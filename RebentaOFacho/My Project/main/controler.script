@@ -1,0 +1,44 @@
+local dificulty = "hard"
+local current_script = nil
+
+local function show(self, proxy, script_name)
+	if self.current_proxy then
+		msg.post(self.current_proxy, "unload")
+		self.current_proxy = nil
+	end
+	msg.post(proxy, "async_load")
+	current_script = script_name
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.current_proxy = nil
+	msg.post("#", "show_menu")
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("show_menu") then
+		show(self, "#menuproxy", nil)
+	elseif message_id == hash("careca_level") then
+		show(self, "#carecaproxy", "careca:/careca#careca_script")
+	elseif message_id == hash("cinha_level") then
+		show(self, "#cinhaproxy", "cinha:/cinha#cinha_script")
+	elseif message_id == hash("vieira_level") then
+		show(self, "#vieiraproxy", "vieira:/vieira#vieira_script")
+	elseif message_id == hash("geleia_level") then
+		show(self, "#geleiaproxy")
+	elseif message_id == hash("proxy_loaded") then
+		self.current_proxy = sender
+		msg.post(sender, "enable")
+		if current_script ~= nil then
+			msg.post(current_script, "dificulty", {dificulty})
+			msg.post(current_script, "start")
+		end
+	elseif message_id == hash("proxy_unloaded") then
+		print("Unloaded", sender)
+	elseif message_id == hash("easy") then
+		dificulty = "easy"
+	elseif message_id == hash("hard") then
+		dificulty = "hard"
+	end
+end

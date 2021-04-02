@@ -1,0 +1,316 @@
+local nextPinch = 0
+local numHits = 0
+local finish_hits = 0
+local numFails = 0
+local clicksToFinish = 0
+local wasHit = false
+local finishHim = false
+local fatality = false
+local continuous_hits = 0
+local game_timer = nil
+local computed_points = false
+local num_combos = 0
+local game_over = false
+local game_over_signaled = false
+local estagiario = false
+local drill_big_one = false
+local start = false
+local dificulty = hard
+local clicks_to_finish = 5
+
+-- Damage levels / game states
+local LEVEL0 = 1
+local LEVEL1 = 2
+local LEVEL2 = 3
+local LEVEL3 = 4
+local PREPARE_FINISH = 5
+local WAIT_PREPARE_FINISH = 6
+local FINISHING_LEVEL = 7
+local FINISH_HIM = 8
+local FINAL_RESULT = 9
+local GAME_END = 10
+local curr_level = LEVEL0
+
+-- Initial object positions
+
+-- Time left
+local total_left = 30
+local function time_passed(self, handle, elapsed)
+	total_left = total_left - elapsed
+	if total_left < 6 then
+		sound.play("FinishHer#ticktok", {delay = 0, gain = 2, pan = 0, speed = 1})
+	end
+
+	if total_left < 0 then total_left = 0 end
+	label.set_text("Cenario#Elapsed", string.format("%d", total_left))
+	if total_left == 0 then
+		timer.cancel(handle)
+		curr_level = FINAL_RESULT
+		game_won = false
+	end
+end
+
+local function combo_off(self, handle, elapsed)
+	continuous_hits = 0
+end
+
+function start_game()
+	if dificulty == "easy" then
+		go.set("cinha", "position.x", 500)
+	else			
+		go.animate("cinha", "position.x", go.PLAYBACK_LOOP_PINGPONG, 300, go.EASING_INOUTSINE, 2,0)
+	end
+
+	game_timer = timer.delay(1,true,time_passed)
+
+	-- combo timer off
+	timer.delay(3, true, combo_off)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("dificulty") then
+		dificulty = message[1]
+	elseif message_id == hash("start") then
+		start = true
+		start_game()
+	end
+end
+
+local function animate_object(id, properties, playback, tos, easing, duration)
+	for index, property in ipairs(properties) do
+		go.animate(id, property, playback, tos[index], easing, duration, 0)
+	end
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	msg.post("cinha:/inner#sprite", "play_animation", {id = hash("Cinha1")})
+
+	nextPinch = 0
+	numHits = 0
+	numFails = 0
+
+	label.set_text("Cenario#Elapsed", string.format("%d", total_left))
+end
+
+function player_loses()		
+	-- Put Victim in the middle laughing
+	go.cancel_animations("cinha", "position.x")
+	go.set("cinha", "position.x", 500)
+	msg.post("cinha:/inner#sprite", "play_animation", {id = hash("Cinha1")})
+	msg.post("Logo", "play_animation", {id = hash("fraco")})
+	sound.play("FinishHer#looser", {delay = 0, gain = 3, pan = 0, speed = 1})
+	sound.play("FinishHer#booing", {delay = 1, gain = 2, pan = 0, speed = 1})
+end
+
+function check_game_level(hits)
+	if curr_level == FINISHING_LEVEL and numHits >= 70 then
+		curr_level = FINISH_HIM
+	end
+
+	if curr_level < PREPARE_FINISH then
+		if numHits >= 60 then
+			curr_level = PREPARE_FINISH
+		elseif numHits >= 45 then
+			curr_level = LEVEL3
+		elseif numHits >= 30 then
+			curr_level = LEVEL2
+		elseif numHits >= 15 then
+			curr_level = LEVEL1
+		elseif numHits >= 0 then
+			curr_level = LEVEL0
+		end
+	end
+end
+
+local function start_blood (self, url, property)
+	sound.play("BigSeringe#sound", {delay = 0, gain = 2, pan = 0, speed = 1.10})
+	particlefx.play("BloodSplash")
+
+	if drill_big_one == false then
+		drill_big_one = true
+		go.set("BigSeringe", "position.y", 430)
+		go.animate("BigSeringe", "position.y", go.PLAYBACK_LOOP_PINGPONG, 440, go.EASING_LINEAR, 0.1, 0)
+		sound.play("FinishHer#drill", {delay = 0, gain = 1, pan = 0, speed = 1.00})
+	end
+end
+
+local finish_ready = 0
+local function prepare_finish (self, handle, elapsed)
+	finish_ready = finish_ready + elapsed
+
+	if finish_ready >= 2 then
+		nextPinch = 0
+
+		-- Let's finish the bastard
+		curr_level = FINISHING_LEVEL
+		timer.cancel(handle)
+	elseif finish_ready >= 1.5 then
+		-- stop Cinha and drop big seringe
+		go.cancel_animations("cinha", "position.x")
+		go.set("cinha", "position.x", 500)
+		go.animate("BigSeringe", "position.y", go.PLAYBACK_ONCE_FORWARD, 430, go.EASING_LINEAR, 0.5, 0, start_blood)
+	elseif finish_ready >= 0.5 then
+		timer.cancel(game_timer)
+
+		numHits = numHits + 1
+		sound.play("FinishHer#finishher", {delay = 0, gain = 2, pan = 0, speed = 1.00})
+
+		-- Set Finishe Her sign
+		local pos = go.get_position()
+		pos.x = 520
+		pos.y = 600
+		local finishher = factory.create("FinishHer#factory", pos)
+		go.animate(finishher, "position.x", go.PLAYBACK_LOOP_PINGPONG, 510, go.EASING_LINEAR, 0.05, 0)
+	end
+end
+
+local function finish_him ()
+	sound.stop("FinishHer#drill")
+	go.cancel_animations("BigSeringe", "position.y")
+
+	msg.post("cinha:/inner#sprite", "play_animation", {id = hash("Cinha6")})
+	sound.play("cinha#crack", {delay = 0, gain = 2, pan = 0, speed = 1.00})
+	sound.play("FinishHer#fatality", {delay = 2, gain = 2, pan = 0, speed = 1.00})
+	go.animate("neuronio", "position.x", go.PLAYBACK_LOOP_PINGPONG, 60, go.EASING_INBOUNCE, 0.05, 0)
+	sound.play("FinishHer#cheers", {delay = 0, gain = 2, pan = 0, speed = 1.00})
+	particlefx.play("covid")
+
+	-- Compute file points
+	if computed_points == false then
+		computed_points = true
+		bonus_time = 60 + total_left * .2
+		num_combos = num_combos * .3
+		numHits = numHits + bonus_time + num_combos
+		label.set_text("Cenario#Pontos", string.format("%d", numHits))
+	end
+	
+	curr_level = FINAL_RESULT
+	game_won = true
+end
+
+function update(self, dt)
+	if start == false then
+		return
+	end
+
+	check_game_level (numHits)
+
+	if curr_level == LEVEL0 or curr_level == LEVEL1 or curr_level == LEVEL2 or curr_level == LEVEL3 then
+		if wasHit then
+			wasHit = false
+			msg.post("cinha:/inner#sprite", "play_animation", {id = hash(string.format("Cinha%d",curr_level))})
+		end
+	elseif curr_level == PREPARE_FINISH then
+		timer.cancel(game_timer)
+		timer.delay(0.5, true, prepare_finish)
+	elseif curr_level == WAIT_PREPARE_FINISH then 
+		return 
+	elseif curr_level == FINISHING_LEVEL then
+		msg.post("cinha:/inner#sprite", "play_animation", {id = hash(string.format("Cinha%d",LEVEL3))})
+	elseif curr_level == FINISH_HIM then
+		finish_him ()
+	elseif curr_level == FINAL_RESULT then 
+		if game_won == false then
+			player_loses()	
+		end
+		curr_level = GAME_END
+	elseif GAME_END then
+		return
+	end
+	
+	if continuous_hits > 5 and finishHim == false then
+		sound.play("FinishHer#combo", {delay = 0, gain = 3, pan = 0, speed = 1})
+		num_combos = num_combos + 1
+		total_left = total_left + 2
+		continuous_hits = 0
+	end
+end
+
+local function check_hit(cinha_pos, seringa)
+	local hit_sound = nil
+	local miss_sound = nil
+	local sound_speed = nil
+	local sound_pan = nil
+	local miss_particle = nil
+	local ui = "cinha#ui"
+
+	if seringa == "seringa_esquerda" then
+		hit_sound = "seringa_esquerda#sound"
+		miss_sound = "miss_botox_left#sound"
+		miss_particle = "miss_botox_left"
+		sound_speed = 1.25
+		ui_speed = 1
+		sound_pan = -1
+	elseif seringa == "seringa_direita" then
+		hit_sound = "seringa_direita#sound"
+		miss_sound = "miss_botox_right#sound"
+		miss_particle = "miss_botox_right"
+		sound_speed = 1.00
+		ui_speed = 1.10
+		sound_pan = 1
+	end
+
+	if cinha_pos.x < 600 and cinha_pos.x > 400 then
+		sound.play(hit_sound, {delay = 0, gain = 0.5, pan = sound_pan, speed = sound_speed})
+		sound.play(ui, {delay = 0, gain = 2, pan = sound_pan, speed = ui_speed})
+
+		-- shake cinha
+		animate_object("cinha:/inner", {"position.y"}, go.PLAYBACK_ONCE_PINGPONG, {10}, go.EASING_OUTBACK, 0.1)
+		numHits = numHits + 1
+		continuous_hits = continuous_hits + 1
+		wasHit = true
+	else
+		particlefx.play(miss_particle)
+		sound.play(miss_sound, {delay = 0, gain = 1, pan = sound_pan, speed = sound_speed})
+		numHits = numHits - 1
+		if numHits < 0 then
+			numHits = 0
+		end
+		continuous_hits = 0
+		wasHit = false
+	end
+end
+
+local function pinch_left(cinha_pos)
+	animate_object ("seringa_esquerda", {"position.x", "position.y"}, go.PLAYBACK_ONCE_BACKWARD, {395, 70}, go.EASING_OUTBACK, 0.3)
+	check_hit(cinha_pos, "seringa_esquerda")
+	
+	label.set_text("Cenario#Pontos", string.format("%d", numHits))
+end
+
+local function pinch_right(cinha_pos)
+	animate_object ("seringa_direita", {"position.x", "position.y"}, go.PLAYBACK_ONCE_BACKWARD, {671, 63}, go.EASING_OUTBACK, 0.3)
+	check_hit(cinha_pos, "seringa_direita")
+	
+	label.set_text("Cenario#Pontos", string.format("%d", numHits))
+end
+
+function on_input(self, action_id, action)
+	if start == false then
+		return
+	end
+
+	if curr_level == PREPARE_FINISH or curr_level == WAIT_PREPARE_FINISH or curr_level == FINISH or curr_level == FINAL_RESULT then
+		return
+	elseif curr_level == GAME_END then
+		if action_id == hash("click") and action.pressed then
+			clicks_to_finish = clicks_to_finish - 1
+			if clicks_to_finish == 0 then
+				msg.post("main:/controler#controler", "show_menu")
+			end
+		end
+		return 
+	else
+		local cinha_pos = go.get_position("cinha")
+		if action_id == hash("click") and action.pressed then
+			if nextPinch == 0 then
+				pinch_left(cinha_pos)
+				nextPinch = 1
+			elseif nextPinch == 1 then
+				pinch_right(cinha_pos)
+				nextPinch = 0
+			end 
+		end
+	end
+end

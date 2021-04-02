@@ -1,0 +1,72 @@
+local selected_round = "show_menu"
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	sound.play("EscolheFachoSound#sound", {delay = 0, gain = 0.5, pan = 0, speed = 1})
+end
+
+local function unselect_all(self)
+	local geleia = gui.get_node("Geleia")
+	local vieira = gui.get_node("Vieira")
+	local careca = gui.get_node("Careca")
+	local cinha = gui.get_node("Cinha")
+
+	gui.play_flipbook(geleia, hash("geleiaSelect1"))
+	gui.play_flipbook(vieira, hash("VieiraSelect1"))
+	gui.play_flipbook(careca, hash("CarecaSelect1"))
+	gui.play_flipbook(cinha, hash("cinhaSelect1"))
+end
+
+function on_input(self, action_id, action)
+	local geleia = gui.get_node("Geleia")
+	local vieira = gui.get_node("Vieira")
+	local careca = gui.get_node("Careca")
+	local cinha = gui.get_node("Cinha")
+	local start = gui.get_node("Jogar")
+
+	local select_easy = gui.get_node("select_easy")
+	local select_hard = gui.get_node("select_hard")
+
+	if action_id  == hash("click") and action.pressed then
+		unselect_all(this)
+		if gui.pick_node(geleia, action.x, action.y) then
+			gui.play_flipbook(geleia, hash("geleiaSelect2"))
+			sound.play("GeleiaSound#sound", {delay = 0, gain = 0.5, pan = -0.75, speed = 1})
+			selected_round = "geleia_level"
+		elseif gui.pick_node(vieira, action.x, action.y) then
+			gui.play_flipbook(vieira, hash("VieiraSelect2"))
+			sound.play("VieiraSound#sound", {delay = 0, gain = 0.5, pan = -0.5, speed = 1})
+			selected_round = "vieira_level"
+		elseif gui.pick_node(careca, action.x, action.y) then
+			gui.play_flipbook(careca, hash("CarecaSelect2"))
+			sound.play("CarecaSound#sound", {delay = 0, gain = 0.5, pan = 0.2, speed = 1})
+			selected_round = "careca_level"
+		elseif gui.pick_node(cinha, action.x, action.y) then
+			gui.play_flipbook(cinha, hash("cinhaSelect2"))
+			sound.play("CinhaSound#sound", {delay = 0, gain = 0.5, pan = 0.75, speed = 1})
+			selected_round = "cinha_level"
+		elseif gui.pick_node(start, action.x, action.y) then
+			if selected_round == nil then
+				sound.play("EscolheFachoSound#sound", {delay = 0, gain = 0.5, pan = 0, speed = 1})
+			else
+				msg.post("main:/controler#controler", selected_round)
+			end
+		elseif gui.pick_node(select_easy, action.x, action.y) then
+			gui.play_flipbook(select_easy, hash("select"))
+			gui.play_flipbook(select_hard, hash("no_select"))
+			sound.play("Gui#select_sound", {delay = 0, gain = 0.5, pan = 0, speed = 1})
+			msg.post("main:/controler#controler", "easy")
+		elseif gui.pick_node(select_hard, action.x, action.y) then
+			gui.play_flipbook(select_easy, hash("no_select"))
+			gui.play_flipbook(select_hard, hash("select"))
+			sound.play("Gui#select_sound", {delay = 0, gain = 0.5, pan = 0, speed = 1})
+			msg.post("main:/controler#controler", "hard")
+		end
+	end
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Learn more: https://defold.com/manuals/hot-reload/
+	-- Remove this function if not needed
+end
