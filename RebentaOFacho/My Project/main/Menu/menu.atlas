@@ -1,8 +1,4 @@
 images {
-  image: "/main/Menu/Images/intro.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
   image: "/main/Menu/Images/CarecaSelect1.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
@@ -16,10 +12,6 @@ images {
 }
 images {
   image: "/main/Menu/Images/cinhaSelect2.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
-  image: "/main/Menu/Images/Escolheoteufacho.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
@@ -48,6 +40,18 @@ images {
 }
 images {
   image: "/main/Menu/Images/no_select.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/main/Menu/Images/main_intro.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/main/Menu/Images/game_logo.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/main/Menu/Images/come\303\247a_ok.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 margin: 0

@@ -2,7 +2,6 @@ local selected_round = "show_menu"
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	sound.play("EscolheFachoSound#sound", {delay = 0, gain = 0.5, pan = 0, speed = 1})
 end
 
 local function unselect_all(self)
@@ -23,6 +22,7 @@ function on_input(self, action_id, action)
 	local careca = gui.get_node("Careca")
 	local cinha = gui.get_node("Cinha")
 	local start = gui.get_node("Jogar")
+	local intro = gui.get_node("Intro")
 
 	local select_easy = gui.get_node("select_easy")
 	local select_hard = gui.get_node("select_hard")
@@ -51,6 +51,9 @@ function on_input(self, action_id, action)
 			else
 				msg.post("main:/controler#controler", selected_round)
 			end
+		elseif gui.pick_node(intro, action.x, action.y)
+			sound.play("EscolheFachoSound#sound", {delay = 0, gain = 0.5, pan = 0, speed = 1})
+			gui.set_enabled(intro, false)
 		elseif gui.pick_node(select_easy, action.x, action.y) then
 			gui.play_flipbook(select_easy, hash("select"))
 			gui.play_flipbook(select_hard, hash("no_select"))
