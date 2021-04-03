@@ -1,9 +1,9 @@
 images {
-  image: "/main/Images/finishhim.png"
+  image: "/Common/Images/finishhim.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/main/Images/finishher.png"
+  image: "/Common/Images/finishher.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 margin: 0

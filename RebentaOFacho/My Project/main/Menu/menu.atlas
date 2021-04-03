@@ -35,10 +35,6 @@ images {
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/main/Menu/Images/select.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
   image: "/main/Menu/Images/no_select.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
@@ -52,6 +48,42 @@ images {
 }
 images {
   image: "/main/Menu/Images/come\303\247a_ok.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/main/Menu/Images/MeloSelect1.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/main/Menu/Images/MeloSelect2.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/main/Menu/Images/MeloSelectMistery.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/main/Menu/Images/ObrasSelect.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/main/Menu/Images/tilly0.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/main/Menu/Images/tilly1.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/main/Menu/Images/tilly2.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/main/Menu/Images/costa_select.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/main/Menu/Images/passos_select.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 margin: 0
