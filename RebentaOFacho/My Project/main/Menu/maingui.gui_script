@@ -41,6 +41,7 @@ end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
+
 	animate_little_tilly()
 	animate_little_ivo()
 
@@ -52,6 +53,22 @@ function init(self)
 
 	-- Play title song
 	sound.play("Gui#wagner", {delay = 0, gain = 0.3, pan = 0, speed = 1})
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("total_score") then
+		local node = gui.get_node("Score")
+		local value = string.format("%09d", message[1])
+		gui.set_text(node, value)
+	elseif message_id == hash("max_score") then
+		local node = gui.get_node("TopScore")
+		local value = string.format("%09d", message[1])
+		gui.set_text(node, value)
+	elseif message_id == hash("max_fachos") then
+		local node = gui.get_node("DeadFachos")
+		local value = string.format("%05d", message[1])
+		gui.set_text(node, value)
+	end
 end
 
 local function unselect_all(self)

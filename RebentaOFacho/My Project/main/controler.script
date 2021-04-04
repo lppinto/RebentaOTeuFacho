@@ -1,5 +1,8 @@
-local dificulty = "hard"
 local current_script = nil
+local total_score = 0
+local max_score = 0
+local max_fachos = 0
+local dificulty = "hard"
 
 local function show(self, proxy, script_name)
 	if self.current_proxy then
@@ -12,6 +15,7 @@ end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
+
 	self.current_proxy = nil
 	msg.post("#", "show_menu")
 end
@@ -30,7 +34,11 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("proxy_loaded") then
 		self.current_proxy = sender
 		msg.post(sender, "enable")
-		if current_script ~= nil then
+		if current_script == nil then
+			msg.post("proxy:/Gui#MainGui", "total_score", {total_score})
+			msg.post("proxy:/Gui#MainGui", "max_score", {max_score})
+			msg.post("proxy:/Gui#MainGui", "max_fachos", {max_fachos})
+		else
 			msg.post(current_script, "dificulty", {dificulty})
 			msg.post(current_script, "start")
 		end
@@ -40,5 +48,13 @@ function on_message(self, message_id, message, sender)
 		dificulty = "easy"
 	elseif message_id == hash("hard") then
 		dificulty = "hard"
+	elseif message_id == hash("add_score") then
+		local score = message[1]
+		total_score = total_score + score
+		if max_score < total_score then
+			max_score = total_score
+		end
+	elseif message_id == hash("add_facho_kill") then
+		max_fachos = max_fachos + 1
 	end
 end

@@ -203,6 +203,13 @@ local function finish_careca_done(self, url, property)
 	go.animate("Avacaqueri", "position.y", go.PLAYBACK_ONCE_FORWARD, 260, go.EASING_OUTBOUNCE, 1, 0, finish_vaca)
 end
 
+local function comunicate_score(game_won, score)
+	if game_won then
+		msg.post("main:/controler#controler", "add_score", {score})
+		msg.post("main:/controler#controler", "add_facho_kill")
+	end
+end
+
 local function finish_him ()
 	msg.post("careca:/inner#sprite", "play_animation", {id = hash("careca_done")})
 	msg.post("Logo", "play_animation", {id = hash("chega_winner")})
@@ -277,6 +284,7 @@ function update(self, dt)
 		if game_won == false then
 			player_loses()	
 		end
+		comunicate_score(game_won, numHits)
 		curr_level = GAME_END
 	elseif GAME_END then
 		return
