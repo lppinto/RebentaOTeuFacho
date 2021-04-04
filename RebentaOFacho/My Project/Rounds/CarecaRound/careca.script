@@ -1,6 +1,7 @@
 local nextPunch = "Left"
 local numHits = 0
-local finish_hits = 0
+local finish_hits = 1
+local cut_hits = 1
 local numFails = 0
 local wasHit = false
 local slash = false
@@ -10,7 +11,7 @@ local computed_points = false
 local num_combos = 0
 local game_won = false
 local start = false
-local dificulty = hard
+local dificulty = "hard"
 local clicks_to_finish = 5
 
 -- Damage levels / game states
@@ -130,7 +131,7 @@ function player_loses()
 end
 
 function check_game_level(hits)
-	if curr_level == FINISHING_LEVEL and numHits >= 70 then
+	if curr_level == FINISHING_LEVEL and numHits >= 80 then
 		curr_level = FINISH_HIM
 	end
 
@@ -162,10 +163,14 @@ function prepare_finish (self, handle, elapsed)
 		timer.cancel(handle)
 	elseif finish_ready >= 1.5 then
 		-- Set slash mode for fatality
+		go.set("socoesquerdo", "position.x", 850)
+		socoesquerdo_init_pos = go.get_position("socoesquerdo")
 		msg.post("socoesquerdo#sprite", "play_animation", {id = hash("punch_right_claws")})
 		sound.play("socoesquerdo#clawup", {delay = 0, gain = 3, pan = 1.0, speed = 1.1})	
 	elseif finish_ready >= 1 then
 		-- Set slash mode for fatality
+		go.set("socodireito", "position.x", 200)
+		socodireito_init_pos = go.get_position("socodireito")
 		msg.post("socodireito#sprite", "play_animation", {id = hash("punch_left_claws")})
 		sound.play("socodireito#clawup", {delay = 0, gain = 3, pan = -1.0, speed = 1.0})
 	elseif finish_ready >= .5 then
@@ -277,7 +282,7 @@ function update(self, dt)
 		return
 	end
 	
-	if continuous_hits > 5 and curr_level ~= FINISHING_LEVEL then
+	if continuous_hits > 5 and curr_level ~= FINISHING_LEVEL and dificulty == "hard" then
 		sound.play("FinishHim#combo", {delay = 0, gain = 3, pan = 0, speed = 1})
 		num_combos = num_combos + 1
 		total_left = total_left + 2
@@ -399,7 +404,7 @@ function on_input(self, action_id, action)
 			end
 
 			if curr_level == FINISHING_LEVEL then
-				finish_hits = finish_hits + 1
+				finish_hits = finish_hits + 0.2
 				if finish_hits > 4 then
 					finish_hits = 4
 				end
