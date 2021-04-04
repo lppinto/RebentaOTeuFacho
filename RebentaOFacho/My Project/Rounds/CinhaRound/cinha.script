@@ -195,6 +195,13 @@ local function prepare_finish (self, handle, elapsed)
 	end
 end
 
+local function comunicate_score(game_won, score)
+	if game_won then
+		msg.post("main:/controler#controler", "add_score", {score})
+		msg.post("main:/controler#controler", "add_facho_kill")
+	end
+end
+
 local function finish_him_after_face_open (self, message_id, message, id, sender)
 	sound.play("FinishHer#fatality", {delay = 1, gain = 2, pan = 0, speed = 1.00})
 	go.animate("neuronio", "position.x", go.PLAYBACK_LOOP_PINGPONG, 60, go.EASING_INBOUNCE, 0.10, 0)
@@ -280,6 +287,7 @@ function update(self, dt)
 		if game_won == false then
 			player_loses()	
 		end
+		comunicate_score(game_won, numHits)
 		curr_level = GAME_END
 	elseif GAME_END then
 		return

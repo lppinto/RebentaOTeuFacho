@@ -172,6 +172,13 @@ function check_game_level(hits)
 	end
 end
 
+local function comunicate_score(game_won, score)
+	if game_won then
+		msg.post("main:/controler#controler", "add_score", {score})
+		msg.post("main:/controler#controler", "add_facho_kill")
+	end
+end
+
 local function finish_him ()
 	animate_object ("vieira:/Top", {"position.y"}, go.PLAYBACK_ONCE_FORWARD, {1000}, go.EASING_LINEAR, 0.3)
 	sound.play("vieira#cracked_skull", {delay = 0, gain = 4, pan = 0, speed = 1.00})
@@ -270,6 +277,7 @@ function update(self, dt)
 		if game_won == false then
 			player_loses()	
 		end
+		comunicate_score(game_won, numHits)
 		curr_level = GAME_END
 	elseif GAME_END then
 		return

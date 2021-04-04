@@ -16,6 +16,6 @@ title = Rebenta o Teu Facho
 developer = Filho do Damata
 
 [html5]
-splash_image = /main/splashgame.png
+splash_image = /main/Menu/Images/splash_screen.png
 scale_mode = fit
 
