@@ -3,10 +3,6 @@ images {
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Common/Images/miss.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
   image: "/Common/Images/queijo.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
