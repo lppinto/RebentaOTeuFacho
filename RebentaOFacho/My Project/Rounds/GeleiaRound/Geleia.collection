@@ -1,7 +1,7 @@
 name: "geleia"
 scale_along_z: 0
 embedded_instances {
-  id: "cenario"
+  id: "Cenario"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
@@ -667,7 +667,7 @@ embedded_instances {
   children: "laser_left"
   data: ""
   position {
-    x: 84.0
+    x: -172.0
     y: 456.0
     z: 0.3
   }
@@ -689,7 +689,7 @@ embedded_instances {
   children: "laser_right"
   data: ""
   position {
-    x: 1129.0
+    x: 1128.0
     y: 466.0
     z: 0.2
   }
@@ -1096,15 +1096,15 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 335.462
-    y: -239.178
+    x: 324.212
+    y: -247.928
     z: 0.2
   }
   rotation {
-    x: -1.1545099E-16
-    y: -8.243135E-17
-    z: 0.95304394
-    w: 0.3028322
+    x: -1.1697657E-16
+    y: -8.0251726E-17
+    z: 0.94719714
+    w: 0.32065192
   }
   scale3 {
     x: 1.0
@@ -1136,8 +1136,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: -323.99
-    y: -242.991
+    x: -331.49
+    y: -251.741
     z: 0.2
   }
   rotation {

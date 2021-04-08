@@ -99,6 +99,10 @@ function init(self)
 	toradireita_init_pos = go.get_position("Tora_direita")
 	socoesquerdo_init_pos = go.get_position("Tora_esquerda")
 
+	-- Hide initial objects not be seen
+	msg.post("laser_left", "disable")
+	msg.post("laser_right", "disable")
+	
 	-- msg.post("corte", "disable")
 	-- msg.post("careca_laughs", "disable")
 	-- msg.post("boca", "disable")
@@ -287,14 +291,14 @@ local function check_hit(escudo_pos, soco)
 	local sound_pan = nil
 	local sound_gain = 1
 
-	if soco == "socoesquerdo" then
-		hit_sound = "socoesquerdo#sound" 		
+	if tora == "Tora_esquerda" then
+		hit_sound = "Tora_esquerda#sound" 		
 		particle_fx = "punch_splash_left"
 		miss_sound = "socoesquerdo#miss_sound"
 		sound_speed = 1.0
 		sound_pan = 1
-	elseif soco == "socodireito" then
-		hit_sound = "socodireito#sound" 
+	elseif tora == "Tora_direita" then
+		hit_sound = "Tora_direita#sound" 
 		particle_fx = "punch_splash_right"
 		miss_sound = "socodireito#miss_sound"
 		sound_speed = 1.10
@@ -304,13 +308,6 @@ local function check_hit(escudo_pos, soco)
 	if escudo_pos.y < -100 then
 		sound.play(hit_sound, {delay = 0, gain = 1, pan = sound_pan, speed = sound_speed})
 		particlefx.play(particle_fx)
-
-		if numHits > 40 then
-			particlefx.play("punch_splash_final")
-		end
-
-		-- Play bonus sounds
-		playsounds(numHits);
 
 		-- shake careca
 		go.set_position(careca_inner_init_pos, "careca:/inner")
@@ -330,22 +327,22 @@ local function check_hit(escudo_pos, soco)
 	end
 end
 
-local function punch_left(escudo_pos)
-	go.set_position(socoesquerdo_init_pos, "socoesquerdo")
+local function cum_left(escudo_pos)
+	go.set_position(toraesquerda_init_pos, "Tora_esquerda")
 
 	-- animate cum left
 	
-	check_hit(escudo_pos, "socoesquerdo")
+	check_hit(escudo_pos, "Tora_esquerda")
 
 	label.set_text("Cenario#Pontos", string.format("%d", numHits))
 end
 
-local function punch_right(escudo_pos)
-	go.set_position(socodireito_init_pos, "socodireito")
+local function cum_right(escudo_pos)
+	go.set_position(toradireita_init_pos, "Tora_direita")
 
-	-- animate cum right\
+	-- animate cum right
 
-	check_hit(escudo_pos, "socodireito")
+	check_hit(escudo_pos, "Tora_direita")
 
 	label.set_text("Cenario#Pontos", string.format("%d", numHits))
 end
