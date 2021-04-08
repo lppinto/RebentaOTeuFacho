@@ -1,5 +1,5 @@
 images {
-  image: "/Rounds/GeleiaRound/Images/mecap\303\251nis_off.png"
+  image: "/Rounds/GeleiaRound/Images/mecap\303\251nis_off_left.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
@@ -9,6 +9,40 @@ images {
 images {
   image: "/Rounds/GeleiaRound/Images/mecap\303\251nis_on_red.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/GeleiaRound/Images/mecap\303\251nis_off_right.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+animations {
+  id: "laser_blue"
+  images {
+    image: "/Rounds/GeleiaRound/Images/laser_blue1.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/Rounds/GeleiaRound/Images/laser_blue2.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 60
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "laser_red"
+  images {
+    image: "/Rounds/GeleiaRound/Images/laser_red1.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/Rounds/GeleiaRound/Images/laser_red2.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 60
+  flip_horizontal: 0
+  flip_vertical: 0
 }
 margin: 0
 extrude_borders: 2

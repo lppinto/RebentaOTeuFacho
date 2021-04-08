@@ -20,14 +20,14 @@ emitters {
   blend_mode: BLEND_MODE_ALPHA
   particle_orientation: PARTICLE_ORIENTATION_MOVEMENT_DIRECTION
   inherit_velocity: 0.0
-  max_particle_count: 200
-  type: EMITTER_TYPE_2DCONE
+  max_particle_count: 1000
+  type: EMITTER_TYPE_BOX
   start_delay: 0.0
   properties {
     key: EMITTER_KEY_SPAWN_RATE
     points {
       x: 0.0
-      y: 75.0
+      y: 400.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -37,7 +37,7 @@ emitters {
     key: EMITTER_KEY_SIZE_X
     points {
       x: 0.0
-      y: 0.179
+      y: 20.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -47,7 +47,7 @@ emitters {
     key: EMITTER_KEY_SIZE_Y
     points {
       x: 0.0
-      y: 19.083
+      y: 0.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -67,7 +67,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_LIFE_TIME
     points {
       x: 0.0
-      y: 1.2
+      y: 0.8
       t_x: 1.0
       t_y: 0.0
     }
@@ -77,7 +77,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_SPEED
     points {
       x: 0.0
-      y: 150.0
+      y: 40.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -87,7 +87,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_SIZE
     points {
       x: 0.0
-      y: 10.0
+      y: 8.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -127,7 +127,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_ALPHA
     points {
       x: 0.0
-      y: 5.0
+      y: 1.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -273,11 +273,11 @@ emitters {
     }
   }
   modifiers {
-    type: MODIFIER_TYPE_VORTEX
+    type: MODIFIER_TYPE_RADIAL
     use_direction: 0
     position {
-      x: -159.0
-      y: 178.0
+      x: 0.0
+      y: 16.0
       z: 0.0
     }
     rotation {
@@ -290,54 +290,7 @@ emitters {
       key: MODIFIER_KEY_MAGNITUDE
       points {
         x: 0.0
-        y: 190.24919
-        t_x: 0.0013892545
-        t_y: -0.99999905
-      }
-      points {
-        x: 1.0
-        y: 200.0
-        t_x: 1.0
-        t_y: 0.0
-      }
-      spread: 0.0
-    }
-    properties {
-      key: MODIFIER_KEY_MAX_DISTANCE
-      points {
-        x: 0.0
-        y: 1000.0
-        t_x: 1.0
-        t_y: 0.0
-      }
-      spread: 0.0
-    }
-  }
-  modifiers {
-    type: MODIFIER_TYPE_VORTEX
-    use_direction: 0
-    position {
-      x: 1.0
-      y: -1.0
-      z: 0.0
-    }
-    rotation {
-      x: 0.0
-      y: 0.0
-      z: 0.0
-      w: 1.0
-    }
-    properties {
-      key: MODIFIER_KEY_MAGNITUDE
-      points {
-        x: 0.0
-        y: 83.25266
-        t_x: 1.0
-        t_y: 0.0
-      }
-      points {
-        x: 1.0
-        y: 53.105972
+        y: 150.0
         t_x: 1.0
         t_y: 0.0
       }

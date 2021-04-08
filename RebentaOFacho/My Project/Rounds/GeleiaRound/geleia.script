@@ -1,77 +1,467 @@
-local currCum = 0
-local numCums = 0
-local vibrarion = 5
+local nextPunch = "Left"
+local numHits = 0
+local finish_hits = 1
+local cut_hits = 1
+local numFails = 0
+local wasHit = false
+local slash = false
+local continuous_hits = 0
+local game_timer = nil
+local computed_points = false
+local num_combos = 0
+local game_won = false
+local start = false
+local dificulty = "hard"
+local clicks_to_finish = 5
+
+-- Damage levels / game states
+local LEVEL0 = 1
+local LEVEL1 = 2
+local LEVEL2 = 3
+local LEVEL3 = 4
+local PREPARE_FINISH = 5
+local WAIT_PREPARE_FINISH = 6
+local FINISHING_LEVEL = 7
+local FINISH_HIM = 8
+local FINAL_RESULT = 9
+local GAME_END = 10
+local curr_level = LEVEL0
+
+-- Initial object positions
+local geleia_inner_init_pos = nil
+local toradireita_init_pos = nil
+local toraesquerda_init_pos = nil
+
+-- Time passed for the game
+local total_left = 30
+local function time_passed(self, handle, elapsed)
+	total_left = total_left - elapsed
+	if total_left < 6 then
+		sound.play("FinishHim#ticktok", {delay = 0, gain = 2, pan = 0, speed = 1})
+	end
+
+	if total_left < 0 then total_left = 0 end
+	label.set_text("Cenario#Elapsed", string.format("%d", total_left))
+	if total_left == 0 then
+		timer.cancel(handle)
+		curr_level = FINAL_RESULT
+		game_won = false
+	end
+end
+
+local function combo_off(self, handle, elapsed)
+	continuous_hits = 0
+end
+
+function start_game()
+	go.animate("Geleia", "position.x", go.PLAYBACK_LOOP_PINGPONG, 490, go.EASING_INOUTSINE, 0.5,0)
+
+	if dificulty == "hard" then		
+		go.animate("Shield", "position.y", go.PLAYBACK_LOOP_PINGPONG, 125, go.EASING_INOUTSINE, 1,0)
+	end
+
+	game_timer = timer.delay(1,true,time_passed)
+
+	-- combo timer off
+	timer.delay(3, true, combo_off)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("dificulty") then
+		dificulty = message[1]
+	elseif message_id == hash("start") then
+		start = true
+		start_game()
+	end
+end
+
+local function animate_object(id, properties, playback, tos, easing, duration)
+	for index, property in ipairs(properties) do
+		go.animate(id, property, playback, tos[index], easing, duration, 0)
+	end
+end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	msg.post("#sprite", "play_animation", {id = hash("geleia1")})
-	currCum = 0
-	numCums = 0
-	vibrarion = 5
-	
+	msg.post("geleia:/inner#sprite", "play_animation", {id = hash("geleia1")})
+	print (options)
+	nextPunch = "Left"
+	numHits = 0
+	numFails = 0
+	wasHit = false
+	slash = false
+	continuous_hits = 0
+	computed_points = false
+	num_combos = 0
+
+	-- Save initial positions
+	geleia_inner_init_pos = go.get_position("geleia:/inner")
+	toradireita_init_pos = go.get_position("Tora_direita")
+	socoesquerdo_init_pos = go.get_position("Tora_esquerda")
+
+	-- msg.post("corte", "disable")
+	-- msg.post("careca_laughs", "disable")
+	-- msg.post("boca", "disable")
+
+	label.set_text("Cenario#Elapsed", string.format("%d", total_left))
+
+	start_game()
+end
+
+-- function laugh_stop(self, handle, elapsed)
+-- 	go.cancel_animations("careca:/boca", "position.y")
+-- 	go.set("careca:/boca", "position.y", -92)
+-- 	sound.stop("careca:/laughs#mock_sound")
+-- end
+
+-- function player_loses()		
+-- 	-- Put facho in the middle laughing
+-- 	go.cancel_animations("careca", "position.x")
+-- 	go.set("careca", "position.x", 500)
+-- 	msg.post("careca:/inner#sprite", "play_animation", {id = hash("careca1")})
+-- 	msg.post("careca:/inner", "disable")
+-- 	msg.post("careca_laughs", "enable")
+-- 	msg.post("boca", "enable")
+-- 	msg.post("Logo", "play_animation", {id = hash("fraco")})
+-- 	sound.play("FinishHim#looser", {delay = 0, gain = 3, pan = 0, speed = 1})
+-- 	sound.play("FinishHim#booing", {delay = 1, gain = 2, pan = 0, speed = 1})
+-- 
+-- 	-- Animate facho mouth laughing
+-- 	timer.delay(10, false, laugh_stop)
+-- 	go.animate("boca", "position.y", go.PLAYBACK_LOOP_PINGPONG, -148, go.EASING_INOUTSINE, 0.2, 0)
+-- 	sound.play("careca:/laughs#mock_sound", {delay = 0, gain = 2, pan = 0, speed = 1})
+-- end
+
+function check_game_level(hits)
+	if curr_level == FINISHING_LEVEL and numHits >= 80 then
+		curr_level = FINISH_HIM
+	end
+
+	if curr_level < PREPARE_FINISH then
+		if numHits >= 60 then
+			curr_level = PREPARE_FINISH
+		elseif numHits >= 45 then
+			curr_level = LEVEL3
+		elseif numHits >= 30 then
+			curr_level = LEVEL2
+		elseif numHits >= 15 then
+			curr_level = LEVEL1
+		elseif numHits >= 0 then
+			curr_level = LEVEL0
+		end
+	end
+end
+
+-- local finish_ready = 0
+-- function prepare_finish (self, handle, elapsed)
+-- 	finish_ready = finish_ready + elapsed
+-- 
+-- 	if finish_ready >= 2 then
+-- 		slash = true
+-- 		nextPunch = "Right"
+-- 
+-- 		-- Let's finish the bastard
+-- 		curr_level = FINISHING_LEVEL
+-- 		timer.cancel(handle)
+-- 	elseif finish_ready >= 1.5 then
+-- 		-- Set slash mode for fatality
+-- 		go.set("socoesquerdo", "position.x", 850)
+-- 		socoesquerdo_init_pos = go.get_position("socoesquerdo")
+-- 		msg.post("socoesquerdo#sprite", "play_animation", {id = hash("punch_right_claws")})
+-- 		sound.play("socoesquerdo#clawup", {delay = 0, gain = 3, pan = 1.0, speed = 1.1})	
+-- 	elseif finish_ready >= 1 then
+-- 		-- Set slash mode for fatality
+-- 		go.set("socodireito", "position.x", 200)
+-- 		socodireito_init_pos = go.get_position("socodireito")
+-- 		msg.post("socodireito#sprite", "play_animation", {id = hash("punch_left_claws")})
+-- 		sound.play("socodireito#clawup", {delay = 0, gain = 3, pan = -1.0, speed = 1.0})
+-- 	elseif finish_ready >= .5 then
+-- 		sound.play("FinishHim#finishhim", {delay = 0, gain = 2, pan = 0, speed = 1.00})
+-- 		-- Show finish him sign
+-- 		local pos = vmath.vector3()
+-- 		pos.x = 525
+-- 		pos.y = 575
+-- 		pos.z = 0.5
+-- 		local finishhim = factory.create("FinishHim#factory", pos)
+-- 		go.animate(finishhim, "position.x", go.PLAYBACK_LOOP_PINGPONG, 510, go.EASING_LINEAR, 0.05, 0)	
+-- 
+-- 		-- Put Victim in the middle shaking
+-- 		go.cancel_animations("careca", "position.x")
+-- 		go.set("careca", "position.x", 500)
+-- 		go.animate("careca", "position.x", go.PLAYBACK_LOOP_PINGPONG, 520, go.EASING_LINEAR, 0.1,0)
+-- 
+-- 		-- Show neck cut
+-- 		msg.post("corte", "enable")
+-- 	end
+-- end
+
+local function comunicate_score(game_won, score)
+	if game_won then
+		msg.post("main:/controler#controler", "add_score", {score})
+		msg.post("main:/controler#controler", "add_facho_kill")
+	end
+end
+
+local function finish_him ()
+-- 	msg.post("careca:/inner#sprite", "play_animation", {id = hash("careca_done")})
+-- 	msg.post("Logo", "play_animation", {id = hash("chega_winner")})
+-- 	go.animate("Logo", "position.x", go.PLAYBACK_LOOP_PINGPONG, 525, go.EASING_INBOUNCE, 0.5, 0)
+-- 	msg.post("corte", "disable")
+-- 
+-- 	sound.play("FinishHim#fatality", {delay = 0, gain = 2, pan = 0, speed = 1.00})
+-- 	sound.play("FinishHim#skullcrack", {delay = 0, gain = 2, pan = 0, speed = 1.00})
+-- 
+-- 	-- Start cheese stream
+-- 	particlefx.play("queijo_stream")
+-- 	sound.play("careca:/queijo_stream#slush", {delay = 0, gain = 2, pan = 0, speed = 1.00})
+-- 
+-- 	-- Shoot careca head
+-- 	local pos = vmath.vector3()
+-- 	pos.x = 525
+-- 	pos.y = 200
+-- 	pos.z = 0.4
+-- 	local careca_done = factory.create("careca#factory", pos)
+-- 	go.animate(careca_done, "position.y", go.PLAYBACK_ONCE_FORWARD, 1000, go.EASING_LINEAR, 0.5, 0, finish_careca_done)
+-- 
+-- 	sound.play("FinishHim#cheers", {delay = 0, gain = 2, pan = 0, speed = 1.00})
+-- 	go.cancel_animations("careca", "position.x")
+-- 
+-- 	-- Compute file points
+-- 	if computed_points == false then
+-- 		computed_points = true
+-- 		bonus_time = 60 + (total_left * 0.2)
+-- 		num_combos = num_combos * .3
+-- 		numHits = numHits + bonus_time + num_combos
+-- 		numHits = numHits - (numFails * 0.1)
+-- 		label.set_text("Cenario#Pontos", string.format("%d", numHits))
+-- 	end
+-- 
+-- 	curr_level = FINAL_RESULT
+-- 	game_won = true
 end
 
 function update(self, dt)
-	if numCums > 60 then
-		msg.post("#sprite", "play_animation", {id = hash("geleia6")})
-	elseif numCums > 45 then
-		msg.post("#sprite", "play_animation", {id = hash("geleia5")})
-	elseif numCums > 35 then
-		msg.post("#sprite", "play_animation", {id = hash("geleia4")})
-	elseif numCums > 25 then
-		msg.post("#sprite", "play_animation", {id = hash("geleia3")})
-	elseif numCums > 15 then
-		msg.post("#sprite", "play_animation", {id = hash("geleia2")})
-	elseif numCums > 0 then
-		msg.post("#sprite", "play_animation", {id = hash("geleia1")})
+	-- if start == false then
+	-- 	return
+	-- end
+
+	check_game_level (numHits)
+
+	if curr_level == LEVEL0 or curr_level == LEVEL1 or curr_level == LEVEL2 or curr_level == LEVEL3 then
+		if wasHit then
+			wasHit = false
+			msg.post("geleia:/inner#sprite", "play_animation", {id = hash(string.format("geleia%d", curr_level))})
+		end
+	elseif curr_level == PREPARE_FINISH then
+		timer.cancel(game_timer)
+		timer.delay(0.5, true, prepare_finish)
+	elseif curr_level == WAIT_PREPARE_FINISH then
+		return 
+	elseif curr_level == FINISHING_LEVEL then
+		-- msg.post("careca:/inner#sprite", "play_animation", {id = hash(string.format("%sJab%s", nextPunch, LEVEL3))})
+	elseif curr_level == FINISH_HIM then
+		finish_him ()
+	elseif curr_level == FINAL_RESULT then 
+		if game_won == false then
+			player_loses()	
+		end
+		comunicate_score(game_won, numHits)
+		curr_level = GAME_END
+	elseif GAME_END then
+		return
 	end
 
+	if continuous_hits > 5 and curr_level ~= FINISHING_LEVEL and dificulty == "hard" then
+		sound.play("FinishHim#combo", {delay = 0, gain = 3, pan = 0, speed = 1})
+		num_combos = num_combos + 1
+		total_left = total_left + 2
+		continuous_hits = 0
+	end
+end
+
+local function check_hit(escudo_pos, soco)
+	local hit_sound = nil
+	local particle_fx = nil
+	local miss_sound = nil
+	local sound_speed = nil
+	local sound_pan = nil
+	local sound_gain = 1
+
+	if soco == "socoesquerdo" then
+		hit_sound = "socoesquerdo#sound" 		
+		particle_fx = "punch_splash_left"
+		miss_sound = "socoesquerdo#miss_sound"
+		sound_speed = 1.0
+		sound_pan = 1
+	elseif soco == "socodireito" then
+		hit_sound = "socodireito#sound" 
+		particle_fx = "punch_splash_right"
+		miss_sound = "socodireito#miss_sound"
+		sound_speed = 1.10
+		sound_pan = -1
+	end
+
+	if escudo_pos.y < -100 then
+		sound.play(hit_sound, {delay = 0, gain = 1, pan = sound_pan, speed = sound_speed})
+		particlefx.play(particle_fx)
+
+		if numHits > 40 then
+			particlefx.play("punch_splash_final")
+		end
+
+		-- Play bonus sounds
+		playsounds(numHits);
+
+		-- shake careca
+		go.set_position(careca_inner_init_pos, "careca:/inner")
+		animate_object("careca:/inner", {"position.y"}, go.PLAYBACK_ONCE_PINGPONG, {20}, go.EASING_OUTBACK, 0.2)
+		numHits = numHits + 1
+		continuous_hits = continuous_hits + 1
+		wasHit = true
+	else
+		sound.play(miss_sound, {delay = 0, gain = 1, pan = 0, speed = 1.00})
+		numHits = numHits - 1
+		if numHits < 0 then
+			numHits = 0
+		end
+		numFails = numFails + 1
+		continuous_hits = 0
+		wasHit = false
+	end
+end
+
+local function punch_left(escudo_pos)
+	go.set_position(socoesquerdo_init_pos, "socoesquerdo")
+
+	-- animate cum left
+	
+	check_hit(escudo_pos, "socoesquerdo")
+
+	label.set_text("Cenario#Pontos", string.format("%d", numHits))
+end
+
+local function punch_right(escudo_pos)
+	go.set_position(socodireito_init_pos, "socodireito")
+
+	-- animate cum right\
+
+	check_hit(escudo_pos, "socodireito")
+
+	label.set_text("Cenario#Pontos", string.format("%d", numHits))
 end
 
 function on_input(self, action_id, action)
-	if action_id == hash("click") and action.pressed then
-		if currCum == 0 then
-			sound.play("Tora1#sound", {delay = 0, gain = 0.5, pan = -1.0, speed = 1.25})
-			go.animate("Tora1", "position.y", go.PLAYBACK_ONCE_BACKWARD, 10, go.EASING_OUTBACK, 0.3, 0)
-			go.animate("Tora1", "position.x", go.PLAYBACK_ONCE_BACKWARD, 180, go.EASING_OUTBACK, 0.3, 0)
-			go.animate(".", "position.x", go.PLAYBACK_ONCE_PINGPONG, 510, go.EASING_LINEAR, 0.1,0)
-			particlefx.play("Cum1")
-			particlefx.play("SkinTear")
-			currCum = 1
-		elseif currCum == 1 then
-			sound.play("Tora2#sound", {delay = 0, gain = 0.5, pan = 1.0, speed = 1.50})
-			go.animate("Tora2", "position.y", go.PLAYBACK_ONCE_BACKWARD, -35, go.EASING_OUTBACK, 0.3, 0)
-			go.animate("Tora2", "position.x", go.PLAYBACK_ONCE_BACKWARD, 763, go.EASING_OUTBACK, 0.3, 0)
-			go.animate(".", "position.x", go.PLAYBACK_ONCE_PINGPONG, 495, go.EASING_LINEAR, 0.1,0)
-			particlefx.play("Cum2")
-			particlefx.play("SkinTear")
-			currCum = 0
-		elseif currCum > 1 and numCums > 65 then
-			msg.post("main:/controler#controler", "show_menu")
+	if start == false then
+		return
+	end
+
+	if curr_level == PREPARE_FINISH or curr_level == WAIT_PREPARE_FINISH or curr_level == FINISH or curr_level == FINAL_RESULT then
+		return
+	elseif curr_level == GAME_END then
+		if action_id == hash("click") and action.pressed then
+			clicks_to_finish = clicks_to_finish - 1
+			if clicks_to_finish == 0 then
+				msg.post("main:/controler#controler", "show_menu")
+			end
 		end
-		numCums = numCums + 1
-		if numCums == 45 then
-			go.animate("Jovem", "position.y", go.PLAYBACK_ONCE_BACKWARD, 50, go.EASING_OUTBACK, 0.7, 0)
-			sound.play("Jovem#sound", {delay = 0, gain = 2, pan = 0, speed = 1.00})
-		elseif numCums == 50 then
-			sound.play("FinishHim#finishhim", {delay = 0, gain = 2, pan = 0, speed = 1.00})
-			local pos = go.get_position();
-			pos.x = 525
-			pos.y = 575
-			local finishhim = factory.create("FinishHim#factory", pos)
-			go.animate(finishhim, "position.x", go.PLAYBACK_LOOP_PINGPONG, 510, go.EASING_LINEAR, 0.05, 0)
-		elseif numCums == 60 then
-			numCums = numCums + 1
-			sound.play("FinishHim#fatality", {delay = 0, gain = 2, pan = 0, speed = 1.00})
-			currCum = 2
+		return 
+	else
+		local careca_pos = go.get_position("careca")
+		if action_id == hash("click") and action.pressed then
+			if nextPunch == "Left" then
+				punch_left(careca_pos)			
+				nextPunch = "Right"
+			elseif nextPunch == "Right" then
+				punch_right(careca_pos)
+				nextPunch = "Left"
+			end
+
+			if curr_level == FINISHING_LEVEL then
+				finish_hits = finish_hits + 0.2
+				if finish_hits > 4 then
+					finish_hits = 4
+				end
+			end
 		end
 	end
 end
 
-function on_reload(self)
-	currCum = 0
-	numCums = 0
-	vibrarion = 5
-	ignoreInput = false
-	msg.post("#sprite", "play_animation", {id = hash("geleia1")})
-end
+
+-- local currCum = 0
+-- local numCums = 0
+-- local vibrarion = 5
+-- 
+-- function init(self)
+-- 	msg.post(".", "acquire_input_focus")
+-- 	msg.post("#sprite", "play_animation", {id = hash("geleia1")})
+-- 	currCum = 0
+-- 	numCums = 0
+-- 	vibrarion = 5
+-- 	
+-- end
+-- 
+-- function update(self, dt)
+-- 	if numCums > 60 then
+-- 		msg.post("#sprite", "play_animation", {id = hash("geleia6")})
+-- 	elseif numCums > 45 then
+-- 		msg.post("#sprite", "play_animation", {id = hash("geleia5")})
+-- 	elseif numCums > 35 then
+-- 		msg.post("#sprite", "play_animation", {id = hash("geleia4")})
+-- 	elseif numCums > 25 then
+-- 		msg.post("#sprite", "play_animation", {id = hash("geleia3")})
+-- 	elseif numCums > 15 then
+-- 		msg.post("#sprite", "play_animation", {id = hash("geleia2")})
+-- 	elseif numCums > 0 then
+-- 		msg.post("#sprite", "play_animation", {id = hash("geleia1")})
+-- 	end
+-- 
+-- end
+-- 
+-- function on_input(self, action_id, action)
+-- 	if action_id == hash("click") and action.pressed then
+-- 		if currCum == 0 then
+-- 			sound.play("Tora1#sound", {delay = 0, gain = 0.5, pan = -1.0, speed = 1.25})
+-- 			go.animate("Tora1", "position.y", go.PLAYBACK_ONCE_BACKWARD, 10, go.EASING_OUTBACK, 0.3, 0)
+-- 			go.animate("Tora1", "position.x", go.PLAYBACK_ONCE_BACKWARD, 180, go.EASING_OUTBACK, 0.3, 0)
+-- 			go.animate(".", "position.x", go.PLAYBACK_ONCE_PINGPONG, 510, go.EASING_LINEAR, 0.1,0)
+-- 			particlefx.play("Cum1")
+-- 			particlefx.play("SkinTear")
+-- 			currCum = 1
+-- 		elseif currCum == 1 then
+-- 			sound.play("Tora2#sound", {delay = 0, gain = 0.5, pan = 1.0, speed = 1.50})
+-- 			go.animate("Tora2", "position.y", go.PLAYBACK_ONCE_BACKWARD, -35, go.EASING_OUTBACK, 0.3, 0)
+-- 			go.animate("Tora2", "position.x", go.PLAYBACK_ONCE_BACKWARD, 763, go.EASING_OUTBACK, 0.3, 0)
+-- 			go.animate(".", "position.x", go.PLAYBACK_ONCE_PINGPONG, 495, go.EASING_LINEAR, 0.1,0)
+-- 			particlefx.play("Cum2")
+-- 			particlefx.play("SkinTear")
+-- 			currCum = 0
+-- 		elseif currCum > 1 and numCums > 65 then
+-- 			msg.post("main:/controler#controler", "show_menu")
+-- 		end
+-- 		numCums = numCums + 1
+-- 		if numCums == 45 then
+-- 			go.animate("Jovem", "position.y", go.PLAYBACK_ONCE_BACKWARD, 50, go.EASING_OUTBACK, 0.7, 0)
+-- 			sound.play("Jovem#sound", {delay = 0, gain = 2, pan = 0, speed = 1.00})
+-- 		elseif numCums == 50 then
+-- 			sound.play("FinishHim#finishhim", {delay = 0, gain = 2, pan = 0, speed = 1.00})
+-- 			local pos = go.get_position();
+-- 			pos.x = 525
+-- 			pos.y = 575
+-- 			local finishhim = factory.create("FinishHim#factory", pos)
+-- 			go.animate(finishhim, "position.x", go.PLAYBACK_LOOP_PINGPONG, 510, go.EASING_LINEAR, 0.05, 0)
+-- 		elseif numCums == 60 then
+-- 			numCums = numCums + 1
+-- 			sound.play("FinishHim#fatality", {delay = 0, gain = 2, pan = 0, speed = 1.00})
+-- 			currCum = 2
+-- 		end
+-- 	end
+-- end
+-- 
+-- function on_reload(self)
+-- 	currCum = 0
+-- 	numCums = 0
+-- 	vibrarion = 5
+-- 	ignoreInput = false
+-- 	msg.post("#sprite", "play_animation", {id = hash("geleia1")})
+-- end
+-- 
