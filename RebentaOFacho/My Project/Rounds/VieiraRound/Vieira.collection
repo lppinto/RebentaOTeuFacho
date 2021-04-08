@@ -788,7 +788,7 @@ embedded_instances {
   id: "SkinTear"
   data: "components {\n"
   "  id: \"skin\"\n"
-  "  component: \"/Rounds/GeleiaRound/Geleia_facho/skin.particlefx\"\n"
+  "  component: \"/Rounds/GeleiaRound/skin.particlefx\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"

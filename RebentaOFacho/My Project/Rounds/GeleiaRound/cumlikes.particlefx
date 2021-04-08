@@ -2,11 +2,11 @@ emitters {
   id: "emitter"
   mode: PLAY_MODE_ONCE
   duration: 1.0
-  space: EMISSION_SPACE_WORLD
+  space: EMISSION_SPACE_EMITTER
   position {
     x: 0.0
-    y: 1.0
-    z: 0.2
+    y: 0.0
+    z: 0.0
   }
   rotation {
     x: 0.0
@@ -14,8 +14,8 @@ emitters {
     z: 0.0
     w: 1.0
   }
-  tile_source: "/Rounds/GeleiaRound/Geleia_facho/Geleia.atlas"
-  animation: "smile"
+  tile_source: "/Rounds/GeleiaRound/Geleia.atlas"
+  animation: "like"
   material: "/builtins/materials/particlefx.material"
   blend_mode: BLEND_MODE_ALPHA
   particle_orientation: PARTICLE_ORIENTATION_DEFAULT
@@ -272,7 +272,7 @@ emitters {
       t_y: 0.0
     }
   }
-  size_mode: SIZE_MODE_MANUAL
+  size_mode: SIZE_MODE_AUTO
   start_delay_spread: 0.0
   duration_spread: 0.0
   stretch_with_velocity: false

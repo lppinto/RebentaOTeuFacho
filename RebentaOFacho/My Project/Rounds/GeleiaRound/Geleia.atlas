@@ -1,49 +1,49 @@
 images {
-  image: "/Rounds/GeleiaRound/Geleia_facho/geleia1.png"
+  image: "/Rounds/GeleiaRound/Images/geleia1.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/GeleiaRound/Geleia_facho/geleia2.png"
+  image: "/Rounds/GeleiaRound/Images/geleia2.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/GeleiaRound/Geleia_facho/geleia3.png"
+  image: "/Rounds/GeleiaRound/Images/geleia3.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/GeleiaRound/Geleia_facho/geleia4.png"
+  image: "/Rounds/GeleiaRound/Images/geleia4.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/GeleiaRound/Geleia_facho/geleia5.png"
+  image: "/Rounds/GeleiaRound/Images/geleia5.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/GeleiaRound/Geleia_facho/geleia6.png"
+  image: "/Rounds/GeleiaRound/Images/geleia6.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/GeleiaRound/tora1.png"
+  image: "/Rounds/GeleiaRound/Images/tora1.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/GeleiaRound/tora2.png"
+  image: "/Rounds/GeleiaRound/Images/tora2.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/GeleiaRound/like.png"
+  image: "/Rounds/GeleiaRound/Images/like.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/GeleiaRound/smile.png"
+  image: "/Rounds/GeleiaRound/Images/smile.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/GeleiaRound/skinpiece.png"
+  image: "/Rounds/GeleiaRound/Images/skinpiece.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/GeleiaRound/Geleia_facho/Jovem.png"
+  image: "/Rounds/GeleiaRound/Images/Jovem.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 margin: 0
