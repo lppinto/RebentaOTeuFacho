@@ -1,4 +1,4 @@
-local nextPunch = "Left"
+local nextCum = "Left"
 local numHits = 0
 local finish_hits = 1
 local cut_hits = 1
@@ -11,7 +11,7 @@ local computed_points = false
 local num_combos = 0
 local game_won = false
 local start = false
-local dificulty = "hard"
+local dificulty = "easy"
 local clicks_to_finish = 5
 
 -- Damage levels / game states
@@ -54,7 +54,7 @@ local function combo_off(self, handle, elapsed)
 end
 
 function start_game()
-	go.animate("Geleia", "position.x", go.PLAYBACK_LOOP_PINGPONG, 490, go.EASING_INOUTSINE, 0.5,0)
+	go.animate("Geleia", "position.x", go.PLAYBACK_LOOP_PINGPONG, 485, go.EASING_INOUTSINE, 0.2,0)
 
 	if dificulty == "hard" then		
 		go.animate("Shield", "position.y", go.PLAYBACK_LOOP_PINGPONG, 125, go.EASING_INOUTSINE, 1,0)
@@ -96,8 +96,9 @@ function init(self)
 
 	-- Save initial positions
 	geleia_inner_init_pos = go.get_position("geleia:/inner")
+	geleia_inner_init_scale = go.get_scale("geleia:/inner")
 	toradireita_init_pos = go.get_position("Tora_direita")
-	socoesquerdo_init_pos = go.get_position("Tora_esquerda")
+	toraesquerda_init_pos = go.get_position("Tora_esquerda")
 
 	-- Hide initial objects not be seen
 	msg.post("laser_left", "disable")
@@ -109,6 +110,8 @@ function init(self)
 
 	label.set_text("Cenario#Elapsed", string.format("%d", total_left))
 
+	-- for testing now
+	start = true
 	start_game()
 end
 
@@ -156,48 +159,115 @@ function check_game_level(hits)
 	end
 end
 
--- local finish_ready = 0
--- function prepare_finish (self, handle, elapsed)
--- 	finish_ready = finish_ready + elapsed
--- 
--- 	if finish_ready >= 2 then
--- 		slash = true
--- 		nextPunch = "Right"
--- 
--- 		-- Let's finish the bastard
--- 		curr_level = FINISHING_LEVEL
--- 		timer.cancel(handle)
--- 	elseif finish_ready >= 1.5 then
--- 		-- Set slash mode for fatality
--- 		go.set("socoesquerdo", "position.x", 850)
--- 		socoesquerdo_init_pos = go.get_position("socoesquerdo")
--- 		msg.post("socoesquerdo#sprite", "play_animation", {id = hash("punch_right_claws")})
--- 		sound.play("socoesquerdo#clawup", {delay = 0, gain = 3, pan = 1.0, speed = 1.1})	
--- 	elseif finish_ready >= 1 then
--- 		-- Set slash mode for fatality
--- 		go.set("socodireito", "position.x", 200)
--- 		socodireito_init_pos = go.get_position("socodireito")
--- 		msg.post("socodireito#sprite", "play_animation", {id = hash("punch_left_claws")})
--- 		sound.play("socodireito#clawup", {delay = 0, gain = 3, pan = -1.0, speed = 1.0})
--- 	elseif finish_ready >= .5 then
--- 		sound.play("FinishHim#finishhim", {delay = 0, gain = 2, pan = 0, speed = 1.00})
--- 		-- Show finish him sign
--- 		local pos = vmath.vector3()
--- 		pos.x = 525
--- 		pos.y = 575
--- 		pos.z = 0.5
--- 		local finishhim = factory.create("FinishHim#factory", pos)
--- 		go.animate(finishhim, "position.x", go.PLAYBACK_LOOP_PINGPONG, 510, go.EASING_LINEAR, 0.05, 0)	
--- 
--- 		-- Put Victim in the middle shaking
--- 		go.cancel_animations("careca", "position.x")
--- 		go.set("careca", "position.x", 500)
--- 		go.animate("careca", "position.x", go.PLAYBACK_LOOP_PINGPONG, 520, go.EASING_LINEAR, 0.1,0)
--- 
--- 		-- Show neck cut
--- 		msg.post("corte", "enable")
--- 	end
--- end
+-- Prepare finish seccion
+
+local function make_angel_pee(self, url, property)
+	particlefx.play("mijo#pee")
+	particlefx.play("peesplash#peesplash")
+	go.animate("sacarneiro", "position.y", go.PLAYBACK_LOOP_PINGPONG, 520, go.EASING_LINEAR, 1, 0)
+	go.animate("sacarneiro", "position.x", go.PLAYBACK_LOOP_PINGPONG, 480, go.EASING_LINEAR, 2, 0)
+end
+
+local function call_angle_from_sky(self, handle, elapsed)
+	go.animate("sacarneiro", "position.y", go.PLAYBACK_ONCE_FORWARD, 530, go.EASING_OUTBACK, 5, 0, make_angel_pee)
+end
+
+local curr_fire_num = 1
+local function increase_fire(self, handle, elapsed)
+	local next_fire_num = curr_fire_num + 1
+	local curr_fire = string.format("fire#fire%d", curr_fire_num)
+	local next_fire = string.format("fire#fire%d", next_fire_num)
+
+	particlefx.play(next_fire)
+	particlefx.stop(curr_fire)
+
+	curr_fire_num = curr_fire_num + 1
+	if curr_fire_num >= 4 then
+		timer.cancel(handle)
+		timer.delay(10, false, call_angle_from_sky)
+	end
+end
+
+local function start_fire(self, handle, elapsed)
+	particlefx.play("fire#fire1")
+	particlefx.play("fire#fire0")
+	sound.play("Geleia#fire_sound", {delay = 0, gain = 2, pan = 0, speed = 1})
+	timer.delay(3, true, increase_fire)
+end
+	
+local turned_laser_right = false
+local function turn_right_laser()
+	if turned_laser_right then return end
+	msg.post("laser_right", "enable")
+	msg.post("laser_right", "play_animation", {id = hash("laser_blue")})
+	sound.play("MecaPenisRight#mega_shoot", {delay = 0, gain = 1, pan = 2, speed = 1.1})
+	sound.play("MecaPenisRight#laser_hum", {delay = 0, gain = 1, pan = 2, speed = 1.1})
+	turned_laser_right = true
+
+	timer.delay(3, false, start_fire)
+end
+
+local turned_laser_left = false
+local function turn_left_laser ()
+	if turned_laser_left then return end
+	msg.post("laser_left", "enable")
+	msg.post("laser_left", "play_animation", {id = hash("laser_red")})
+	sound.play("MecaPenisLeft#mega_shoot", {delay = 0, gain = 1, pan = -2, speed = 1.2})
+	sound.play("MecaPenisLeft#laser_hum", {delay = 0, gain = 1, pan = -2, speed = 1.2})
+	turned_laser_left = true
+end
+
+local turned_on_right = false
+local function turn_on_righ_meca()
+	if turned_on_right then return end
+	msg.post("Penis_right#sprite", "play_animation", {id = hash("mecapenis_on_right")})
+	sound.play("MecaPenisRight#meca_turning_on", {delay = 0, gain = 1, pan = 2, speed = 1.1})
+	turned_on_right = true
+end
+
+local turned_on_left = false
+local function turn_on_left_meca ()
+	if turned_on_left then return end
+	msg.post("Penis_left#sprite", "play_animation", {id = hash("mecapenis_on_left")})
+	sound.play("MecaPenisLeft#meca_turning_on", {delay = 0, gain = 1, pan = -2, speed = 1.2})
+	turned_on_left = true
+end
+
+local curr_meca_iteration = 1;
+local function turn_on_mecas(self, handle, elapsed)
+	if curr_meca_iteration == 1 then
+		turn_on_left_meca()
+	elseif curr_meca_iteration == 2 then
+		turn_on_righ_meca()
+	elseif curr_meca_iteration == 3 then
+		turn_left_laser()
+	elseif curr_meca_iteration == 4 then
+		turn_right_laser()
+	elseif curr_meca_iteration == 5 then
+		timer.cancel(handle)
+	end
+
+	curr_meca_iteration = curr_meca_iteration + 1
+end
+
+local function animate_meca_penis_right (self, url, property)
+	go.animate("MecaPenisRight", "position.x", go.PLAYBACK_ONCE_FORWARD, 885, go.EASING_OUTBACK, 3, 0)
+	sound.play("MecaPenisRight#mega_apearing", {delay = 0, gain = 1, pan = 2, speed = 1.1})
+
+	-- Wait 2 seconds to turn them both on
+	timer.delay(2, true, turn_on_mecas)
+end
+
+local function animate_meca_penis_left()
+	go.animate("MecaPenisLeft", "position.x", go.PLAYBACK_ONCE_FORWARD, 86, go.EASING_OUTBACK, 3, 0, animate_meca_penis_right)
+	sound.play("MecaPenisLeft#mega_apearing", {delay = 0, gain = 1, pan = -2, speed = 1.2})
+end
+
+local finish_ready = 0
+function prepare_finish (self, handle, elapsed)
+	-- Animate meca penis
+	animate_meca_penis_left()
+end
 
 local function comunicate_score(game_won, score)
 	if game_won then
@@ -207,41 +277,18 @@ local function comunicate_score(game_won, score)
 end
 
 local function finish_him ()
--- 	msg.post("careca:/inner#sprite", "play_animation", {id = hash("careca_done")})
--- 	msg.post("Logo", "play_animation", {id = hash("chega_winner")})
--- 	go.animate("Logo", "position.x", go.PLAYBACK_LOOP_PINGPONG, 525, go.EASING_INBOUNCE, 0.5, 0)
--- 	msg.post("corte", "disable")
--- 
--- 	sound.play("FinishHim#fatality", {delay = 0, gain = 2, pan = 0, speed = 1.00})
--- 	sound.play("FinishHim#skullcrack", {delay = 0, gain = 2, pan = 0, speed = 1.00})
--- 
--- 	-- Start cheese stream
--- 	particlefx.play("queijo_stream")
--- 	sound.play("careca:/queijo_stream#slush", {delay = 0, gain = 2, pan = 0, speed = 1.00})
--- 
--- 	-- Shoot careca head
--- 	local pos = vmath.vector3()
--- 	pos.x = 525
--- 	pos.y = 200
--- 	pos.z = 0.4
--- 	local careca_done = factory.create("careca#factory", pos)
--- 	go.animate(careca_done, "position.y", go.PLAYBACK_ONCE_FORWARD, 1000, go.EASING_LINEAR, 0.5, 0, finish_careca_done)
--- 
--- 	sound.play("FinishHim#cheers", {delay = 0, gain = 2, pan = 0, speed = 1.00})
--- 	go.cancel_animations("careca", "position.x")
--- 
--- 	-- Compute file points
--- 	if computed_points == false then
--- 		computed_points = true
--- 		bonus_time = 60 + (total_left * 0.2)
--- 		num_combos = num_combos * .3
--- 		numHits = numHits + bonus_time + num_combos
--- 		numHits = numHits - (numFails * 0.1)
--- 		label.set_text("Cenario#Pontos", string.format("%d", numHits))
--- 	end
--- 
--- 	curr_level = FINAL_RESULT
--- 	game_won = true
+	-- Compute file points
+	if computed_points == false then
+		computed_points = true
+		bonus_time = 60 + (total_left * 0.2)
+		num_combos = num_combos * .3
+		numHits = numHits + bonus_time + num_combos
+		numHits = numHits - (numFails * 0.1)
+		label.set_text("Cenario#Pontos", string.format("%d", numHits))
+	end
+
+	curr_level = FINAL_RESULT
+	game_won = true
 end
 
 function update(self, dt)
@@ -258,7 +305,8 @@ function update(self, dt)
 		end
 	elseif curr_level == PREPARE_FINISH then
 		timer.cancel(game_timer)
-		timer.delay(0.5, true, prepare_finish)
+		timer.delay(0.5, false, prepare_finish)
+		curr_level = WAIT_PREPARE_FINISH
 	elseif curr_level == WAIT_PREPARE_FINISH then
 		return 
 	elseif curr_level == FINISHING_LEVEL then
@@ -293,25 +341,23 @@ local function check_hit(escudo_pos, soco)
 
 	if tora == "Tora_esquerda" then
 		hit_sound = "Tora_esquerda#sound" 		
-		particle_fx = "punch_splash_left"
-		miss_sound = "socoesquerdo#miss_sound"
+		-- miss_sound = "socoesquerdo#miss_sound"
 		sound_speed = 1.0
 		sound_pan = 1
 	elseif tora == "Tora_direita" then
 		hit_sound = "Tora_direita#sound" 
-		particle_fx = "punch_splash_right"
-		miss_sound = "socodireito#miss_sound"
+		-- miss_sound = "socodireito#miss_sound"
 		sound_speed = 1.10
 		sound_pan = -1
 	end
 
 	if escudo_pos.y < -100 then
-		sound.play(hit_sound, {delay = 0, gain = 1, pan = sound_pan, speed = sound_speed})
-		particlefx.play(particle_fx)
+		-- sound.play(hit_sound, {delay = 0, gain = 1, pan = sound_pan, speed = sound_speed})
+		particlefx.play("SkinTear")
 
 		-- shake careca
-		go.set_position(careca_inner_init_pos, "careca:/inner")
-		animate_object("careca:/inner", {"position.y"}, go.PLAYBACK_ONCE_PINGPONG, {20}, go.EASING_OUTBACK, 0.2)
+		go.set_scale(geleia_inner_init_scale, "geleia:/inner")
+		animate_object("geleia:/inner", {"scale.x", "scale.y"}, go.PLAYBACK_ONCE_PINGPONG, {1.1,1.1}, go.EASING_OUTBACK, 0.2)
 		numHits = numHits + 1
 		continuous_hits = continuous_hits + 1
 		wasHit = true
@@ -331,6 +377,11 @@ local function cum_left(escudo_pos)
 	go.set_position(toraesquerda_init_pos, "Tora_esquerda")
 
 	-- animate cum left
+	local movex = toraesquerda_init_pos.x - 50
+	local movey = toraesquerda_init_pos.y - 20
+	animate_object("Tora_esquerda", {"position.x", "position.y"}, go.PLAYBACK_ONCE_PINGPONG, {movex, movey}, go.EASING_OUTBACK, 0.2)
+	particlefx.play("Cum_left")
+	sound.play("Tora_esquerda#sound", {delay = 0, gain = 0.5, pan = -1.0, speed = 1.25})
 	
 	check_hit(escudo_pos, "Tora_esquerda")
 
@@ -341,6 +392,11 @@ local function cum_right(escudo_pos)
 	go.set_position(toradireita_init_pos, "Tora_direita")
 
 	-- animate cum right
+	local movex = toradireita_init_pos.x + 50
+	local movey = toradireita_init_pos.y - 20
+	animate_object("Tora_direita", {"position.x", "position.y"}, go.PLAYBACK_ONCE_PINGPONG, {movex, movey}, go.EASING_OUTBACK, 0.2)
+	particlefx.play("Cum_right")
+	sound.play("Tora_direita#sound", {delay = 0, gain = 0.5, pan = -1.0, speed = 1.25})
 
 	check_hit(escudo_pos, "Tora_direita")
 
@@ -363,14 +419,14 @@ function on_input(self, action_id, action)
 		end
 		return 
 	else
-		local careca_pos = go.get_position("careca")
+		local shield_pos = go.get_position("Shield")
 		if action_id == hash("click") and action.pressed then
-			if nextPunch == "Left" then
-				punch_left(careca_pos)			
-				nextPunch = "Right"
-			elseif nextPunch == "Right" then
-				punch_right(careca_pos)
-				nextPunch = "Left"
+			if nextCum == "Left" then
+				cum_left(shield_pos)			
+				nextCum = "Right"
+			elseif nextCum == "Right" then
+				cum_right(shield_pos)
+				nextCum = "Left"
 			end
 
 			if curr_level == FINISHING_LEVEL then

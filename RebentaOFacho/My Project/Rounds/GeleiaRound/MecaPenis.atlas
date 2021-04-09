@@ -1,17 +1,17 @@
 images {
-  image: "/Rounds/GeleiaRound/Images/mecap\303\251nis_off_left.png"
+  image: "/Rounds/GeleiaRound/Images/mecapenis_off_left.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/GeleiaRound/Images/mecap\303\251nis_on_blue.png"
+  image: "/Rounds/GeleiaRound/Images/mecapenis_on_left.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/GeleiaRound/Images/mecap\303\251nis_on_red.png"
+  image: "/Rounds/GeleiaRound/Images/mecapenis_on_right.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/GeleiaRound/Images/mecap\303\251nis_off_right.png"
+  image: "/Rounds/GeleiaRound/Images/mecapenis_off_right.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 animations {
@@ -24,8 +24,8 @@ animations {
     image: "/Rounds/GeleiaRound/Images/laser_blue2.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
-  playback: PLAYBACK_LOOP_FORWARD
-  fps: 60
+  playback: PLAYBACK_LOOP_PINGPONG
+  fps: 25
   flip_horizontal: 0
   flip_vertical: 0
 }
@@ -39,8 +39,8 @@ animations {
     image: "/Rounds/GeleiaRound/Images/laser_red2.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
-  playback: PLAYBACK_LOOP_FORWARD
-  fps: 60
+  playback: PLAYBACK_LOOP_PINGPONG
+  fps: 25
   flip_horizontal: 0
   flip_vertical: 0
 }

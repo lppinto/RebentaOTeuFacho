@@ -19,3 +19,6 @@ developer = Filho do Damata
 splash_image = /main/Menu/Images/splash_screen.png
 scale_mode = downscale_fit
 
+[particle_fx]
+max_particle_count = 4096
+

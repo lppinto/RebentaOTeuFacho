@@ -2,10 +2,10 @@ emitters {
   id: "emitter"
   mode: PLAY_MODE_LOOP
   duration: 1.0
-  space: EMISSION_SPACE_WORLD
+  space: EMISSION_SPACE_EMITTER
   position {
     x: 0.0
-    y: 0.0
+    y: 5.0
     z: 0.0
   }
   rotation {
@@ -14,10 +14,10 @@ emitters {
     z: 0.0
     w: 1.0
   }
-  tile_source: "/Rounds/GeleiaRound/sacarneiro.atlas"
-  animation: "pee"
+  tile_source: "/Rounds/GeleiaRound/fire.atlas"
+  animation: "fire"
   material: "/builtins/materials/particlefx.material"
-  blend_mode: BLEND_MODE_ALPHA
+  blend_mode: BLEND_MODE_ADD
   particle_orientation: PARTICLE_ORIENTATION_MOVEMENT_DIRECTION
   inherit_velocity: 0.0
   max_particle_count: 1000
@@ -27,7 +27,7 @@ emitters {
     key: EMITTER_KEY_SPAWN_RATE
     points {
       x: 0.0
-      y: 400.0
+      y: 500.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -37,7 +37,7 @@ emitters {
     key: EMITTER_KEY_SIZE_X
     points {
       x: 0.0
-      y: 20.0
+      y: 135.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -67,7 +67,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_LIFE_TIME
     points {
       x: 0.0
-      y: 0.8
+      y: 2.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -77,7 +77,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_SPEED
     points {
       x: 0.0
-      y: 40.0
+      y: 80.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -87,7 +87,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_SIZE
     points {
       x: 0.0
-      y: 8.0
+      y: 40.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -277,7 +277,7 @@ emitters {
     use_direction: 0
     position {
       x: 0.0
-      y: 16.0
+      y: -31.0
       z: 0.0
     }
     rotation {
@@ -290,7 +290,7 @@ emitters {
       key: MODIFIER_KEY_MAGNITUDE
       points {
         x: 0.0
-        y: 150.0
+        y: 60.0
         t_x: 1.0
         t_y: 0.0
       }
@@ -300,7 +300,7 @@ emitters {
       key: MODIFIER_KEY_MAX_DISTANCE
       points {
         x: 0.0
-        y: 1000.0
+        y: 300.0
         t_x: 1.0
         t_y: 0.0
       }
