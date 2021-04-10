@@ -1,31 +1,38 @@
-images {
-  image: "/Rounds/GeleiaRound/Images/asa_direita.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
-  image: "/Rounds/GeleiaRound/Images/asa_esquerda.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
-  image: "/Rounds/GeleiaRound/Images/bebe_sa_carneiro.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
 animations {
   id: "pee"
   images {
-    image: "/Rounds/GeleiaRound/Images/pee_drop1.png"
+    image: "/Rounds/GeleiaRound/Images/drop_piss1.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   images {
-    image: "/Rounds/GeleiaRound/Images/pee_drop2.png"
+    image: "/Rounds/GeleiaRound/Images/drop_piss2.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   images {
-    image: "/Rounds/GeleiaRound/Images/pee_drop3.png"
+    image: "/Rounds/GeleiaRound/Images/drop_piss3.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/Rounds/GeleiaRound/Images/drop_piss4.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_LOOP_PINGPONG
+  fps: 10
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "bebe"
+  images {
+    image: "/Rounds/GeleiaRound/Images/bebe_sa_carneiro_1.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/Rounds/GeleiaRound/Images/bebe_sa_carneiro_2.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_LOOP_FORWARD
-  fps: 25
+  fps: 10
   flip_horizontal: 0
   flip_vertical: 0
 }

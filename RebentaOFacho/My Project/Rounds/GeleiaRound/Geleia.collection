@@ -646,7 +646,7 @@ embedded_instances {
   ""
   position {
     x: 874.0
-    y: -86.0
+    y: -70.0
     z: 0.5
   }
   rotation {
@@ -1052,13 +1052,11 @@ embedded_instances {
 }
 embedded_instances {
   id: "beb\303\251"
-  children: "asadireita"
-  children: "asaesquerda"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
   "  data: \"tile_set: \\\"/Rounds/GeleiaRound/sacarneiro.atlas\\\"\\n"
-  "default_animation: \\\"bebe_sa_carneiro\\\"\\n"
+  "default_animation: \\\"bebe\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"
@@ -1079,86 +1077,6 @@ embedded_instances {
     x: 0.0
     y: 0.0
     z: 0.2
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-embedded_instances {
-  id: "asadireita"
-  data: "embedded_components {\n"
-  "  id: \"sprite\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/GeleiaRound/sacarneiro.atlas\\\"\\n"
-  "default_animation: \\\"asa_direita\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 113.0\n"
-  "    y: 19.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  ""
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-embedded_instances {
-  id: "asaesquerda"
-  data: "embedded_components {\n"
-  "  id: \"sprite\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/GeleiaRound/sacarneiro.atlas\\\"\\n"
-  "default_animation: \\\"asa_esquerda\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: -117.0\n"
-  "    y: 19.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  ""
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
   }
   rotation {
     x: 0.0
@@ -1411,6 +1329,8 @@ embedded_instances {
   id: "inner"
   children: "fire"
   children: "peesplash"
+  children: "salazar_sad"
+  children: "skull"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
@@ -1576,6 +1496,207 @@ embedded_instances {
   scale3 {
     x: 4.384
     y: 2.291
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "lighter_right"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/GeleiaRound/Geleia.atlas\\\"\\n"
+  "default_animation: \\\"lighter_right\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 849.0
+    y: -100.0
+    z: 0.4
+  }
+  rotation {
+    x: -2.5191295E-16
+    y: -1.8724793E-17
+    z: 0.29976466
+    w: 0.95401317
+  }
+  scale3 {
+    x: 0.8
+    y: 0.8
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "lighter_left"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/GeleiaRound/Geleia.atlas\\\"\\n"
+  "default_animation: \\\"lighter_left\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 92.0
+    y: -100.0
+    z: 0.4
+  }
+  rotation {
+    x: 1.5120892E-16
+    y: 1.8597671E-16
+    z: -0.32066557
+    w: 0.9471925
+  }
+  scale3 {
+    x: 0.8
+    y: 0.8
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "salazar_sad"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/GeleiaRound/Geleia.atlas\\\"\\n"
+  "default_animation: \\\"salazar_face\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 5.785
+    y: -2.555
+    z: 0.4
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "skull"
+  children: "teeth"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/GeleiaRound/Geleia.atlas\\\"\\n"
+  "default_animation: \\\"skull\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 2.48
+    y: 5.963
+    z: 0.4
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 0.993
+    y: 0.96
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "teeth"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/GeleiaRound/Geleia.atlas\\\"\\n"
+  "default_animation: \\\"skull_teeth\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: -49.936\n"
+  "    y: -26.618\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 45.781
+    y: -71.373
+    z: 0.4
+  }
+  rotation {
+    x: 1.07903785E-16
+    y: -1.889061E-16
+    z: -0.008440476
+    w: 0.99996436
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
     z: 1.0
   }
 }

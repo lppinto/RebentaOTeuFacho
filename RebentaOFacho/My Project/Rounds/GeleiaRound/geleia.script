@@ -19,12 +19,17 @@ local LEVEL0 = 1
 local LEVEL1 = 2
 local LEVEL2 = 3
 local LEVEL3 = 4
-local PREPARE_FINISH = 5
-local WAIT_PREPARE_FINISH = 6
-local FINISHING_LEVEL = 7
-local FINISH_HIM = 8
-local FINAL_RESULT = 9
-local GAME_END = 10
+local LEVEL4 = 5
+local LEVEL5 = 6
+local LEVEL6 = 7
+local LEVEL7 = 8
+local LEVEL8 = 9
+local PREPARE_FINISH = 10
+local WAIT_PREPARE_FINISH = 11
+local FINISHING_LEVEL = 12
+local FINISH_HIM = 13
+local FINAL_RESULT = 14
+local GAME_END = 15
 local curr_level = LEVEL0
 
 -- Initial object positions
@@ -147,11 +152,21 @@ function check_game_level(hits)
 	if curr_level < PREPARE_FINISH then
 		if numHits >= 60 then
 			curr_level = PREPARE_FINISH
-		elseif numHits >= 45 then
-			curr_level = LEVEL3
+		elseif numHits >= 48 then
+			curr_level = LEVEL8
+		elseif numHits >= 42 then
+			curr_level = LEVEL7
+		elseif numHits >= 36 then
+			curr_level = LEVEL6
 		elseif numHits >= 30 then
+			curr_level = LEVEL5
+		elseif numHits >= 24 then
+			curr_level = LEVEL4
+		elseif numHits >= 18 then
+			curr_level = LEVEL3
+		elseif numHits >= 12 then
 			curr_level = LEVEL2
-		elseif numHits >= 15 then
+		elseif numHits >= 6 then
 			curr_level = LEVEL1
 		elseif numHits >= 0 then
 			curr_level = LEVEL0
@@ -169,6 +184,7 @@ local function make_angel_pee(self, url, property)
 end
 
 local function call_angle_from_sky(self, handle, elapsed)
+	msg.post("bebé#sprite", "play_animation", {id = hash("bebe")})
 	go.animate("sacarneiro", "position.y", go.PLAYBACK_ONCE_FORWARD, 530, go.EASING_OUTBACK, 5, 0, make_angel_pee)
 end
 
@@ -298,7 +314,15 @@ function update(self, dt)
 
 	check_game_level (numHits)
 
-	if curr_level == LEVEL0 or curr_level == LEVEL1 or curr_level == LEVEL2 or curr_level == LEVEL3 then
+	if curr_level == LEVEL0 or 
+	curr_level == LEVEL1 or 
+	curr_level == LEVEL2 or 
+	curr_level == LEVEL3 or
+	curr_level == LEVEL4 or
+	curr_level == LEVEL5 or
+	curr_level == LEVEL6 or
+	curr_level == LEVEL7 or
+	curr_level == LEVEL8 then
 		if wasHit then
 			wasHit = false
 			msg.post("geleia:/inner#sprite", "play_animation", {id = hash(string.format("geleia%d", curr_level))})
