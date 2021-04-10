@@ -309,7 +309,7 @@ embedded_instances {
   position {
     x: 108.0
     y: 0.0
-    z: 0.4
+    z: 0.5
   }
   rotation {
     x: 0.0
@@ -318,8 +318,8 @@ embedded_instances {
     w: 0.8433914
   }
   scale3 {
-    x: 0.26
-    y: 0.26
+    x: 0.5
+    y: 0.5
     z: 1.0
   }
 }
@@ -371,8 +371,8 @@ embedded_instances {
   ""
   position {
     x: 854.0
-    y: -2.0
-    z: 0.4
+    y: 0.0
+    z: 0.5
   }
   rotation {
     x: 0.0
@@ -381,8 +381,8 @@ embedded_instances {
     w: 0.8433914
   }
   scale3 {
-    x: 0.28
-    y: 0.28
+    x: 0.5
+    y: 0.5
     z: 1.0
   }
 }
@@ -893,7 +893,7 @@ embedded_instances {
   id: "Geleia"
   children: "inner"
   data: "components {\n"
-  "  id: \"geleia\"\n"
+  "  id: \"geleia_script\"\n"
   "  component: \"/Rounds/GeleiaRound/geleia.script\"\n"
   "  position {\n"
   "    x: 0.0\n"
@@ -1032,10 +1032,33 @@ embedded_instances {
   id: "sacarneiro"
   children: "beb\303\251"
   children: "mijo"
-  data: ""
+  data: "embedded_components {\n"
+  "  id: \"sound\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Rounds/GeleiaRound/Sounds/angel_sound.ogg\\\"\\n"
+  "looping: 1\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
   position {
-    x: 450.0
-    y: 767.0
+    x: 460.0
+    y: 766.0
     z: 0.2
   }
   rotation {
@@ -1109,8 +1132,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 37.143
-    y: -234.286
+    x: 32.699
+    y: -229.842
     z: 0.2
   }
   rotation {
@@ -1151,7 +1174,7 @@ embedded_instances {
   position {
     x: 327.962
     y: -245.428
-    z: 0.2
+    z: 0.3
   }
   rotation {
     x: 8.00401E-17
@@ -1191,7 +1214,7 @@ embedded_instances {
   position {
     x: -331.49
     y: -251.741
-    z: 0.2
+    z: 0.3
   }
   rotation {
     x: -9.465379E-14
@@ -1207,6 +1230,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "Logo"
+  children: "logo_fire"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
@@ -1327,31 +1351,11 @@ embedded_instances {
 }
 embedded_instances {
   id: "inner"
+  children: "destructable"
+  children: "empty_geleia"
   children: "fire"
   children: "peesplash"
-  children: "salazar_sad"
-  children: "skull"
-  data: "embedded_components {\n"
-  "  id: \"sprite\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/GeleiaRound/Geleia.atlas\\\"\\n"
-  "default_animation: \\\"geleia1\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.1\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  ""
+  data: ""
   position {
     x: 0.0
     y: 0.0
@@ -1501,6 +1505,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "lighter_right"
+  children: "fuel_right"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
@@ -1508,6 +1513,29 @@ embedded_instances {
   "default_animation: \\\"lighter_right\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"sound\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Common/Sounds/espreme.ogg\\\"\\n"
+  "looping: 0\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
@@ -1541,6 +1569,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "lighter_left"
+  children: "fuel_left"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
@@ -1548,6 +1577,29 @@ embedded_instances {
   "default_animation: \\\"lighter_left\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"sound\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Common/Sounds/espreme.ogg\\\"\\n"
+  "looping: 0\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
@@ -1580,6 +1632,173 @@ embedded_instances {
   }
 }
 embedded_instances {
+  id: "empty_geleia"
+  children: "empty_face"
+  children: "salazar_sad"
+  children: "skull"
+  data: ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "empty_face"
+  data: "embedded_components {\n"
+  "  id: \"geleia_empty\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/GeleiaRound/Geleia.atlas\\\"\\n"
+  "default_animation: \\\"geleia_empty\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: -1.665\n"
+  "    y: 0.0\n"
+  "    z: 0.1\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "skull"
+  children: "skull_teeth"
+  data: "embedded_components {\n"
+  "  id: \"skull_sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/GeleiaRound/Geleia.atlas\\\"\\n"
+  "default_animation: \\\"skull\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"screem\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Rounds/GeleiaRound/Sounds/skull_screem.ogg\\\"\\n"
+  "looping: 0\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 1.665
+    y: 16.858
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "skull_teeth"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/GeleiaRound/Geleia.atlas\\\"\\n"
+  "default_animation: \\\"skull_teeth\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: -49.936\n"
+  "    y: -26.618\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 49.913
+    y: -71.373
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
   id: "salazar_sad"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
@@ -1603,9 +1822,9 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 5.785
+    x: 4.12
     y: -2.555
-    z: 0.4
+    z: 0.0
   }
   rotation {
     x: 0.0
@@ -1620,16 +1839,10 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "skull"
-  children: "teeth"
-  data: "embedded_components {\n"
-  "  id: \"sprite\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/GeleiaRound/Geleia.atlas\\\"\\n"
-  "default_animation: \\\"skull\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "\"\n"
+  id: "logo_fire"
+  data: "components {\n"
+  "  id: \"logo_fire1\"\n"
+  "  component: \"/Rounds/GeleiaRound/Particles/Fire/fire1.particlefx\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
@@ -1642,11 +1855,41 @@ embedded_instances {
   "    w: 1.0\n"
   "  }\n"
   "}\n"
+  "components {\n"
+  "  id: \"logo_fire2\"\n"
+  "  component: \"/Rounds/GeleiaRound/Particles/Fire/fire1.particlefx\"\n"
+  "  position {\n"
+  "    x: 112.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "components {\n"
+  "  id: \"logo_fire3\"\n"
+  "  component: \"/Rounds/GeleiaRound/Particles/Fire/fire1.particlefx\"\n"
+  "  position {\n"
+  "    x: 218.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
   ""
   position {
-    x: 2.48
-    y: 5.963
-    z: 0.4
+    x: -109.0
+    y: -73.0
+    z: 0.0
   }
   rotation {
     x: 0.0
@@ -1655,24 +1898,59 @@ embedded_instances {
     w: 1.0
   }
   scale3 {
-    x: 0.993
-    y: 0.96
+    x: 1.0
+    y: 1.0
     z: 1.0
   }
 }
 embedded_instances {
-  id: "teeth"
+  id: "destructable"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
   "  data: \"tile_set: \\\"/Rounds/GeleiaRound/Geleia.atlas\\\"\\n"
-  "default_animation: \\\"skull_teeth\\\"\\n"
+  "default_animation: \\\"geleia1\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"
   "  position {\n"
-  "    x: -49.936\n"
-  "    y: -26.618\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.1\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "fuel_left"
+  data: "components {\n"
+  "  id: \"fuel_stream\"\n"
+  "  component: \"/Rounds/GeleiaRound/Particles/Fire/fuel_stream_left.particlefx\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
   "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
@@ -1684,15 +1962,50 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 45.781
-    y: -71.373
-    z: 0.4
+    x: 123.181
+    y: 168.161
+    z: 0.0
   }
   rotation {
-    x: 1.07903785E-16
-    y: -1.889061E-16
-    z: -0.008440476
-    w: 0.99996436
+    x: 0.0
+    y: 0.0
+    z: -0.21643962
+    w: 0.976296
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "fuel_right"
+  data: "components {\n"
+  "  id: \"fuel_stream\"\n"
+  "  component: \"/Rounds/GeleiaRound/Particles/Fire/fuel_stream_right.particlefx\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -121.564
+    y: 173.147
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.21643962
+    w: 0.976296
   }
   scale3 {
     x: 1.0

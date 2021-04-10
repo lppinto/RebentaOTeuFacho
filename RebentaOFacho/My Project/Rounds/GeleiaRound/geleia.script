@@ -13,6 +13,7 @@ local game_won = false
 local start = false
 local dificulty = "easy"
 local clicks_to_finish = 5
+local fuel_hits = 0
 
 -- Damage levels / game states
 local LEVEL0 = 1
@@ -32,10 +33,20 @@ local FINAL_RESULT = 14
 local GAME_END = 15
 local curr_level = LEVEL0
 
+local FIRE_LEVEL0 = 0
+local FIRE_LEVEL1 = 1
+local FIRE_LEVEL2 = 2
+local FIRE_LEVEL3 = 3
+local FIRE_LEVEL4 = 4
+local curr_fire_level = -1
+
 -- Initial object positions
+local shield_init_pos = nil
 local geleia_inner_init_pos = nil
 local toradireita_init_pos = nil
 local toraesquerda_init_pos = nil
+local lighterRight_init_pos = nil
+local lighterLeft_init_pos = nil
 
 -- Time passed for the game
 local total_left = 30
@@ -62,7 +73,7 @@ function start_game()
 	go.animate("Geleia", "position.x", go.PLAYBACK_LOOP_PINGPONG, 485, go.EASING_INOUTSINE, 0.2,0)
 
 	if dificulty == "hard" then		
-		go.animate("Shield", "position.y", go.PLAYBACK_LOOP_PINGPONG, 125, go.EASING_INOUTSINE, 1,0)
+		go.animate("Shield", "position.y", go.PLAYBACK_LOOP_PINGPONG, 125, go.EASING_INOUTSINE, 1.5,0)
 	end
 
 	game_timer = timer.delay(1,true,time_passed)
@@ -88,7 +99,7 @@ end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	msg.post("geleia:/inner#sprite", "play_animation", {id = hash("geleia1")})
+	msg.post("geleia:/destructable#sprite", "play_animation", {id = hash("geleia1")})
 	print (options)
 	nextPunch = "Left"
 	numHits = 0
@@ -100,24 +111,23 @@ function init(self)
 	num_combos = 0
 
 	-- Save initial positions
-	geleia_inner_init_pos = go.get_position("geleia:/inner")
-	geleia_inner_init_scale = go.get_scale("geleia:/inner")
+	shield_init_pos = go.get_position("geleia:/Shield")
+	geleia_inner_init_pos = go.get_position("geleia:/destructable")
+	geleia_inner_init_scale = go.get_scale("geleia:/destructable")
 	toradireita_init_pos = go.get_position("Tora_direita")
 	toraesquerda_init_pos = go.get_position("Tora_esquerda")
 
 	-- Hide initial objects not be seen
 	msg.post("laser_left", "disable")
 	msg.post("laser_right", "disable")
-	
-	-- msg.post("corte", "disable")
-	-- msg.post("careca_laughs", "disable")
-	-- msg.post("boca", "disable")
+
+	-- Hide finishing face states
+	msg.post("empty_face", "disable")
+	msg.post("salazar_sad", "disable")
+	msg.post("skull", "disable")
+	msg.post("skull_teeth", "disable")
 
 	label.set_text("Cenario#Elapsed", string.format("%d", total_left))
-
-	-- for testing now
-	start = true
-	start_game()
 end
 
 -- function laugh_stop(self, handle, elapsed)
@@ -145,7 +155,7 @@ end
 -- end
 
 function check_game_level(hits)
-	if curr_level == FINISHING_LEVEL and numHits >= 80 then
+	if curr_level == FINISHING_LEVEL and numHits >= 110 then
 		curr_level = FINISH_HIM
 	end
 
@@ -174,43 +184,121 @@ function check_game_level(hits)
 	end
 end
 
+function check_fuel_level(fuel_hits)
+	if fuel_hits >= 40 then
+		curr_fire_level = FIRE_LEVEL4
+	elseif fuel_hits >= 30 then
+		curr_fire_level = FIRE_LEVEL3
+	elseif fuel_hits >= 20 then
+		curr_fire_level = FIRE_LEVEL2
+	elseif fuel_hits >= 10 then
+		curr_fire_level = FIRE_LEVEL1
+	elseif fuel_hits >= 5 then
+		curr_fire_level = FIRE_LEVEL0
+	end
+end
+
 -- Prepare finish seccion
+
+local function screem_skull (self, handle, elapsed)
+	-- Make skull screem and jaw drop
+	sound.play("skull#screem", {delay = 0, gain = 3, pan = 0, speed = 1.1})
+	go.animate("skull_teeth", "position.y", go.PLAYBACK_ONCE_FORWARD, -118, go.EASING_LINEAR, 1)
+end
+
+local function finish_him ()
+	timer.delay(3, false, screem_skull)
+	
+	-- Compute file points
+	if computed_points == false then
+		computed_points = true
+		bonus_time = 60 + (total_left * 0.2)
+		num_combos = num_combos * .3
+		numHits = numHits + bonus_time + num_combos
+		numHits = numHits - (numFails * 0.1)
+		label.set_text("Cenario#Pontos", string.format("%d", numHits))
+	end
+
+	curr_level = FINAL_RESULT
+	game_won = true
+end
+
+local function stop_angel_pee()
+	particlefx.stop("mijo#pee")
+	particlefx.stop("peesplash#peesplash")
+end
+
+local put_out_level = FIRE_LEVEL4
+local function put_out_fire(self, handle, elapsed)
+	local prev_level = put_out_level - 1
+	local curr_fire = string.format("fire#fire%d", put_out_level)
+	local next_fire = string.format("fire#fire%d", prev_level)
+
+	particlefx.play(next_fire)
+	particlefx.stop(curr_fire)
+
+	put_out_level = put_out_level - 1
+	if put_out_level < FIRE_LEVEL0 then
+		fire_sound_on = false
+		timer.cancel(handle)
+		stop_angel_pee()
+		curr_level = FINISH_HIM
+	end
+end
+
+local function stop_lasers()
+	msg.post("laser_left", "disable")
+	sound.stop("MecaPenisLeft#laser_hum")
+
+	msg.post("laser_right", "disable")
+	sound.stop("MecaPenisRight#laser_hum")
+end
 
 local function make_angel_pee(self, url, property)
 	particlefx.play("mijo#pee")
 	particlefx.play("peesplash#peesplash")
 	go.animate("sacarneiro", "position.y", go.PLAYBACK_LOOP_PINGPONG, 520, go.EASING_LINEAR, 1, 0)
 	go.animate("sacarneiro", "position.x", go.PLAYBACK_LOOP_PINGPONG, 480, go.EASING_LINEAR, 2, 0)
+
+	stop_lasers ()
+	
+	timer.delay(2, true, put_out_fire)
 end
 
 local function call_angle_from_sky(self, handle, elapsed)
+	-- first transform face into skull
+	msg.post("salazar_sad", "disable")
+	msg.post("skull", "enable")
+	msg.post("skull_teeth", "enable")
+
+	sound.play("sacarneiro#sound", {delay = 0, gain = 2, pan = 0, speed = 1.0})
 	msg.post("bebé#sprite", "play_animation", {id = hash("bebe")})
 	go.animate("sacarneiro", "position.y", go.PLAYBACK_ONCE_FORWARD, 530, go.EASING_OUTBACK, 5, 0, make_angel_pee)
 end
 
-local curr_fire_num = 1
-local function increase_fire(self, handle, elapsed)
-	local next_fire_num = curr_fire_num + 1
-	local curr_fire = string.format("fire#fire%d", curr_fire_num)
-	local next_fire = string.format("fire#fire%d", next_fire_num)
-
-	particlefx.play(next_fire)
-	particlefx.stop(curr_fire)
-
-	curr_fire_num = curr_fire_num + 1
-	if curr_fire_num >= 4 then
-		timer.cancel(handle)
-		timer.delay(10, false, call_angle_from_sky)
-	end
+-- Start Changing Salazar face
+local function change_salazar_face()
+	-- Change to scared salazar
+	msg.post("destructable", "disable")
+	msg.post("empty_face", "enable")
+	msg.post("salazar_sad", "enable")
+	curr_level = FINISHING_LEVEL
 end
 
-local function start_fire(self, handle, elapsed)
-	particlefx.play("fire#fire1")
-	particlefx.play("fire#fire0")
-	sound.play("Geleia#fire_sound", {delay = 0, gain = 2, pan = 0, speed = 1})
-	timer.delay(3, true, increase_fire)
+-- Turn Divine lasers on and change weapons
+
+local function save_lighters_init_positions (self, url, property)
+	lighterRight_init_pos = go.get_position("lighter_right")
+	lighterLeft_init_pos = go.get_position("lighter_left")
 end
-	
+
+local function lower_toras_raise_oil()
+	go.animate("Tora_direita", "position.y", go.PLAYBACK_ONCE_FORWARD, -135, go.EASING_LINEAR, 1,0)
+	go.animate("Tora_esquerda", "position.y", go.PLAYBACK_ONCE_FORWARD, -135, go.EASING_LINEAR, 1,0)
+	go.animate("lighter_right", "position.y", go.PLAYBACK_ONCE_FORWARD, 50, go.EASING_LINEAR, 1,0)
+	go.animate("lighter_left", "position.y", go.PLAYBACK_ONCE_FORWARD, 50, go.EASING_LINEAR, 1,0,save_lighters_init_positions)
+end
+
 local turned_laser_right = false
 local function turn_right_laser()
 	if turned_laser_right then return end
@@ -219,8 +307,6 @@ local function turn_right_laser()
 	sound.play("MecaPenisRight#mega_shoot", {delay = 0, gain = 1, pan = 2, speed = 1.1})
 	sound.play("MecaPenisRight#laser_hum", {delay = 0, gain = 1, pan = 2, speed = 1.1})
 	turned_laser_right = true
-
-	timer.delay(3, false, start_fire)
 end
 
 local turned_laser_left = false
@@ -260,6 +346,10 @@ local function turn_on_mecas(self, handle, elapsed)
 	elseif curr_meca_iteration == 4 then
 		turn_right_laser()
 	elseif curr_meca_iteration == 5 then
+		lower_toras_raise_oil()
+	elseif curr_meca_iteration == 6 then
+		change_salazar_face()
+	elseif curr_meca_iteration == 7 then
 		timer.cancel(handle)
 	end
 
@@ -281,6 +371,10 @@ end
 
 local finish_ready = 0
 function prepare_finish (self, handle, elapsed)
+	-- Stop shield
+	go.set_position(shield_init_pos, "geleia:/Shield")
+	go.cancel_animations("Shield", "position.y")
+	
 	-- Animate meca penis
 	animate_meca_penis_left()
 end
@@ -292,19 +386,36 @@ local function comunicate_score(game_won, score)
 	end
 end
 
-local function finish_him ()
-	-- Compute file points
-	if computed_points == false then
-		computed_points = true
-		bonus_time = 60 + (total_left * 0.2)
-		num_combos = num_combos * .3
-		numHits = numHits + bonus_time + num_combos
-		numHits = numHits - (numFails * 0.1)
-		label.set_text("Cenario#Pontos", string.format("%d", numHits))
+local fire_sound_on = false
+local current_fire_level_on = -1
+function turn_fire_on(level)
+	if fire_sound_on == false and level >= FIRE_LEVEL0 then
+		fire_sound_on = true 
+		sound.play("Geleia#fire_sound", {delay = 0, gain = 2, pan = 0, speed = 1})
 	end
 
-	curr_level = FINAL_RESULT
-	game_won = true
+	if current_fire_level_on == level then
+		return
+	end
+	
+	if level >= FIRE_LEVEL2 then
+		local prev_level = level - 1
+		local curr_fire = string.format("fire#fire%d", prev_level)
+		local next_fire = string.format("fire#fire%d", level)
+
+		particlefx.play(next_fire)
+		particlefx.stop(curr_fire)
+	else
+		local next_fire = string.format("fire#fire%d", level)
+		particlefx.play(next_fire)
+	end
+
+	if level >= FIRE_LEVEL4 then
+		-- Wait 10 secs for the angel to "save" him and finish him
+		timer.delay(10, false, call_angle_from_sky)
+	end
+	
+	current_fire_level_on = level
 end
 
 function update(self, dt)
@@ -325,7 +436,7 @@ function update(self, dt)
 	curr_level == LEVEL8 then
 		if wasHit then
 			wasHit = false
-			msg.post("geleia:/inner#sprite", "play_animation", {id = hash(string.format("geleia%d", curr_level))})
+			msg.post("geleia:/destructable#sprite", "play_animation", {id = hash(string.format("geleia%d", curr_level))})
 		end
 	elseif curr_level == PREPARE_FINISH then
 		timer.cancel(game_timer)
@@ -334,7 +445,10 @@ function update(self, dt)
 	elseif curr_level == WAIT_PREPARE_FINISH then
 		return 
 	elseif curr_level == FINISHING_LEVEL then
-		-- msg.post("careca:/inner#sprite", "play_animation", {id = hash(string.format("%sJab%s", nextPunch, LEVEL3))})
+		-- check fire level and turn it on
+		check_fuel_level(fuel_hits)
+		turn_fire_on(curr_fire_level)
+		return
 	elseif curr_level == FINISH_HIM then
 		finish_him ()
 	elseif curr_level == FINAL_RESULT then 
@@ -355,7 +469,7 @@ function update(self, dt)
 	end
 end
 
-local function check_hit(escudo_pos, soco)
+local function check_hit(escudo_pos, side)
 	local hit_sound = nil
 	local particle_fx = nil
 	local miss_sound = nil
@@ -363,13 +477,11 @@ local function check_hit(escudo_pos, soco)
 	local sound_pan = nil
 	local sound_gain = 1
 
-	if tora == "Tora_esquerda" then
-		hit_sound = "Tora_esquerda#sound" 		
+	if side == "esquerdo" then		
 		-- miss_sound = "socoesquerdo#miss_sound"
 		sound_speed = 1.0
 		sound_pan = 1
-	elseif tora == "Tora_direita" then
-		hit_sound = "Tora_direita#sound" 
+	elseif side == "direito" then
 		-- miss_sound = "socodireito#miss_sound"
 		sound_speed = 1.10
 		sound_pan = -1
@@ -379,9 +491,9 @@ local function check_hit(escudo_pos, soco)
 		-- sound.play(hit_sound, {delay = 0, gain = 1, pan = sound_pan, speed = sound_speed})
 		particlefx.play("SkinTear")
 
-		-- shake careca
-		go.set_scale(geleia_inner_init_scale, "geleia:/inner")
-		animate_object("geleia:/inner", {"scale.x", "scale.y"}, go.PLAYBACK_ONCE_PINGPONG, {1.1,1.1}, go.EASING_OUTBACK, 0.2)
+		-- shake geleia
+		go.set_scale(geleia_inner_init_scale, "geleia:/destructable")
+		animate_object("geleia:/destructable", {"scale.x", "scale.y"}, go.PLAYBACK_ONCE_PINGPONG, {0.98,0.98}, go.EASING_OUTBACK, 0.2)
 		numHits = numHits + 1
 		continuous_hits = continuous_hits + 1
 		wasHit = true
@@ -397,32 +509,53 @@ local function check_hit(escudo_pos, soco)
 	end
 end
 
-local function cum_left(escudo_pos)
-	go.set_position(toraesquerda_init_pos, "Tora_esquerda")
+local function shoot_left(escudo_pos)
+	if curr_level == FINISHING_LEVEL then
+		-- animate fuel lighter
+		go.set_position(lighterLeft_init_pos, "lighter_left")
+		local movex = lighterLeft_init_pos.x - 50
+		local movey = lighterLeft_init_pos.y - 20
+		animate_object("lighter_left", {"position.x", "position.y"}, go.PLAYBACK_ONCE_PINGPONG, {movex, movey}, go.EASING_OUTBACK, 0.2)
+		particlefx.play("fuel_left")
+		sound.play("lighter_left#sound", {delay = 0, gain = 1, pan = 2.0, speed = 1.25})
+		fuel_hits = fuel_hits + 1
+		wasHit = true
+	else
+		-- animate cum left
+		go.set_position(toraesquerda_init_pos, "Tora_esquerda")
+		local movex = toraesquerda_init_pos.x - 50
+		local movey = toraesquerda_init_pos.y - 20
+		animate_object("Tora_esquerda", {"position.x", "position.y"}, go.PLAYBACK_ONCE_PINGPONG, {movex, movey}, go.EASING_OUTBACK, 0.2)
+		particlefx.play("Cum_left")
+		sound.play("Tora_esquerda#sound", {delay = 0, gain = 0.5, pan = -1.0, speed = 1.25})
+		check_hit(escudo_pos, "esquerda")
+	end
 
-	-- animate cum left
-	local movex = toraesquerda_init_pos.x - 50
-	local movey = toraesquerda_init_pos.y - 20
-	animate_object("Tora_esquerda", {"position.x", "position.y"}, go.PLAYBACK_ONCE_PINGPONG, {movex, movey}, go.EASING_OUTBACK, 0.2)
-	particlefx.play("Cum_left")
-	sound.play("Tora_esquerda#sound", {delay = 0, gain = 0.5, pan = -1.0, speed = 1.25})
-	
-	check_hit(escudo_pos, "Tora_esquerda")
 
 	label.set_text("Cenario#Pontos", string.format("%d", numHits))
 end
 
-local function cum_right(escudo_pos)
-	go.set_position(toradireita_init_pos, "Tora_direita")
-
-	-- animate cum right
-	local movex = toradireita_init_pos.x + 50
-	local movey = toradireita_init_pos.y - 20
-	animate_object("Tora_direita", {"position.x", "position.y"}, go.PLAYBACK_ONCE_PINGPONG, {movex, movey}, go.EASING_OUTBACK, 0.2)
-	particlefx.play("Cum_right")
-	sound.play("Tora_direita#sound", {delay = 0, gain = 0.5, pan = -1.0, speed = 1.25})
-
-	check_hit(escudo_pos, "Tora_direita")
+local function shoot_right(escudo_pos)
+	if curr_level == FINISHING_LEVEL then
+		-- animate fuel lighter
+		go.set_position(lighterRight_init_pos, "lighter_right")
+		local movex = lighterRight_init_pos.x + 50
+		local movey = lighterRight_init_pos.y - 20
+		animate_object("lighter_right", {"position.x", "position.y"}, go.PLAYBACK_ONCE_PINGPONG, {movex, movey}, go.EASING_OUTBACK, 0.2)
+		particlefx.play("fuel_right")
+		sound.play("lighter_right#sound", {delay = 0, gain = 1, pan = 2.0, speed = 1.10})
+		fuel_hits = fuel_hits + 1
+		wasHit = true
+	else
+		-- animate cum right
+		go.set_position(toradireita_init_pos, "Tora_direita")
+		local movex = toradireita_init_pos.x + 50
+		local movey = toradireita_init_pos.y - 20
+		animate_object("Tora_direita", {"position.x", "position.y"}, go.PLAYBACK_ONCE_PINGPONG, {movex, movey}, go.EASING_OUTBACK, 0.2)
+		particlefx.play("Cum_right")
+		sound.play("Tora_direita#sound", {delay = 0, gain = 0.5, pan = -1.0, speed = 1.25})
+		check_hit(escudo_pos, "direita")
+	end
 
 	label.set_text("Cenario#Pontos", string.format("%d", numHits))
 end
@@ -432,7 +565,10 @@ function on_input(self, action_id, action)
 		return
 	end
 
-	if curr_level == PREPARE_FINISH or curr_level == WAIT_PREPARE_FINISH or curr_level == FINISH or curr_level == FINAL_RESULT then
+	if curr_level == PREPARE_FINISH or 
+	curr_level == WAIT_PREPARE_FINISH or 
+	curr_level == FINISH_HIM or 
+	curr_level == FINAL_RESULT then
 		return
 	elseif curr_level == GAME_END then
 		if action_id == hash("click") and action.pressed then
@@ -446,10 +582,10 @@ function on_input(self, action_id, action)
 		local shield_pos = go.get_position("Shield")
 		if action_id == hash("click") and action.pressed then
 			if nextCum == "Left" then
-				cum_left(shield_pos)			
+				shoot_left(shield_pos)			
 				nextCum = "Right"
 			elseif nextCum == "Right" then
-				cum_right(shield_pos)
+				shoot_right(shield_pos)
 				nextCum = "Left"
 			end
 
@@ -462,83 +598,3 @@ function on_input(self, action_id, action)
 		end
 	end
 end
-
-
--- local currCum = 0
--- local numCums = 0
--- local vibrarion = 5
--- 
--- function init(self)
--- 	msg.post(".", "acquire_input_focus")
--- 	msg.post("#sprite", "play_animation", {id = hash("geleia1")})
--- 	currCum = 0
--- 	numCums = 0
--- 	vibrarion = 5
--- 	
--- end
--- 
--- function update(self, dt)
--- 	if numCums > 60 then
--- 		msg.post("#sprite", "play_animation", {id = hash("geleia6")})
--- 	elseif numCums > 45 then
--- 		msg.post("#sprite", "play_animation", {id = hash("geleia5")})
--- 	elseif numCums > 35 then
--- 		msg.post("#sprite", "play_animation", {id = hash("geleia4")})
--- 	elseif numCums > 25 then
--- 		msg.post("#sprite", "play_animation", {id = hash("geleia3")})
--- 	elseif numCums > 15 then
--- 		msg.post("#sprite", "play_animation", {id = hash("geleia2")})
--- 	elseif numCums > 0 then
--- 		msg.post("#sprite", "play_animation", {id = hash("geleia1")})
--- 	end
--- 
--- end
--- 
--- function on_input(self, action_id, action)
--- 	if action_id == hash("click") and action.pressed then
--- 		if currCum == 0 then
--- 			sound.play("Tora1#sound", {delay = 0, gain = 0.5, pan = -1.0, speed = 1.25})
--- 			go.animate("Tora1", "position.y", go.PLAYBACK_ONCE_BACKWARD, 10, go.EASING_OUTBACK, 0.3, 0)
--- 			go.animate("Tora1", "position.x", go.PLAYBACK_ONCE_BACKWARD, 180, go.EASING_OUTBACK, 0.3, 0)
--- 			go.animate(".", "position.x", go.PLAYBACK_ONCE_PINGPONG, 510, go.EASING_LINEAR, 0.1,0)
--- 			particlefx.play("Cum1")
--- 			particlefx.play("SkinTear")
--- 			currCum = 1
--- 		elseif currCum == 1 then
--- 			sound.play("Tora2#sound", {delay = 0, gain = 0.5, pan = 1.0, speed = 1.50})
--- 			go.animate("Tora2", "position.y", go.PLAYBACK_ONCE_BACKWARD, -35, go.EASING_OUTBACK, 0.3, 0)
--- 			go.animate("Tora2", "position.x", go.PLAYBACK_ONCE_BACKWARD, 763, go.EASING_OUTBACK, 0.3, 0)
--- 			go.animate(".", "position.x", go.PLAYBACK_ONCE_PINGPONG, 495, go.EASING_LINEAR, 0.1,0)
--- 			particlefx.play("Cum2")
--- 			particlefx.play("SkinTear")
--- 			currCum = 0
--- 		elseif currCum > 1 and numCums > 65 then
--- 			msg.post("main:/controler#controler", "show_menu")
--- 		end
--- 		numCums = numCums + 1
--- 		if numCums == 45 then
--- 			go.animate("Jovem", "position.y", go.PLAYBACK_ONCE_BACKWARD, 50, go.EASING_OUTBACK, 0.7, 0)
--- 			sound.play("Jovem#sound", {delay = 0, gain = 2, pan = 0, speed = 1.00})
--- 		elseif numCums == 50 then
--- 			sound.play("FinishHim#finishhim", {delay = 0, gain = 2, pan = 0, speed = 1.00})
--- 			local pos = go.get_position();
--- 			pos.x = 525
--- 			pos.y = 575
--- 			local finishhim = factory.create("FinishHim#factory", pos)
--- 			go.animate(finishhim, "position.x", go.PLAYBACK_LOOP_PINGPONG, 510, go.EASING_LINEAR, 0.05, 0)
--- 		elseif numCums == 60 then
--- 			numCums = numCums + 1
--- 			sound.play("FinishHim#fatality", {delay = 0, gain = 2, pan = 0, speed = 1.00})
--- 			currCum = 2
--- 		end
--- 	end
--- end
--- 
--- function on_reload(self)
--- 	currCum = 0
--- 	numCums = 0
--- 	vibrarion = 5
--- 	ignoreInput = false
--- 	msg.post("#sprite", "play_animation", {id = hash("geleia1")})
--- end
--- 

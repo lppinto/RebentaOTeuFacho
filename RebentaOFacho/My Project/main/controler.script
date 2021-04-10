@@ -30,7 +30,7 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("vieira_level") then
 		show(self, "#vieiraproxy", "vieira:/vieira#vieira_script")
 	elseif message_id == hash("geleia_level") then
-		show(self, "#geleiaproxy")
+		show(self, "#geleiaproxy", "geleia:/Geleia#geleia_script")
 	elseif message_id == hash("proxy_loaded") then
 		self.current_proxy = sender
 		msg.post(sender, "enable")

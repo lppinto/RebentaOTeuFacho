@@ -82,6 +82,14 @@ images {
   image: "/Rounds/GeleiaRound/Images/skull_teeth.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
+images {
+  image: "/Rounds/GeleiaRound/Images/geleia_boca.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/GeleiaRound/Images/geleia_won.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
 margin: 0
 extrude_borders: 2
 inner_padding: 0
