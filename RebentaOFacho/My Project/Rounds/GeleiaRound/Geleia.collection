@@ -679,6 +679,29 @@ embedded_instances {
   "    w: 1.0\n"
   "  }\n"
   "}\n"
+  "embedded_components {\n"
+  "  id: \"combo\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Common/Sounds/combo.ogg\\\"\\n"
+  "looping: 0\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
   ""
   position {
     x: 233.0
@@ -1029,6 +1052,29 @@ embedded_instances {
   "    w: 1.0\n"
   "  }\n"
   "}\n"
+  "embedded_components {\n"
+  "  id: \"hit\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Rounds/GeleiaRound/Sounds/hitsound.ogg\\\"\\n"
+  "looping: 0\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
   ""
   position {
     x: 480.0
@@ -1240,6 +1286,29 @@ embedded_instances {
   data: "components {\n"
   "  id: \"pee\"\n"
   "  component: \"/Rounds/GeleiaRound/Particles/pee.particlefx\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"pee_noise\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Rounds/GeleiaRound/Sounds/peenoise.ogg\\\"\\n"
+  "looping: 1\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
+  "\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
@@ -1819,6 +1888,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "skull"
+  children: "Tongue"
   children: "skull_teeth"
   data: "embedded_components {\n"
   "  id: \"skull_sprite\"\n"
@@ -1844,12 +1914,12 @@ embedded_instances {
   "  id: \"screem\"\n"
   "  type: \"sound\"\n"
   "  data: \"sound: \\\"/Rounds/GeleiaRound/Sounds/skull_screem.ogg\\\"\\n"
-  "looping: 0\\n"
+  "looping: 1\\n"
   "group: \\\"master\\\"\\n"
   "gain: 1.0\\n"
   "pan: 0.0\\n"
   "speed: 1.0\\n"
-  "loopcount: 0\\n"
+  "loopcount: 2\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
@@ -1906,7 +1976,7 @@ embedded_instances {
   ""
   position {
     x: 49.913
-    y: -71.373
+    y: -70.522
     z: 0.15
   }
   rotation {
@@ -2168,7 +2238,7 @@ embedded_instances {
   "gain: 1.0\\n"
   "pan: 0.0\\n"
   "speed: 1.0\\n"
-  "loopcount: 0\\n"
+  "loopcount: 2\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
@@ -2227,6 +2297,46 @@ embedded_instances {
     x: 0.0
     y: -88.0
     z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "Tongue"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/GeleiaRound/Geleia.atlas\\\"\\n"
+  "default_animation: \\\"tongue\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 0.0
+    y: -107.0
+    z: 0.14
   }
   rotation {
     x: 0.0

@@ -31,10 +31,6 @@ images {
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/GeleiaRound/Images/skinpiece.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
   image: "/Rounds/GeleiaRound/Images/Jovem.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
@@ -81,6 +77,29 @@ images {
 images {
   image: "/Rounds/GeleiaRound/Images/geleia_won.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/GeleiaRound/Images/tongue.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+animations {
+  id: "skinshread"
+  images {
+    image: "/Rounds/GeleiaRound/Images/skinpiece.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/Rounds/GeleiaRound/Images/skinpiece_1.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/Rounds/GeleiaRound/Images/skinpiece_2.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 25
+  flip_horizontal: 0
+  flip_vertical: 0
 }
 margin: 0
 extrude_borders: 2

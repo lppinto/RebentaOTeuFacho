@@ -11,7 +11,7 @@ local computed_points = false
 local num_combos = 0
 local game_won = false
 local start = false
-local dificulty = "easy"
+local dificulty = "hard"
 local clicks_to_finish = 5
 local fuel_hits = 0
 
@@ -130,6 +130,7 @@ function init(self)
 	msg.post("salazar_sad", "disable")
 	msg.post("skull", "disable")
 	msg.post("skull_teeth", "disable")
+	msg.post("Tongue", "disable")
 
 	-- Hide laughing face
 	msg.post("Laugh", "disable")
@@ -161,18 +162,19 @@ function player_loses()
 	msg.post("salazar_sad", "disable")
 	msg.post("skull", "disable")
 	msg.post("skull_teeth", "disable")
+	msg.post("Tongue", "disable")
 
 	-- Show laughing face
 	msg.post("Laugh", "enable")
 	msg.post("boca", "enable")
 	
 	sound.play("FinishHim#looser", {delay = 0, gain = 3, pan = 0, speed = 1})
-	sound.play("FinishHim#booing", {delay = 1, gain = 2, pan = 0, speed = 1})
+	sound.play("FinishHim#booing", {delay = 1, gain = 1, pan = 0, speed = 1})
 
 	-- Animate facho mouth laughing
 	timer.delay(10, false, laugh_stop)
-	go.animate("boca", "position.y", go.PLAYBACK_LOOP_PINGPONG, -115, go.EASING_INELASTIC, 1, 0)
-	sound.play("Laugh#vergonha", {delay = 0, gain = 1, pan = 0, speed = 1})
+	go.animate("boca", "position.y", go.PLAYBACK_LOOP_PINGPONG, -118, go.EASING_INELASTIC, 1, 0)
+	sound.play("Laugh#vergonha", {delay = 0, gain = 3, pan = 0, speed = 1})
 end
 
 function check_game_level(hits)
@@ -224,7 +226,10 @@ end
 local function screem_skull (self, handle, elapsed)
 	-- Make skull screem and jaw drop
 	sound.play("skull#screem", {delay = 0, gain = 3, pan = 0, speed = 1.1})
-	go.animate("skull_teeth", "position.y", go.PLAYBACK_ONCE_FORWARD, -118, go.EASING_LINEAR, 1)
+	go.animate("skull_teeth", "position.y", go.PLAYBACK_ONCE_FORWARD, -118, go.EASING_LINEAR, 1, 0, function()
+		go.animate("skull_teeth", "position.y", go.PLAYBACK_LOOP_PINGPONG, -115, go.EASING_LINEAR, .2, 0)
+		go.animate("Tongue", "position.y", go.PLAYBACK_LOOP_PINGPONG, -112, go.EASING_LINEAR, .1, 0)
+	end)
 
 	sound.play("FinishHim#fatality", {delay = 2, gain = 2, pan = 0, speed = 1})
 end
@@ -247,8 +252,13 @@ local function finish_him ()
 end
 
 local function stop_angel_pee()
+	sound.stop("mijo#pee_noise")
 	particlefx.stop("mijo#pee")
 	particlefx.stop("peesplash#peesplash")
+
+	timer.delay(5, false, function()
+		go.animate("sacarneiro", "position.y", go.PLAYBACK_ONCE_FORWARD, 800, go.EASING_OUTBACK, 5, 0)
+	end)
 end
 
 local put_out_level = FIRE_LEVEL4
@@ -280,6 +290,7 @@ end
 local function make_angel_pee(self, url, property)
 	particlefx.play("mijo#pee")
 	particlefx.play("peesplash#peesplash")
+	sound.play("mijo#pee_noise", {delay = 0, gain = 3, pan = 0, speed = 1})
 	go.animate("sacarneiro", "position.y", go.PLAYBACK_LOOP_PINGPONG, 520, go.EASING_LINEAR, 1, 0)
 	go.animate("sacarneiro", "position.x", go.PLAYBACK_LOOP_PINGPONG, 480, go.EASING_LINEAR, 2, 0)
 
@@ -293,6 +304,7 @@ local function call_angle_from_sky(self, handle, elapsed)
 	msg.post("salazar_sad", "disable")
 	msg.post("skull", "enable")
 	msg.post("skull_teeth", "enable")
+	msg.post("Tongue", "enable")
 
 	-- Make logo start burning
 	particlefx.play("logo_fire")
@@ -309,6 +321,9 @@ local function change_salazar_face()
 	msg.post("empty_face", "enable")
 	msg.post("salazar_sad", "enable")
 
+	-- animate salazar face to be red
+	go.animate("salazar_sad#sprite", "tint.x", go.PLAYBACK_ONCE_FORWARD, 5, go.EASING_LINEAR, 20, 0)
+	
 	-- Show finish him signal
 	
 	sound.play("FinishHim#finishhim", {delay = 0, gain = 2, pan = 0, speed = 1.00})
@@ -318,7 +333,10 @@ local function change_salazar_face()
 	pos.y = 575
 	pos.z = 0.5
 	local finishhim = factory.create("FinishHim#factory", pos)
-	go.animate(finishhim, "position.x", go.PLAYBACK_LOOP_PINGPONG, 510, go.EASING_LINEAR, 0.05, 0)	
+	go.animate(finishhim, "position.x", go.PLAYBACK_LOOP_PINGPONG, 520, go.EASING_LINEAR, 0.2, 0)
+	timer.delay(10, false, function()
+		msg.post(finishhim, "disable")
+	end)
 	
 	curr_level = FINISHING_LEVEL
 end
@@ -536,7 +554,7 @@ function update(self, dt)
 end
 
 local function check_hit(escudo_pos, side)
-	local hit_sound = nil
+	local hit_sound = "Geleia#hit"
 	local particle_fx = nil
 	local miss_sound = "Shield#ricochet"
 	local sound_speed = 1
@@ -552,7 +570,7 @@ local function check_hit(escudo_pos, side)
 	end
 
 	if escudo_pos.y < -100 then
-		-- sound.play(hit_sound, {delay = 0, gain = 1, pan = sound_pan, speed = sound_speed})
+		sound.play(hit_sound, {delay = 0, gain = 1, pan = sound_pan, speed = sound_speed})
 		particlefx.play("SkinTear")
 
 		-- shake geleia

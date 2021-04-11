@@ -1,4 +1,4 @@
-local selected_round = "show_menu"
+local selected_round = nil
 local music_playing = nil
 local can_select = false
 
@@ -130,6 +130,19 @@ function restart_title_music_ivo(self, message_id, message, id, sender)
 	sound.pause("Gui#wagner", false)
 end
 
+local intro_closed = true
+local function slide_intro(intro)
+	if intro_closed then
+		intro_closed = false
+		sound.play("EscolheFachoSound#sound", {delay = 0, gain = 1.1, pan = 0, speed = 1})
+		gui.animate(intro, "position.y", 900, go.EASING_LINEAR, 0.5, 0, nil, gui.PLAYBACK_ONCE_FORWARD)
+		sound.play("Gui#slide_door", {delay = 0, gain = 1.5, pan = 0, speed = 0.80})
+		can_select = true
+	else
+		sound.play("EscolheFachoSound#sound2", {delay = 0, gain = 0.5, pan = 0, speed = 1})
+	end
+end
+
 local tilly_music_playing = false
 local ivo_music_playing = false
 function on_input(self, action_id, action)
@@ -173,15 +186,12 @@ function on_input(self, action_id, action)
 			gui.play_flipbook(start, hash("começa_ok"))
 		elseif gui.pick_node(start, action.x, action.y) then
 			if selected_round == nil then
-				sound.play("EscolheFachoSound#sound", {delay = 0, gain = 1.5, pan = 0, speed = 1})
+				slide_intro(intro)
 			else
 				msg.post("main:/controler#controler", selected_round)
 			end
 		elseif gui.pick_node(intro, action.x, action.y) then
-			sound.play("EscolheFachoSound#sound", {delay = 0, gain = 1.1, pan = 0, speed = 1})
-			gui.animate(intro, "position.y", 900, go.EASING_LINEAR, 0.5, 0, nil, gui.PLAYBACK_ONCE_FORWARD)
-			sound.play("Gui#slide_door", {delay = 0, gain = 1.5, pan = 0, speed = 0.80})
-			can_select = true
+			slide_intro(intro)
 		elseif gui.pick_node(select_easy, action.x, action.y) then
 			gui.play_flipbook(select_easy, hash("costa_select"))
 			gui.play_flipbook(select_hard, hash("no_select"))
@@ -192,6 +202,8 @@ function on_input(self, action_id, action)
 			gui.play_flipbook(select_hard, hash("passos_select"))
 			sound.play("Gui#select_sound", {delay = 0, gain = 1, pan = 0, speed = 1})
 			msg.post("main:/controler#controler", "hard")
+		else
+			selected_round = nil
 		end
 
 		-- Music Selection
