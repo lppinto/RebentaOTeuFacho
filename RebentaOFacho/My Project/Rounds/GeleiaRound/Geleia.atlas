@@ -31,14 +31,6 @@ images {
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/GeleiaRound/Images/like.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
-  image: "/Rounds/GeleiaRound/Images/smile.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
   image: "/Rounds/GeleiaRound/Images/skinpiece.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }

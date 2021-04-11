@@ -16,7 +16,7 @@ emitters {
   }
   tile_source: "/Rounds/GeleiaRound/fire.atlas"
   animation: "fire"
-  material: "/builtins/materials/particlefx.material"
+  material: "/builtins/materials/sprite.material"
   blend_mode: BLEND_MODE_ADD
   particle_orientation: PARTICLE_ORIENTATION_MOVEMENT_DIRECTION
   inherit_velocity: 0.0

@@ -394,20 +394,35 @@ embedded_instances {
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
-  "    z: 0.2\n"
+  "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
-  "    z: -0.38585338\n"
-  "    w: 0.9225601\n"
+  "    z: -0.38268343\n"
+  "    w: 0.9238795\n"
+  "  }\n"
+  "}\n"
+  "components {\n"
+  "  id: \"cumlikes_left_deflect\"\n"
+  "  component: \"/Rounds/GeleiaRound/Particles/cumlikes_left_deflect.particlefx\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: -0.38268343\n"
+  "    w: 0.9238795\n"
   "  }\n"
   "}\n"
   ""
   position {
     x: 220.0
     y: 92.0
-    z: 0.1
+    z: 0.4
   }
   rotation {
     x: 0.0
@@ -416,20 +431,35 @@ embedded_instances {
     w: 0.9914449
   }
   scale3 {
-    x: 1.0
-    y: 1.0
+    x: 0.2
+    y: 0.2
     z: 1.0
   }
 }
 embedded_instances {
   id: "Cum_right"
   data: "components {\n"
-  "  id: \"cumsmiles\"\n"
-  "  component: \"/Rounds/GeleiaRound/Particles/cumsmiles.particlefx\"\n"
+  "  id: \"cumlikes\"\n"
+  "  component: \"/Rounds/GeleiaRound/Particles/cumlikes.particlefx\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
-  "    z: 0.2\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "components {\n"
+  "  id: \"cumlikes_right_deflect\"\n"
+  "  component: \"/Rounds/GeleiaRound/Particles/cumlikes_right_deflect.particlefx\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
   "    x: 0.0\n"
@@ -442,7 +472,7 @@ embedded_instances {
   position {
     x: 744.0
     y: 92.0
-    z: 0.1
+    z: 0.4
   }
   rotation {
     x: 0.0
@@ -451,8 +481,8 @@ embedded_instances {
     w: 0.8660254
   }
   scale3 {
-    x: 1.0
-    y: 1.0
+    x: 0.2
+    y: 0.2
     z: 1.0
   }
 }
@@ -561,6 +591,75 @@ embedded_instances {
   "  id: \"grito\"\n"
   "  type: \"sound\"\n"
   "  data: \"sound: \\\"/Common/Sounds/grito.ogg\\\"\\n"
+  "looping: 0\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"booing\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Common/Sounds/booing.ogg\\\"\\n"
+  "looping: 0\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"looser\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Common/Sounds/looser.ogg\\\"\\n"
+  "looping: 0\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"ticktok\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Common/Sounds/timeout.ogg\\\"\\n"
   "looping: 0\\n"
   "group: \\\"master\\\"\\n"
   "gain: 1.0\\n"
@@ -761,7 +860,7 @@ embedded_instances {
   position {
     x: -167.0
     y: 456.0
-    z: 0.3
+    z: 0.14
   }
   rotation {
     x: 0.0
@@ -875,7 +974,7 @@ embedded_instances {
   position {
     x: 1128.0
     y: 466.0
-    z: 0.2
+    z: 0.14
   }
   rotation {
     x: 0.0
@@ -1010,6 +1109,29 @@ embedded_instances {
   "    w: 0.97334\n"
   "  }\n"
   "}\n"
+  "embedded_components {\n"
+  "  id: \"ricochet\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Rounds/GeleiaRound/Sounds/ricochet_multi.ogg\\\"\\n"
+  "looping: 0\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
   ""
   position {
     x: 480.0
@@ -1058,8 +1180,8 @@ embedded_instances {
   ""
   position {
     x: 460.0
-    y: 766.0
-    z: 0.2
+    y: 772.0
+    z: 0.4
   }
   rotation {
     x: 0.0
@@ -1086,7 +1208,7 @@ embedded_instances {
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
-  "    z: 0.2\n"
+  "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
   "    x: 0.0\n"
@@ -1099,7 +1221,7 @@ embedded_instances {
   position {
     x: 0.0
     y: 0.0
-    z: 0.2
+    z: 0.0
   }
   rotation {
     x: 0.0
@@ -1134,7 +1256,7 @@ embedded_instances {
   position {
     x: 32.699
     y: -229.842
-    z: 0.2
+    z: 0.0
   }
   rotation {
     x: -6.123234E-17
@@ -1161,7 +1283,7 @@ embedded_instances {
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
-  "    z: 0.2\n"
+  "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
   "    x: 0.0\n"
@@ -1174,7 +1296,7 @@ embedded_instances {
   position {
     x: 327.962
     y: -245.428
-    z: 0.3
+    z: 0.15
   }
   rotation {
     x: 8.00401E-17
@@ -1201,7 +1323,7 @@ embedded_instances {
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
-  "    z: 0.2\n"
+  "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
   "    x: 0.0\n"
@@ -1214,7 +1336,7 @@ embedded_instances {
   position {
     x: -331.49
     y: -251.741
-    z: 0.3
+    z: 0.15
   }
   rotation {
     x: -9.465379E-14
@@ -1351,6 +1473,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "inner"
+  children: "Laugh"
   children: "destructable"
   children: "empty_geleia"
   children: "fire"
@@ -1454,7 +1577,7 @@ embedded_instances {
   position {
     x: -2.479
     y: -113.289
-    z: 0.0
+    z: 0.2
   }
   rotation {
     x: 0.0
@@ -1667,7 +1790,7 @@ embedded_instances {
   "  position {\n"
   "    x: -1.665\n"
   "    y: 0.0\n"
-  "    z: 0.1\n"
+  "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
   "    x: 0.0\n"
@@ -1680,7 +1803,7 @@ embedded_instances {
   position {
     x: 0.0
     y: 0.0
-    z: 0.0
+    z: 0.1
   }
   rotation {
     x: 0.0
@@ -1784,7 +1907,7 @@ embedded_instances {
   position {
     x: 49.913
     y: -71.373
-    z: 0.1
+    z: 0.15
   }
   rotation {
     x: 0.0
@@ -1889,7 +2012,7 @@ embedded_instances {
   position {
     x: -109.0
     y: -73.0
-    z: 0.0
+    z: 0.2
   }
   rotation {
     x: 0.0
@@ -1916,7 +2039,7 @@ embedded_instances {
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
-  "    z: 0.1\n"
+  "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
   "    x: 0.0\n"
@@ -2006,6 +2129,110 @@ embedded_instances {
     y: 0.0
     z: 0.21643962
     w: 0.976296
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "Laugh"
+  children: "boca"
+  data: "embedded_components {\n"
+  "  id: \"face\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/GeleiaRound/Geleia.atlas\\\"\\n"
+  "default_animation: \\\"geleia_won\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"vergonha\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Rounds/GeleiaRound/Sounds/vergonha.ogg\\\"\\n"
+  "looping: 1\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "boca"
+  data: "embedded_components {\n"
+  "  id: \"boca\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/GeleiaRound/Geleia.atlas\\\"\\n"
+  "default_animation: \\\"geleia_boca\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 0.0
+    y: -88.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
   }
   scale3 {
     x: 1.0

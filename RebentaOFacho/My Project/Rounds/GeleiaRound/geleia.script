@@ -48,6 +48,10 @@ local toraesquerda_init_pos = nil
 local lighterRight_init_pos = nil
 local lighterLeft_init_pos = nil
 
+-- Check cum to shoot
+local cum_to_shoot_left = nil
+local cum_to_shoot_right = nil
+
 -- Time passed for the game
 local total_left = 30
 local function time_passed(self, handle, elapsed)
@@ -127,32 +131,49 @@ function init(self)
 	msg.post("skull", "disable")
 	msg.post("skull_teeth", "disable")
 
+	-- Hide laughing face
+	msg.post("Laugh", "disable")
+	msg.post("boca", "disable")
+
+	-- Set initial cum to shoot
+	cum_to_shoot_left = "Cum_left#cumlikes"
+	cum_to_shoot_right = "Cum_right#cumlikes"
+	
 	label.set_text("Cenario#Elapsed", string.format("%d", total_left))
 end
 
--- function laugh_stop(self, handle, elapsed)
--- 	go.cancel_animations("careca:/boca", "position.y")
--- 	go.set("careca:/boca", "position.y", -92)
--- 	sound.stop("careca:/laughs#mock_sound")
--- end
+function laugh_stop(self, handle, elapsed)
+	go.cancel_animations("boca", "position.y")
+	go.set("boca", "position.y", -88)
+	sound.stop("Laugh#vergonha")
+end
 
--- function player_loses()		
--- 	-- Put facho in the middle laughing
--- 	go.cancel_animations("careca", "position.x")
--- 	go.set("careca", "position.x", 500)
--- 	msg.post("careca:/inner#sprite", "play_animation", {id = hash("careca1")})
--- 	msg.post("careca:/inner", "disable")
--- 	msg.post("careca_laughs", "enable")
--- 	msg.post("boca", "enable")
--- 	msg.post("Logo", "play_animation", {id = hash("fraco")})
--- 	sound.play("FinishHim#looser", {delay = 0, gain = 3, pan = 0, speed = 1})
--- 	sound.play("FinishHim#booing", {delay = 1, gain = 2, pan = 0, speed = 1})
--- 
--- 	-- Animate facho mouth laughing
--- 	timer.delay(10, false, laugh_stop)
--- 	go.animate("boca", "position.y", go.PLAYBACK_LOOP_PINGPONG, -148, go.EASING_INOUTSINE, 0.2, 0)
--- 	sound.play("careca:/laughs#mock_sound", {delay = 0, gain = 2, pan = 0, speed = 1})
--- end
+function player_loses()		
+	-- Put facho in the middle laughing
+	go.set("Geleia", "position.x", 480)
+
+	-- Stop Shield
+	go.cancel_animations("Shield", "position.y")
+	go.set_position(shield_init_pos, "Shield")
+
+	-- Hide finishing face states
+	msg.post("empty_face", "disable")
+	msg.post("salazar_sad", "disable")
+	msg.post("skull", "disable")
+	msg.post("skull_teeth", "disable")
+
+	-- Show laughing face
+	msg.post("Laugh", "enable")
+	msg.post("boca", "enable")
+	
+	sound.play("FinishHim#looser", {delay = 0, gain = 3, pan = 0, speed = 1})
+	sound.play("FinishHim#booing", {delay = 1, gain = 2, pan = 0, speed = 1})
+
+	-- Animate facho mouth laughing
+	timer.delay(10, false, laugh_stop)
+	go.animate("boca", "position.y", go.PLAYBACK_LOOP_PINGPONG, -115, go.EASING_INELASTIC, 1, 0)
+	sound.play("Laugh#vergonha", {delay = 0, gain = 1, pan = 0, speed = 1})
+end
 
 function check_game_level(hits)
 	if curr_level == FINISHING_LEVEL and numHits >= 110 then
@@ -204,6 +225,8 @@ local function screem_skull (self, handle, elapsed)
 	-- Make skull screem and jaw drop
 	sound.play("skull#screem", {delay = 0, gain = 3, pan = 0, speed = 1.1})
 	go.animate("skull_teeth", "position.y", go.PLAYBACK_ONCE_FORWARD, -118, go.EASING_LINEAR, 1)
+
+	sound.play("FinishHim#fatality", {delay = 2, gain = 2, pan = 0, speed = 1})
 end
 
 local function finish_him ()
@@ -271,6 +294,9 @@ local function call_angle_from_sky(self, handle, elapsed)
 	msg.post("skull", "enable")
 	msg.post("skull_teeth", "enable")
 
+	-- Make logo start burning
+	particlefx.play("logo_fire")
+	
 	sound.play("sacarneiro#sound", {delay = 0, gain = 2, pan = 0, speed = 1.0})
 	msg.post("bebé#sprite", "play_animation", {id = hash("bebe")})
 	go.animate("sacarneiro", "position.y", go.PLAYBACK_ONCE_FORWARD, 530, go.EASING_OUTBACK, 5, 0, make_angel_pee)
@@ -282,6 +308,18 @@ local function change_salazar_face()
 	msg.post("destructable", "disable")
 	msg.post("empty_face", "enable")
 	msg.post("salazar_sad", "enable")
+
+	-- Show finish him signal
+	
+	sound.play("FinishHim#finishhim", {delay = 0, gain = 2, pan = 0, speed = 1.00})
+	-- Show finish him sign
+	local pos = vmath.vector3()
+	pos.x = 525
+	pos.y = 575
+	pos.z = 0.5
+	local finishhim = factory.create("FinishHim#factory", pos)
+	go.animate(finishhim, "position.x", go.PLAYBACK_LOOP_PINGPONG, 510, go.EASING_LINEAR, 0.05, 0)	
+	
 	curr_level = FINISHING_LEVEL
 end
 
@@ -350,6 +388,7 @@ local function turn_on_mecas(self, handle, elapsed)
 	elseif curr_meca_iteration == 6 then
 		change_salazar_face()
 	elseif curr_meca_iteration == 7 then
+		go.cancel_animations("Geleia", "position.x")
 		timer.cancel(handle)
 	end
 
@@ -418,12 +457,39 @@ function turn_fire_on(level)
 	current_fire_level_on = level
 end
 
+local prev_shoot_left = cum_to_shoot_left
+local prev_shoot_right = cum_to_shoot_right
+local function check_cum_to_shoot()
+	local escudo_pos = go.get_position("Shield")
+	if escudo_pos.y < -100 then
+		cum_to_shoot_left = "Cum_left#cumlikes"
+		cum_to_shoot_right = "Cum_right#cumlikes"
+	else
+		cum_to_shoot_left = "Cum_left#cumlikes_left_deflect"
+		cum_to_shoot_right = "Cum_right#cumlikes_right_deflect"
+	end
+
+	if cum_to_shoot_left ~= prev_shoot_left then
+		-- stop previous effect
+		particlefx.stop(prev_shoot_left)
+		prev_shoot_left = cum_to_shoot_left
+	end
+
+	if cum_to_shoot_right ~= prev_shoot_right then
+		-- stop previous effect
+		particlefx.stop(prev_shoot_right)
+		prev_shoot_right = cum_to_shoot_right
+	end
+end
+
 function update(self, dt)
-	-- if start == false then
-	-- 	return
-	-- end
+	if start == false then
+		return
+	end
 
 	check_game_level (numHits)
+
+	check_cum_to_shoot()
 
 	if curr_level == LEVEL0 or 
 	curr_level == LEVEL1 or 
@@ -472,17 +538,15 @@ end
 local function check_hit(escudo_pos, side)
 	local hit_sound = nil
 	local particle_fx = nil
-	local miss_sound = nil
-	local sound_speed = nil
-	local sound_pan = nil
+	local miss_sound = "Shield#ricochet"
+	local sound_speed = 1
+	local sound_pan = 1
 	local sound_gain = 1
 
 	if side == "esquerdo" then		
-		-- miss_sound = "socoesquerdo#miss_sound"
 		sound_speed = 1.0
 		sound_pan = 1
 	elseif side == "direito" then
-		-- miss_sound = "socodireito#miss_sound"
 		sound_speed = 1.10
 		sound_pan = -1
 	end
@@ -498,7 +562,7 @@ local function check_hit(escudo_pos, side)
 		continuous_hits = continuous_hits + 1
 		wasHit = true
 	else
-		sound.play(miss_sound, {delay = 0, gain = 1, pan = 0, speed = 1.00})
+		sound.play(miss_sound, {delay = 0, gain = 1, pan = sound_pan, speed = sound_speed})
 		numHits = numHits - 1
 		if numHits < 0 then
 			numHits = 0
@@ -526,7 +590,7 @@ local function shoot_left(escudo_pos)
 		local movex = toraesquerda_init_pos.x - 50
 		local movey = toraesquerda_init_pos.y - 20
 		animate_object("Tora_esquerda", {"position.x", "position.y"}, go.PLAYBACK_ONCE_PINGPONG, {movex, movey}, go.EASING_OUTBACK, 0.2)
-		particlefx.play("Cum_left")
+		particlefx.play(cum_to_shoot_left)
 		sound.play("Tora_esquerda#sound", {delay = 0, gain = 0.5, pan = -1.0, speed = 1.25})
 		check_hit(escudo_pos, "esquerda")
 	end
@@ -552,7 +616,7 @@ local function shoot_right(escudo_pos)
 		local movex = toradireita_init_pos.x + 50
 		local movey = toradireita_init_pos.y - 20
 		animate_object("Tora_direita", {"position.x", "position.y"}, go.PLAYBACK_ONCE_PINGPONG, {movex, movey}, go.EASING_OUTBACK, 0.2)
-		particlefx.play("Cum_right")
+		particlefx.play(cum_to_shoot_right)
 		sound.play("Tora_direita#sound", {delay = 0, gain = 0.5, pan = -1.0, speed = 1.25})
 		check_hit(escudo_pos, "direita")
 	end
@@ -580,6 +644,7 @@ function on_input(self, action_id, action)
 		return 
 	else
 		local shield_pos = go.get_position("Shield")
+		check_cum_to_shoot(shield_pos)
 		if action_id == hash("click") and action.pressed then
 			if nextCum == "Left" then
 				shoot_left(shield_pos)			
