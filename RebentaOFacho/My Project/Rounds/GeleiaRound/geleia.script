@@ -562,15 +562,15 @@ local function check_hit(escudo_pos, side)
 	local sound_gain = 1
 
 	if side == "esquerdo" then		
-		sound_speed = 1.0
-		sound_pan = 1
+		sound_speed = 1
+		sound_pan = -2
 	elseif side == "direito" then
-		sound_speed = 1.10
-		sound_pan = -1
+		sound_speed = 1
+		sound_pan = 2
 	end
 
 	if escudo_pos.y < -100 then
-		sound.play(hit_sound, {delay = 0, gain = 1, pan = sound_pan, speed = sound_speed})
+		sound.play(hit_sound, {delay = 0, gain = 1, pan = 0, speed = 1})
 		particlefx.play("SkinTear")
 
 		-- shake geleia
@@ -610,7 +610,7 @@ local function shoot_left(escudo_pos)
 		animate_object("Tora_esquerda", {"position.x", "position.y"}, go.PLAYBACK_ONCE_PINGPONG, {movex, movey}, go.EASING_OUTBACK, 0.2)
 		particlefx.play(cum_to_shoot_left)
 		sound.play("Tora_esquerda#sound", {delay = 0, gain = 0.5, pan = -1.0, speed = 1.25})
-		check_hit(escudo_pos, "esquerda")
+		check_hit(escudo_pos, "esquerdo")
 	end
 
 
@@ -636,7 +636,7 @@ local function shoot_right(escudo_pos)
 		animate_object("Tora_direita", {"position.x", "position.y"}, go.PLAYBACK_ONCE_PINGPONG, {movex, movey}, go.EASING_OUTBACK, 0.2)
 		particlefx.play(cum_to_shoot_right)
 		sound.play("Tora_direita#sound", {delay = 0, gain = 0.5, pan = -1.0, speed = 1.25})
-		check_hit(escudo_pos, "direita")
+		check_hit(escudo_pos, "direito")
 	end
 
 	label.set_text("Cenario#Pontos", string.format("%d", numHits))
