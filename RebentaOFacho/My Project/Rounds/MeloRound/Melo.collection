@@ -282,7 +282,7 @@ embedded_instances {
   ""
   position {
     x: 480.0
-    y: 57.0
+    y: 67.0
     z: 0.1
   }
   rotation {
@@ -292,8 +292,8 @@ embedded_instances {
     w: 1.0
   }
   scale3 {
-    x: 1.0
-    y: 1.0
+    x: 1.2
+    y: 1.2
     z: 1.0
   }
 }
@@ -530,7 +530,7 @@ embedded_instances {
   "  id: \"spinemodel\"\n"
   "  type: \"spinemodel\"\n"
   "  data: \"spine_scene: \\\"/Rounds/MeloRound/Spine_scenes/tentaculo_esquerdo.spinescene\\\"\\n"
-  "default_animation: \\\"Dorment_Left\\\"\\n"
+  "default_animation: \\\"Attack\\\"\\n"
   "skin: \\\"\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "material: \\\"/builtins/materials/spine.material\\\"\\n"
@@ -549,7 +549,7 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 10.0
+    x: 60.0
     y: -431.0
     z: 0.4
   }
@@ -590,7 +590,7 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 505.0
+    x: 460.0
     y: -480.0
     z: 0.4
   }
@@ -654,7 +654,7 @@ embedded_instances {
   "  id: \"sprite_cabe\\303\\247a\"\n"
   "  type: \"sprite\"\n"
   "  data: \"tile_set: \\\"/Rounds/MeloRound/Melo.atlas\\\"\\n"
-  "default_animation: \\\"Cabe\\\\303\\\\247a1\\\"\\n"
+  "default_animation: \\\"Cabe\\\\303\\\\247a2_mad\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"

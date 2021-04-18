@@ -69,11 +69,25 @@ local function combo_off(self, handle, elapsed)
 end
 
 function prepare_weapons()
-	spine.play_anim("polvo_esquerdo#spinemodel", "Dorment_Left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 10})
-	spine.play_anim("polvo_direito#spinemodel", "Dorment_Right", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 10})
-
+	spine.play_anim("polvo_esquerdo#spinemodel", "Dorment_Left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 5})
+	spine.play_anim("polvo_direito#spinemodel", "Dorment_Right", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 5})
+	
 	go.animate("polvo_esquerdo", "position.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 2)
 	go.animate("polvo_direito", "position.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 2)
+
+	local function idle_tentacles()
+		spine.play_anim("polvo_esquerdo#spinemodel", "Idle_left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
+		spine.play_anim("polvo_direito#spinemodel", "Idle_Right", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
+	end
+	
+	local function raise_tentacles()
+		spine.play_anim("polvo_esquerdo#spinemodel", "Rise_Left", go.PLAYBACK_ONCE_FORWARD, {playback_rate = .5})
+		spine.play_anim("polvo_direito#spinemodel", "Rise_Right", go.PLAYBACK_ONCE_FORWARD, {playback_rate = .5}, idle_tentacles)
+	end
+
+	-- Wait 5 seconds to raise the tentacles
+	timer.delay(5, false, raise_tentacles)	
+	
 end
 
 function start_game()
@@ -110,7 +124,7 @@ function init(self)
 	continuous_hits = 0
 	computed_points = false
 	num_combos = 0
-	total_time_left = 30
+	total_time_left = 100000
 
 	-- Save initial positions
 
@@ -287,9 +301,20 @@ local function check_hit(side)
 	end
 end
 
+local function back_to_idle(side)
+	if side == "left" then
+		spine.play_anim("polvo_esquerdo#spinemodel", "Idle_left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
+	else
+		spine.play_anim("polvo_direito#spinemodel", "Idle_Right", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
+	end
+end
+
 local function cut_left()
+	
 	-- animate cut left
-	animate_object("Tora_esquerda", {"position.x", "position.y"}, go.PLAYBACK_ONCE_PINGPONG, {movex, movey}, go.EASING_OUTBACK, 0.2)
+	spine.play_anim("polvo_esquerdo#spinemodel", "Attack", go.PLAYBACK_ONCE_FORWARD, {playback_rate = 2}, function()
+		back_to_idle("left")
+	end)
 
 	-- check_hit("esquerdo")
 	
@@ -298,7 +323,9 @@ end
 
 local function cut_right()
 	-- Animate cut right
-	animate_object("Tora_direita", {"position.x", "position.y"}, go.PLAYBACK_ONCE_PINGPONG, {movex, movey}, go.EASING_OUTBACK, 0.2)
+	spine.play_anim("polvo_direito#spinemodel", "Atack", go.PLAYBACK_ONCE_FORWARD, {playback_rate = 2}, function()
+		back_to_idle("right")
+	end)
 	
 	-- check_hit("direito")
 
@@ -325,7 +352,6 @@ function on_input(self, action_id, action)
 		end
 		return 
 	else
-		check_cum_to_shoot(shield_pos)
 		if action_id == hash("click") and action.pressed then
 			if nextCut == "Left" then
 				cut_left()			
