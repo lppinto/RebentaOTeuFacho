@@ -1,25 +1,25 @@
 images {
-  image: "/Rounds/MeloRound/Images/chico_ferida1.png"
+  image: "/Rounds/MeloRound/Images/Chico/chico_ferida1.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/MeloRound/Images/chico_ferida2.png"
+  image: "/Rounds/MeloRound/Images/Chico/chico_ferida2.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/MeloRound/Images/chico_ferida3.png"
+  image: "/Rounds/MeloRound/Images/Chico/chico_ferida3.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/MeloRound/Images/chico_ferida4.png"
+  image: "/Rounds/MeloRound/Images/Chico/chico_ferida4.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/MeloRound/Images/chico_ferida5.png"
+  image: "/Rounds/MeloRound/Images/Chico/chico_ferida5.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/MeloRound/Images/chico_ferida6.png"
+  image: "/Rounds/MeloRound/Images/Chico/chico_ferida6.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {

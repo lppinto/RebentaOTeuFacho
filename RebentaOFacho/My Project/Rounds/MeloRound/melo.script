@@ -1,0 +1,346 @@
+local nextCut = nil
+local numHits = nil
+local finish_hits = 1
+local cut_hits = 1
+local numFails = 0
+local wasHit = false
+local slash = false
+local continuous_hits = 0
+local game_timer = nil
+local computed_points = false
+local num_combos = 0
+local game_won = false
+local start = false
+local dificulty = "hard"
+local clicks_to_finish = 5
+local total_time_left = nil
+
+-- Damage levels / game states
+local LEVEL0 = 1
+local LEVEL1 = 2
+local LEVEL2 = 3
+local LEVEL3 = 4
+local LEVEL4 = 5
+local LEVEL5 = 6
+local LEVEL6 = 7
+local LEVEL7 = 8
+local LEVEL8 = 9
+local PREPARE_FINISH = 10
+local WAIT_PREPARE_FINISH = 11
+local FINISHING_LEVEL = 12
+local FINISH_HIM = 13
+local FINAL_RESULT = 14
+local GAME_END = 15
+local curr_level = LEVEL0
+
+-- Head states
+local HEAD_INIT = 1
+
+-- Initial object positions
+local melo_inner_init_pos = nil
+local tentaculodireito_init_pos = nil
+local tentaculoesquerdo_init_pos = nil
+
+-- Utility functions to be gatheres in a common script
+local function animate_object(id, properties, playback, tos, easing, duration)
+	for index, property in ipairs(properties) do
+		go.animate(id, property, playback, tos[index], easing, duration, 0)
+	end
+end
+
+-- Time passed for the game
+local function time_passed(self, handle, elapsed)
+	total_time_left = total_time_left - elapsed
+	if total_time_left < 6 then
+		sound.play("FinishHim#ticktok", {delay = 0, gain = 2, pan = 0, speed = 1})
+	end
+
+	if total_time_left < 0 then total_time_left = 0 end
+	label.set_text("Cenario#Elapsed", string.format("%d", total_time_left))
+	if total_time_left == 0 then
+		timer.cancel(handle)
+		curr_level = FINAL_RESULT
+		game_won = false
+	end
+end
+
+local function combo_off(self, handle, elapsed)
+	continuous_hits = 0
+end
+
+function prepare_weapons()
+	spine.play_anim("polvo_esquerdo#spinemodel", "Dorment_Left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 10})
+	spine.play_anim("polvo_direito#spinemodel", "Dorment_Right", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 10})
+
+	go.animate("polvo_esquerdo", "position.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 2)
+	go.animate("polvo_direito", "position.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 2)
+end
+
+function start_game()
+	-- Start melo presentation and bad reception
+	-- Raise octopus weapons
+	prepare_weapons()
+	
+	game_timer = timer.delay(1,true,time_passed)
+
+	-- combo timer off
+	timer.delay(3, true, combo_off)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("dificulty") then
+		dificulty = message[1]
+	elseif message_id == hash("start") then
+		start = true
+		start_game()
+	end
+end
+
+function change_melo_head(head_state)
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	
+	nextCut = "Left"
+	numHits = 0
+	numFails = 0
+	wasHit = false
+	slash = false
+	continuous_hits = 0
+	computed_points = false
+	num_combos = 0
+	total_time_left = 30
+
+	-- Save initial positions
+
+	-- Hide initial objects not be seen
+
+	-- Hide finishing face states
+
+	-- Hide laughing face
+
+	label.set_text("Cenario#Elapsed", string.format("%d", total_time_left))
+
+	start_game()
+end
+
+function laugh_stop(self, handle, elapsed)
+	go.cancel_animations("boca", "position.y")
+	go.set("boca", "position.y", -88)
+	sound.stop("Laugh#vergonha")
+end
+
+function player_loses()		
+	-- Reset Melo face
+
+	sound.play("FinishHim#looser", {delay = 0, gain = 3, pan = 0, speed = 1})
+	sound.play("FinishHim#booing", {delay = 1, gain = 1, pan = 0, speed = 1})
+end
+
+function check_game_level(hits)
+	if curr_level == FINISHING_LEVEL and numHits >= 110 then
+		curr_level = FINISH_HIM
+	end
+
+	if curr_level < PREPARE_FINISH then
+		if numHits >= 60 then
+			curr_level = PREPARE_FINISH
+		elseif numHits >= 48 then
+			curr_level = LEVEL8
+		elseif numHits >= 42 then
+			curr_level = LEVEL7
+		elseif numHits >= 36 then
+			curr_level = LEVEL6
+		elseif numHits >= 30 then
+			curr_level = LEVEL5
+		elseif numHits >= 24 then
+			curr_level = LEVEL4
+		elseif numHits >= 18 then
+			curr_level = LEVEL3
+		elseif numHits >= 12 then
+			curr_level = LEVEL2
+		elseif numHits >= 6 then
+			curr_level = LEVEL1
+		elseif numHits >= 0 then
+			curr_level = LEVEL0
+		end
+	end
+end
+
+-- Prepare finish seccion
+
+local function finish_him ()
+	timer.delay(3, false, screem_skull)
+
+	-- Compute file points
+	if computed_points == false then
+		computed_points = true
+		bonus_time = 60 + (total_time_left * 0.2)
+		num_combos = num_combos * .3
+		numHits = numHits + bonus_time + num_combos
+		numHits = numHits - (numFails * 0.1)
+		label.set_text("Cenario#Pontos", string.format("%d", numHits))
+	end
+
+	curr_level = FINAL_RESULT
+	game_won = true
+end
+
+local finish_ready = 0
+function prepare_finish (self, handle, elapsed)
+	-- Animate meca penis
+	animate_meca_penis_left()
+end
+
+local function comunicate_score(game_won, score)
+	if game_won then
+		msg.post("main:/controler#controler", "add_score", {score})
+		msg.post("main:/controler#controler", "add_facho_kill")
+	end
+end
+
+function update(self, dt)
+	if start == false then
+		return
+	end
+
+	check_game_level (numHits)
+
+	if curr_level == LEVEL0 or 
+	curr_level == LEVEL1 or 
+	curr_level == LEVEL2 or 
+	curr_level == LEVEL3 or
+	curr_level == LEVEL4 or
+	curr_level == LEVEL5 or
+	curr_level == LEVEL6 or
+	curr_level == LEVEL7 or
+	curr_level == LEVEL8 then
+		if wasHit then
+			wasHit = false
+			-- Let's see what to do when melo is realy hit
+		end
+	elseif curr_level == PREPARE_FINISH then
+		timer.cancel(game_timer)
+		timer.delay(0.5, false, prepare_finish)
+		curr_level = WAIT_PREPARE_FINISH
+	elseif curr_level == WAIT_PREPARE_FINISH then
+		return 
+	elseif curr_level == FINISHING_LEVEL then
+		-- Raise the mega drill and position it
+		return
+	elseif curr_level == FINISH_HIM then
+		finish_him ()
+	elseif curr_level == FINAL_RESULT then 
+		if game_won == false then
+			player_loses()	
+		end
+		comunicate_score(game_won, numHits)
+		curr_level = GAME_END
+	elseif GAME_END then
+		return
+	end
+
+	if continuous_hits > 5 and curr_level ~= FINISHING_LEVEL and dificulty == "hard" then
+		sound.play("FinishHim#combo", {delay = 0, gain = 3, pan = 0, speed = 1})
+		num_combos = num_combos + 1
+		total_time_left = total_time_left + 2
+		continuous_hits = 0
+	end
+end
+
+local function check_hit(side)
+	local hit_sound = "Geleia#hit"
+	local particle_fx = nil
+	local miss_sound = "Shield#ricochet"
+	local sound_speed = 1
+	local sound_pan = 1
+	local sound_gain = 1
+
+	if side == "esquerdo" then		
+		sound_speed = 1
+		sound_pan = -2
+	elseif side == "direito" then
+		sound_speed = 1
+		sound_pan = 2
+	end
+
+	if escudo_pos.y < -100 then
+		sound.play(hit_sound, {delay = 0, gain = 1, pan = 0, speed = 1})
+		particlefx.play("SkinTear")
+
+		-- shake geleia
+		go.set_scale(geleia_inner_init_scale, "geleia:/destructable")
+		animate_object("geleia:/destructable", {"scale.x", "scale.y"}, go.PLAYBACK_ONCE_PINGPONG, {0.98,0.98}, go.EASING_OUTBACK, 0.2)
+		numHits = numHits + 1
+		continuous_hits = continuous_hits + 1
+		wasHit = true
+	else
+		sound.play(miss_sound, {delay = 0, gain = 1, pan = sound_pan, speed = sound_speed})
+		numHits = numHits - 1
+		if numHits < 0 then
+			numHits = 0
+		end
+		numFails = numFails + 1
+		continuous_hits = 0
+		wasHit = false
+	end
+end
+
+local function cut_left()
+	-- animate cut left
+	animate_object("Tora_esquerda", {"position.x", "position.y"}, go.PLAYBACK_ONCE_PINGPONG, {movex, movey}, go.EASING_OUTBACK, 0.2)
+
+	-- check_hit("esquerdo")
+	
+	-- label.set_text("Cenario#Pontos", string.format("%d", numHits))
+end
+
+local function cut_right()
+	-- Animate cut right
+	animate_object("Tora_direita", {"position.x", "position.y"}, go.PLAYBACK_ONCE_PINGPONG, {movex, movey}, go.EASING_OUTBACK, 0.2)
+	
+	-- check_hit("direito")
+
+	-- label.set_text("Cenario#Pontos", string.format("%d", numHits))
+end
+
+function on_input(self, action_id, action)
+	-- if start == false then
+	--	return
+	-- end
+
+	if curr_level == PREPARE_FINISH or 
+	curr_level == WAIT_PREPARE_FINISH or 
+	curr_level == FINISH_HIM or 
+	curr_level == FINAL_RESULT then
+		-- Do nothing on input for these states, ignore
+		return
+	elseif curr_level == GAME_END then
+		if action_id == hash("click") and action.pressed then
+			clicks_to_finish = clicks_to_finish - 1
+			if clicks_to_finish == 0 then
+				msg.post("main:/controler#controler", "show_menu")
+			end
+		end
+		return 
+	else
+		check_cum_to_shoot(shield_pos)
+		if action_id == hash("click") and action.pressed then
+			if nextCut == "Left" then
+				cut_left()			
+				nextCut = "Right"
+			elseif nextCut == "Right" then
+				cut_right()
+				nextCut = "Left"
+			end
+
+			if curr_level == FINISHING_LEVEL then
+				finish_hits = finish_hits + 0.2
+				if finish_hits > 4 then
+					finish_hits = 4
+				end
+			end
+		end
+	end
+end
