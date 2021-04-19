@@ -134,6 +134,9 @@ function init(self)
 
 	-- Hide laughing face
 
+	spine.play_anim("Tora#spinemodel", "Sucking", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
+	msg.post("Raios#sprite", "play_animation", {id = hash("Raios")})
+	
 	label.set_text("Cenario#Elapsed", string.format("%d", total_time_left))
 
 	start_game()
