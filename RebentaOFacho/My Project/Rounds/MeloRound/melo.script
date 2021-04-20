@@ -134,9 +134,10 @@ function init(self)
 
 	-- Hide laughing face
 
-	spine.play_anim("Tora#spinemodel", "Sucking", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
-	msg.post("Raios#sprite", "play_animation", {id = hash("Raios")})
-	
+	-- spine.play_anim("Tora#spinemodel", "pump_it_duplication1", go.PLAYBACK_LOOP_FORWARD, {playback_rate = .5})
+	-- msg.post("Raios#sprite", "play_animation", {id = hash("Raios")})
+	msg.post("Beam#sprite", "play_animation", {id = hash("Beam")})
+		
 	label.set_text("Cenario#Elapsed", string.format("%d", total_time_left))
 
 	start_game()

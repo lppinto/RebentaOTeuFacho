@@ -1,0 +1,7 @@
+images {
+  image: "/Rounds/MeloRound/Spine_scenes/tora_explicita_2_texture/tora.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+margin: 0
+extrude_borders: 2
+inner_padding: 0
