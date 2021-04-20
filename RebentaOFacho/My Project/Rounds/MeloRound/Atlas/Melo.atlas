@@ -1,0 +1,71 @@
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a1.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a2.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a3.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a4.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a5.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a6.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a7.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/melo_olho_direito.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/melo_olho_esquerdo.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/FatoDoMelo.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Hole_Big_back.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Hole_Big_Top.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/top_to_hide_drill.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Hole_Big_Top_no_blood.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a2_afraid.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a2_mad.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a3_afraid.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+margin: 0
+extrude_borders: 2
+inner_padding: 0

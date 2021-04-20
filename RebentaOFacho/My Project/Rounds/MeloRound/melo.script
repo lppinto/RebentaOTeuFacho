@@ -135,8 +135,11 @@ function init(self)
 	-- Hide laughing face
 
 	-- spine.play_anim("Tora#spinemodel", "pump_it_duplication1", go.PLAYBACK_LOOP_FORWARD, {playback_rate = .5})
-	-- msg.post("Raios#sprite", "play_animation", {id = hash("Raios")})
+	msg.post("Raios#sprite", "play_animation", {id = hash("Raios")})
 	msg.post("Beam#sprite", "play_animation", {id = hash("Beam")})
+	particlefx.play("Beam#thoughts")
+	particlefx.play("cortes#haircut_left")
+	particlefx.play("cortes#haircut_right")
 		
 	label.set_text("Cenario#Elapsed", string.format("%d", total_time_left))
 

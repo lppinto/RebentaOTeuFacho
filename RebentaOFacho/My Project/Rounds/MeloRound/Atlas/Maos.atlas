@@ -1,0 +1,19 @@
+images {
+  image: "/Rounds/MeloRound/Images/mao_direita_segura.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/mao_esquerda_segura.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/m\303\243o_direita_tora_scaled.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/m\303\243o_esquerda_tora_scaled.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+margin: 0
+extrude_borders: 2
+inner_padding: 0

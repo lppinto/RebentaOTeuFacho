@@ -5,7 +5,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/cenario.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/cenario.atlas\\\"\\n"
   "default_animation: \\\"cen\\\\303\\\\241rio2\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -264,7 +264,6 @@ embedded_instances {
   id: "Melo"
   children: "Beam"
   children: "FullDrill"
-  children: "Raios"
   children: "inner"
   data: "components {\n"
   "  id: \"melo\"\n"
@@ -304,10 +303,11 @@ embedded_instances {
   children: "Atores"
   children: "Back"
   children: "Front"
+  children: "MaosSeguras"
   data: ""
   position {
     x: 480.0
-    y: 1032.0
+    y: 566.0
     z: 0.1
   }
   rotation {
@@ -317,8 +317,8 @@ embedded_instances {
     w: 1.0
   }
   scale3 {
-    x: 1.2
-    y: 1.2
+    x: 1.1
+    y: 1.0
     z: 1.0
   }
 }
@@ -327,7 +327,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/andaime.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/andaime.atlas\\\"\\n"
   "default_animation: \\\"limpajanelassuporte\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -358,7 +358,7 @@ embedded_instances {
   }
   scale3 {
     x: 1.0
-    y: 1.0
+    y: 1.5
     z: 1.0
   }
 }
@@ -367,7 +367,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/andaime.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/andaime.atlas\\\"\\n"
   "default_animation: \\\"limpajanelassuporte_frente\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -398,7 +398,7 @@ embedded_instances {
   }
   scale3 {
     x: 1.0
-    y: 1.0
+    y: 1.5
     z: 1.0
   }
 }
@@ -409,7 +409,7 @@ embedded_instances {
   data: ""
   position {
     x: 0.0
-    y: 0.0
+    y: -45.0
     z: 0.1
   }
   rotation {
@@ -430,7 +430,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/andaime.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/andaime.atlas\\\"\\n"
   "default_animation: \\\"pernasDr\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -470,7 +470,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/andaime.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/andaime.atlas\\\"\\n"
   "default_animation: \\\"pernas_estagiario\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -594,7 +594,7 @@ embedded_instances {
   ""
   position {
     x: 460.0
-    y: -480.0
+    y: -481.0
     z: 0.4
   }
   rotation {
@@ -614,7 +614,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/Melo.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Melo.atlas\\\"\\n"
   "default_animation: \\\"FatoDoMelo\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -652,11 +652,12 @@ embedded_instances {
 embedded_instances {
   id: "cabe\303\247a"
   children: "Buraco"
+  children: "cortes"
   children: "olhos"
   data: "embedded_components {\n"
   "  id: \"sprite_cabe\\303\\247a\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/Melo.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Melo.atlas\\\"\\n"
   "default_animation: \\\"Cabe\\\\303\\\\247a4\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -696,7 +697,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"esquerdo\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/Melo.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Melo.atlas\\\"\\n"
   "default_animation: \\\"melo_olho_esquerdo\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -716,7 +717,7 @@ embedded_instances {
   "embedded_components {\n"
   "  id: \"direito\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/Melo.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Melo.atlas\\\"\\n"
   "default_animation: \\\"melo_olho_direito\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -783,7 +784,7 @@ embedded_instances {
   data: ""
   position {
     x: 61.167
-    y: 61.333
+    y: -389.5
     z: 0.2
   }
   rotation {
@@ -803,7 +804,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/Drill.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Drill.atlas\\\"\\n"
   "default_animation: \\\"Drill\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -843,7 +844,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/DrillSquid.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/DrillSquid.atlas\\\"\\n"
   "default_animation: \\\"drill_tentacle_1\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -883,7 +884,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/DrillSquid.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/DrillSquid.atlas\\\"\\n"
   "default_animation: \\\"drill_tentacle_1_front\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -967,7 +968,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/Chico.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Chico.atlas\\\"\\n"
   "default_animation: \\\"small_body_chico\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -1007,7 +1008,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"left\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/Chico.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Chico.atlas\\\"\\n"
   "default_animation: \\\"m\\\\303\\\\243o_esquerda_escudo\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -1027,7 +1028,7 @@ embedded_instances {
   "embedded_components {\n"
   "  id: \"right\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/Chico.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Chico.atlas\\\"\\n"
   "default_animation: \\\"m\\\\303\\\\243o_direita_escudo\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -1067,7 +1068,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/Chico.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Chico.atlas\\\"\\n"
   "default_animation: \\\"small_head_chico\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -1107,7 +1108,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"back\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/Melo.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Melo.atlas\\\"\\n"
   "default_animation: \\\"Hole_Big_back\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -1147,7 +1148,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"top\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/Melo.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Melo.atlas\\\"\\n"
   "default_animation: \\\"Hole_Big_Top\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -1187,7 +1188,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"top_to_hide\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/Melo.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Melo.atlas\\\"\\n"
   "default_animation: \\\"top_to_hide_drill\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -1426,7 +1427,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/DrillSquid.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/DrillSquid.atlas\\\"\\n"
   "default_animation: \\\"drill_tentacle_tip\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
@@ -1463,6 +1464,205 @@ embedded_instances {
 }
 embedded_instances {
   id: "Tora"
+  children: "Mega"
+  children: "M\303\243o_Dr"
+  children: "M\303\243o_estagiario"
+  children: "Raios"
+  data: ""
+  position {
+    x: -23.809
+    y: -269.045
+    z: 0.39
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 0.8
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "Beam"
+  data: "components {\n"
+  "  id: \"thoughts\"\n"
+  "  component: \"/Rounds/MeloRound/Particles/thoughts.particlefx\"\n"
+  "  position {\n"
+  "    x: 10.833\n"
+  "    y: -260.715\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Beam.atlas\\\"\\n"
+  "default_animation: \\\"Beam\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 6.666
+    y: 445.834
+    z: 0.48
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "Raios"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/raios.atlas\\\"\\n"
+  "default_animation: \\\"Raios\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 54.881
+    y: 152.5
+    z: 0.2
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "M\303\243o_Dr"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Maos.atlas\\\"\\n"
+  "default_animation: \\\"m\\\\303\\\\243o_direita_tora_scaled\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -68.452
+    y: 527.143
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "M\303\243o_estagiario"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Maos.atlas\\\"\\n"
+  "default_animation: \\\"m\\\\303\\\\243o_esquerda_tora_scaled\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 238.095
+    y: 438.095
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "Mega"
   data: "embedded_components {\n"
   "  id: \"spinemodel\"\n"
   "  type: \"spinemodel\"\n"
@@ -1486,9 +1686,9 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: -23.809
-    y: -269.045
-    z: 0.39
+    x: 0.0
+    y: -37.619
+    z: 0.0
   }
   rotation {
     x: 0.0
@@ -1497,38 +1697,20 @@ embedded_instances {
     w: 1.0
   }
   scale3 {
-    x: 0.8
+    x: 1.0
     y: 1.0
     z: 1.0
   }
 }
 embedded_instances {
-  id: "Raios"
-  data: "embedded_components {\n"
-  "  id: \"sprite\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/raios.atlas\\\"\\n"
-  "default_animation: \\\"Raios\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  ""
+  id: "MaosSeguras"
+  children: "Direita"
+  children: "Esquerda"
+  data: ""
   position {
-    x: 19.167
-    y: 709.167
-    z: 0.5
+    x: 2.727
+    y: 0.833
+    z: 0.3
   }
   rotation {
     x: 0.0
@@ -1537,18 +1719,18 @@ embedded_instances {
     w: 1.0
   }
   scale3 {
-    x: 0.25
-    y: 0.24
+    x: 1.0
+    y: 1.0
     z: 1.0
   }
 }
 embedded_instances {
-  id: "Beam"
+  id: "Direita"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/Beam.atlas\\\"\\n"
-  "default_animation: \\\"Beam\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Maos.atlas\\\"\\n"
+  "default_animation: \\\"mao_direita_segura\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"
@@ -1566,9 +1748,99 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 8.333
-    y: 445.833
-    z: 0.5
+    x: -80.0
+    y: 95.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 0.2
+    y: 0.2
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "Esquerda"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Maos.atlas\\\"\\n"
+  "default_animation: \\\"mao_esquerda_segura\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 108.333
+    y: 95.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 0.2
+    y: 0.2
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "cortes"
+  data: "components {\n"
+  "  id: \"haircut_left\"\n"
+  "  component: \"/Rounds/MeloRound/Particles/haircut_left.particlefx\"\n"
+  "  position {\n"
+  "    x: -73.238\n"
+  "    y: 180.953\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "components {\n"
+  "  id: \"haircut_right\"\n"
+  "  component: \"/Rounds/MeloRound/Particles/haircut_right.particlefx\"\n"
+  "  position {\n"
+  "    x: 97.619\n"
+  "    y: 195.239\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: -0.008726535\n"
+  "    w: 0.9999619\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
   }
   rotation {
     x: 0.0
