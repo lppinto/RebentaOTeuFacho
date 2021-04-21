@@ -34,9 +34,27 @@ function display_time (str_digits_list, alternative)
 	end
 end
 
+local start_iter = 3
+function start_start_sequence(self, handle, elapsed)
+	if start_iter > 0 then
+		local sprite_id = string.format("start_%d", start_iter)
+		msg.post("NumberCount#sprite", "play_animation", {id = hash(sprite_id)})
+		msg.post("NumberCount#sprite", "enable")
+		start_iter = start_iter - 1
+	else
+		msg.post("NumberCount#sprite", "play_animation", {id = hash("kill")})
+		go.animate("NumberCount", "scale.x", go.PLAYBACK_LOOP_PINGPONG, 1.1, go.EASING_INELASTIC, 0.5)
+		go.animate("NumberCount", "scale.y", go.PLAYBACK_LOOP_PINGPONG, 1.1, go.EASING_INELASTIC, 0.5)
+	end
+end
+	
 function init(self)
 
 	display_time (get_str_digits_from_number(total_time), false)
+
+	msg.post("NumberCount#sprite", "disable")
+
+	timer.delay(1, true, start_start_sequence)
 	
 	timer.delay(1, true, function ()
 		total_time = total_time - 1
