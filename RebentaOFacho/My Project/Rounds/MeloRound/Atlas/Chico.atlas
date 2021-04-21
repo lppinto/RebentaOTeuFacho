@@ -23,19 +23,19 @@ images {
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/MeloRound/Images/m\303\243o_direita_escudo.png"
+  image: "/Rounds/MeloRound/Images/Maos/m\303\243o_direita_escudo.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/MeloRound/Images/m\303\243o_esquerda_escudo.png"
+  image: "/Rounds/MeloRound/Images/Maos/m\303\243o_esquerda_escudo.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/MeloRound/Images/small_body_chico.png"
+  image: "/Rounds/MeloRound/Images/Chico/small_body_chico.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/MeloRound/Images/small_head_chico.png"
+  image: "/Rounds/MeloRound/Images/Chico/small_head_chico.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 margin: 0

@@ -1,19 +1,19 @@
 animations {
   id: "corte"
   images {
-    image: "/Rounds/MeloRound/Images/cabelo/cabelo1.png"
+    image: "/Rounds/MeloRound/Images/Cabelo/cabelo1.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   images {
-    image: "/Rounds/MeloRound/Images/cabelo/cabelo2.png"
+    image: "/Rounds/MeloRound/Images/Cabelo/cabelo2.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   images {
-    image: "/Rounds/MeloRound/Images/cabelo/cabelo3.png"
+    image: "/Rounds/MeloRound/Images/Cabelo/cabelo3.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   images {
-    image: "/Rounds/MeloRound/Images/cabelo/cabelo4.png"
+    image: "/Rounds/MeloRound/Images/Cabelo/cabelo4.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_LOOP_FORWARD
@@ -24,19 +24,19 @@ animations {
 animations {
   id: "corte2"
   images {
-    image: "/Rounds/MeloRound/Images/cabelo/cabelo5.png"
+    image: "/Rounds/MeloRound/Images/Cabelo/cabelo5.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   images {
-    image: "/Rounds/MeloRound/Images/cabelo/cabelo6.png"
+    image: "/Rounds/MeloRound/Images/Cabelo/cabelo6.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   images {
-    image: "/Rounds/MeloRound/Images/cabelo/cabelo7.png"
+    image: "/Rounds/MeloRound/Images/Cabelo/cabelo7.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   images {
-    image: "/Rounds/MeloRound/Images/cabelo/cabelo8.png"
+    image: "/Rounds/MeloRound/Images/Cabelo/cabelo8.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_LOOP_FORWARD

@@ -7,11 +7,11 @@ images {
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/MeloRound/Images/pernas_estagiario.png"
+  image: "/Rounds/MeloRound/Images/Pernas/pernas_estagiario.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/MeloRound/Images/pernasDr.png"
+  image: "/Rounds/MeloRound/Images/Pernas/pernasDr.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 margin: 0
