@@ -320,11 +320,12 @@ end
 local function cut_left()
 	
 	-- animate cut left
-	sound.play("polvo_esquerdo#sound", {delay = 0, gain = 2, pan = -1, speed = 1})
+	sound.play("polvo_esquerdo#attack_sound", {delay = 0, gain = 2, pan = -1, speed = 1})
 	spine.play_anim("polvo_esquerdo#spinemodel", "Attack", go.PLAYBACK_ONCE_FORWARD, {playback_rate = 2}, function()
 		back_to_idle("left")
 	end)
 
+	sound.play("polvo_esquerdo#cut_sound", {delay = 0, gain = 5, pan = -1, speed = 1})
 	-- check_hit("esquerdo")
 	
 	-- label.set_text("Cenario#Pontos", string.format("%d", numHits))
@@ -332,11 +333,12 @@ end
 
 local function cut_right()
 	-- Animate cut right
-	sound.play("polvo_direito#sound", {delay = 0, gain = 2, pan = 1, speed = 1.2})
+	sound.play("polvo_direito#attack_sound", {delay = 0, gain = 2, pan = 1, speed = 1.2})
 	spine.play_anim("polvo_direito#spinemodel", "Atack", go.PLAYBACK_ONCE_FORWARD, {playback_rate = 2}, function()
 		back_to_idle("right")
 	end)
-	
+
+	sound.play("polvo_direito#cut_sound", {delay = 0, gain = 5, pan = 1, speed = 1.2})
 	-- check_hit("direito")
 
 	-- label.set_text("Cenario#Pontos", string.format("%d", numHits))

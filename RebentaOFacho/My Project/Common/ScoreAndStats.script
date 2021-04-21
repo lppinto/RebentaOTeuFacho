@@ -1,4 +1,53 @@
+local total_time = 30
+
+local function get_str_digits_from_number(number)	
+
+	-- Protection for negative number
+	if number < 0 then number = 0 end
+
+	local str_number = string.format("%02d", number);
+
+	local str_digits_list = {}
+	for d in string.gmatch(str_number, ".") do
+		table.insert(str_digits_list, d)
+	end
+
+	return str_digits_list
+end
+
+function display_time (str_digits_list, alternative)
+	if table.maxn(str_digits_list) > 2 then
+		print ("Time only supports 2 digits for now")
+		return
+	end
+
+	local sprite_pattern = "Tempo#sprite_%d"
+
+	for pos, digit in ipairs (str_digits_list) do
+		local sprite_to_update = string.format(sprite_pattern, pos)
+
+		if alternative then
+			digit = digit .. "_red"
+		end
+		
+		msg.post(sprite_to_update, "play_animation", {id = hash(digit)})
+	end
+end
+
 function init(self)
+
+	display_time (get_str_digits_from_number(total_time), false)
+	
+	timer.delay(1, true, function ()
+		total_time = total_time - 1
+
+		local alternative = false
+		if total_time < 10 then
+			alternative = true
+		end
+			
+		display_time (get_str_digits_from_number(total_time), alternative)
+	end)
 end
 
 function final(self)
