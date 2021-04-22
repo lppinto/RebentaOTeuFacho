@@ -1,6 +1,13 @@
 local total_time = 30
 local round_count = 1
 local parent = nil
+local boss_level = false
+
+-- Life bars
+local active_boss_life_bar = nil
+local player_life_bar = "PlayerLifeBar"
+local curr_facho_health = 100
+local curr_player_health = 100
 
 local function get_str_digits_from_number(number)	
 
@@ -43,10 +50,12 @@ function reduce_player_life(amount)
 end
 
 -- Start Timer Countdown
+local timer_handle = nil
 function start_timer()
 	timer.delay(1, true, function (self, handle, elapsed)
+		timer_handle = handle
 		total_time = total_time - 1
-
+		
 		local alternative = false
 		if total_time < 10 then
 			alternative = true
@@ -59,6 +68,12 @@ function start_timer()
 			msg.post(parent, "time_over")
 		end
 	end)
+end
+
+local function pause_timer()
+	if timer_handle ~= nil then
+		timer.cancel(timer_handle)
+	end
 end
 
 local start_round = 1
@@ -89,6 +104,8 @@ function start_round_sequence(self, handle, elapsed)
 	else
 		msg.post("NumberCount#sprite", "disable")
 		timer.cancel(handle);
+		
+		-- Tell parente to start the round
 		msg.post(parent, "start_round")
 		start_timer()
 	end
@@ -106,17 +123,104 @@ end
 function update(self, dt)
 end
 
+-- Values in percentage
+function hurt_facho(amount)
+	if amount > curr_facho_health then amount = curr_facho_health end
+	if amount < 0 then amount = 0 end
+	
+	curr_facho_health = curr_facho_health - amount
+	
+	if curr_facho_health > 0 then
+		scale_factor = curr_facho_health / 100
+		go.animate(active_boss_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, scale_factor, go.EASING_INOUTBACK, 0.2, 0)
+		-- go.animate(active_boss_life_bar, "tint.x", go.PLAYBACK_ONCE_BACKWARD, 1, go.EASING_INOUTBACK, 0.2, 0)
+	else
+		go.animate(active_boss_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_INOUTBACK, 0.2, 0)
+	end
+
+	if curr_facho_health <= 0 then
+		if boss_level then
+			boss_level = false
+			active_boss_life_bar = "FachoLifeBar1"
+			curr_facho_health = 100 -- Second try bastard
+		else
+			-- message parent to finish the boss once and forever
+		end
+	end
+end
+
+function recover_facho(amount)
+	if amount > 100 then amount = 100 end
+	if amount < 0 then amount = 0 end
+
+	curr_facho_health = curr_facho_health + amount
+
+	if curr_facho_health > 100 then
+		go.animate(active_boss_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_INOUTBACK, 0.2, 0)
+	else
+		scale_factor = curr_facho_health / 100
+		go.animate(active_boss_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, -scale_factor, go.EASING_INOUTBACK, 0.2, 0)
+		-- go.animate(active_boss_life_bar, "tint.x", go.PLAYBACK_ONCE_BACKWARD, 1, go.EASING_INOUTBACK, 0.2, 0)
+	end
+end
+
+-- Values in percentage
+function hurt_player(amount)
+	if amount > curr_player_health then amount = curr_player_health end
+	if amount < 0 then amount = 0 end
+
+	curr_player_health = curr_player_health - amount
+
+	if curr_player_health > 0 then
+		scale_factor = curr_player_health / 100
+		go.animate(active_boss_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, scale_factor, go.EASING_INOUTBACK, 0.2, 0)
+		-- go.animate(active_boss_life_bar, "tint.x", go.PLAYBACK_ONCE_BACKWARD, 1, go.EASING_INOUTBACK, 0.2, 0)
+	else
+		go.animate(active_boss_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_INOUTBACK, 0.2, 0)
+	end
+
+	if curr_player_health <= 0 then
+		-- message parent that player lost the game
+	end
+end
+
+function prepare_life_bars()
+	if boss_level then
+		-- We need the two life bars
+		active_boss_life_bar = "FachoLifeBar2"
+	else
+		-- We only need one life bar
+		active_boss_life_bar = "FachoLifeBar1"
+
+		-- Hide the second life bar
+		msg.post("FachoLifeBar2#sprite", "disable")
+	end
+end
+
 function on_message(self, message_id, message, sender)
 	if message_id == hash("start") then
 		total_time = message[1]
 		round_count = message[2]
+		max_facho_health = message[3]
+		max_player_health = message[4]
+		boss_level = message[5]
+		label.set_text("FachoName#label", message[6]) 
+
+		prepare_life_bars()
+		
 		parent = sender
 		display_time (get_str_digits_from_number(total_time), false)
-		go.animate("GameStatus", "position.y", go.PLAYBACK_ONCE_FORWARD, 600, go.EASING_LINEAR, 2, 0, function()
-			timer.delay(2, true, start_round_sequence)
+		go.animate("GameStatus", "position.y", go.PLAYBACK_ONCE_FORWARD, 580, go.EASING_LINEAR, 1, 0, function()
+			timer.delay(1, true, start_round_sequence)
 		end)
+	elseif message_id == hash("pause") then
+		pause_timer()
 	elseif message_id == hash("set_score") then
 		-- set the score
+	elseif message_id == hash("hurt_facho") then
+		hurt_facho(message[1])
+	elseif message_id == hash("hurt_player") then
+		hurt_player(message[1])
 	end
 end
 

@@ -14,6 +14,7 @@ local start = false
 local dificulty = "hard"
 local clicks_to_finish = 5
 local total_time_left = nil
+local status_bar_id = "melo:/Score/GameStatus#ScoreAndStats"
 
 -- Damage levels / game states
 local LEVEL_PREPARE = 0
@@ -26,12 +27,24 @@ local LEVEL5 = 6
 local LEVEL6 = 7
 local LEVEL7 = 8
 local LEVEL8 = 9
-local PREPARE_FINISH = 10
-local WAIT_PREPARE_FINISH = 11
-local FINISHING_LEVEL = 12
-local FINISH_HIM = 13
-local FINAL_RESULT = 14
-local GAME_END = 15
+
+local C_LEVEL0 = 1
+local C_LEVEL0 = 2
+local C_LEVEL0 = 3
+local C_LEVEL0 = 4
+local C_LEVEL0 = 5
+local C_LEVEL0 = 6
+local C_LEVEL0 = 7
+local C_LEVEL0 = 8
+
+local PREPARE_SECOND_ROUND = 10
+local WAIT_PREPARE_SECOND_ROUND = 11
+local PREPARE_FINISH = 12
+local WAIT_PREPARE_FINISH = 13
+local FINISHING_LEVEL = 14
+local FINISH_HIM = 15
+local FINAL_RESULT = 16
+local GAME_END = 17
 local curr_level = LEVEL_PREPARE
 
 -- Head states
@@ -53,44 +66,52 @@ local function combo_off(self, handle, elapsed)
 	continuous_hits = 0
 end
 
-function prepare_weapons()
-	go.animate("polvo_esquerdo", "position.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 2)
-	go.animate("polvo_direito", "position.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 2)
+function change_chico_state()
+end
 
-	local function idle_tentacles()
-		spine.play_anim("polvo_esquerdo#spinemodel", "Idle_left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
-		spine.play_anim("polvo_direito#spinemodel", "Idle_Right", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
-	end
-	
-	local function raise_tentacles()
-		spine.play_anim("polvo_esquerdo#spinemodel", "Rise_Left", go.PLAYBACK_ONCE_FORWARD, {playback_rate = .5})
-		spine.play_anim("polvo_direito#spinemodel", "Rise_Right", go.PLAYBACK_ONCE_FORWARD, {playback_rate = .5}, idle_tentacles)
-	end
-
-	-- Wait 5 seconds to raise the tentacles
-	timer.delay(5, false, raise_tentacles)	
-	
+function change_melo_state()
 end
 
 function start_game()
+	
+	function prepare_weapons()
+		-- Raise squids
+		go.animate("polvo_esquerdo", "position.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 2)
+		go.animate("polvo_direito", "position.y", go.PLAYBACK_ONCE_FORWARD, 2, go.EASING_LINEAR, 2)
+
+		local function idle_tentacles()
+			spine.play_anim("polvo_esquerdo#spinemodel", "Idle_left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
+			spine.play_anim("polvo_direito#spinemodel", "Idle_Right", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
+		end
+
+		local function raise_tentacles()
+			spine.play_anim("polvo_esquerdo#spinemodel", "Rise_Left", go.PLAYBACK_ONCE_FORWARD, {playback_rate = .5})
+			spine.play_anim("polvo_direito#spinemodel", "Rise_Right", go.PLAYBACK_ONCE_FORWARD, {playback_rate = .5}, idle_tentacles)
+		end
+
+		-- Wait 5 seconds to raise the tentacles
+		timer.delay(2, false, raise_tentacles)	
+
+	end
+
 	-- Start melo presentation and bad reception
+
+
 	-- Raise octopus weapons
 	prepare_weapons()
-
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("dificulty") then
 		dificulty = message[1]
 	elseif message_id == hash("start") then
-		msg.post("melo:/Score/GameStatus#ScoreAndStats", "start", {30,2})
+		msg.post(status_bar_id, "start", {30,2,200,100, true, "Dr. Meloncolico"})
 	elseif message_id == hash("start_round") then
 		-- start = true
-		start_game() 
+		start_game()
+	elseif message_id == hash("time_over") then
+		curr_level = FINAL_RESULT
 	end
-end
-
-function change_melo_head(head_state)
 end
 
 function init(self)
@@ -111,18 +132,6 @@ function init(self)
 	-- Hide initial objects not be seen
 	spine.play_anim("polvo_esquerdo#spinemodel", "Dorment_Left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 5})
 	spine.play_anim("polvo_direito#spinemodel", "Dorment_Right", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 5})
-
-	-- Hide finishing face states
-
-	-- Hide laughing face
-
-	-- spine.play_anim("Tora#spinemodel", "pump_it_duplication1", go.PLAYBACK_LOOP_FORWARD, {playback_rate = .5})
-	-- msg.post("Raios#sprite", "play_animation", {id = hash("Raios")})
-	-- msg.post("Beam#sprite", "play_animation", {id = hash("Beam")})
-	-- particlefx.play("Beam#thoughts")
-	-- particlefx.play("cortes#haircut_left")
-	-- particlefx.play("cortes#haircut_right")
-	-- particlefx.play("Sparkles")
 
 	-- TODO while we don't send message start from controller
 	msg.post(".", "start")
@@ -192,7 +201,7 @@ function update(self, dt)
 			-- Let's see what to do when melo is realy hit
 		end
 	elseif curr_level == PREPARE_FINISH then
-		timer.cancel(game_timer)
+		msg.post(status_bar_id, "pause")
 		timer.delay(0.5, false, prepare_finish)
 		curr_level = WAIT_PREPARE_FINISH
 	elseif curr_level == WAIT_PREPARE_FINISH then
@@ -221,13 +230,13 @@ function update(self, dt)
 end
 
 local function check_hit(side)
-
 	if side == "esquerdo" then
 		sound.play("polvo_esquerdo#cut_sound", {delay = 0, gain = 5, pan = -1, speed = 1})
 	elseif side == "direito" then
 		sound.play("polvo_direito#cut_sound", {delay = 0, gain = 5, pan = 1, speed = 1.2})
 	end
 
+	msg.post(status_bar_id, "hurt_facho", {1})
 end
 
 local function back_to_idle(side)
@@ -267,7 +276,10 @@ function on_input(self, action_id, action)
 	--	return
 	-- end
 
-	if curr_level == PREPARE_FINISH or 
+	if curr_level == LEVEL_PREPARE or
+	curr_level == PREPARE_SECOND_ROUND or
+	curr_level == WAIT_PREPARE_SECOND_ROUND or
+	curr_level == PREPARE_FINISH or 
 	curr_level == WAIT_PREPARE_FINISH or 
 	curr_level == FINISH_HIM or 
 	curr_level == FINAL_RESULT then

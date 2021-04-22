@@ -42,9 +42,9 @@ embedded_instances {
 embedded_instances {
   id: "LifeStatus"
   children: "Base"
+  children: "FachoLifeBar1"
+  children: "FachoLifeBar2"
   children: "FachoName"
-  children: "Firstbar"
-  children: "SecondBar"
   data: ""
   position {
     x: 447.0
@@ -104,7 +104,7 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "Firstbar"
+  id: "FachoLifeBar1"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
@@ -144,7 +144,7 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "SecondBar"
+  id: "FachoLifeBar2"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
@@ -186,8 +186,8 @@ embedded_instances {
 embedded_instances {
   id: "LifeStatusPlayer"
   children: "BasePlayer"
-  children: "Esquerdalho"
-  children: "FirstbarPlayer"
+  children: "EsquerdalhoName"
+  children: "PlayerLifeBar"
   data: ""
   position {
     x: -444.0
@@ -247,7 +247,7 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "FirstbarPlayer"
+  id: "PlayerLifeBar"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
@@ -327,7 +327,7 @@ embedded_instances {
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "line_break: false\\n"
   "text: \\\"TEMPO\\\"\\n"
-  "font: \\\"/builtins/fonts/system_font.font\\\"\\n"
+  "font: \\\"/Common/StatusFont.font\\\"\\n"
   "material: \\\"/builtins/fonts/label.material\\\"\\n"
   "\"\n"
   "  position {\n"
@@ -441,7 +441,7 @@ embedded_instances {
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "line_break: false\\n"
   "text: \\\"Nome do Facho\\\"\\n"
-  "font: \\\"/builtins/fonts/system_font.font\\\"\\n"
+  "font: \\\"/Common/StatusFont.font\\\"\\n"
   "material: \\\"/builtins/fonts/label.material\\\"\\n"
   "\"\n"
   "  position {\n"
@@ -475,7 +475,7 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "Esquerdalho"
+  id: "EsquerdalhoName"
   data: "embedded_components {\n"
   "  id: \"label\"\n"
   "  type: \"label\"\n"
@@ -515,7 +515,7 @@ embedded_instances {
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "line_break: false\\n"
   "text: \\\"Esquerdalho\\\"\\n"
-  "font: \\\"/builtins/fonts/system_font.font\\\"\\n"
+  "font: \\\"/Common/StatusFont.font\\\"\\n"
   "material: \\\"/builtins/fonts/label.material\\\"\\n"
   "\"\n"
   "  position {\n"
