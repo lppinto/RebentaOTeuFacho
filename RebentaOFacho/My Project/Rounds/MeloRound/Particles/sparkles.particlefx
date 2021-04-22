@@ -14,7 +14,7 @@ emitters {
     z: 0.0
     w: 1.0
   }
-  tile_source: "/Rounds/MeloRound/Atlas/sparkles.atlas"
+  tile_source: "/Rounds/MeloRound/Atlas/Sparkles.atlas"
   animation: "sparkle"
   material: "/builtins/materials/sprite.material"
   blend_mode: BLEND_MODE_ALPHA

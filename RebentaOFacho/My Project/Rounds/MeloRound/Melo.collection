@@ -25,7 +25,7 @@ embedded_instances {
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/cenario.atlas\\\"\\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Cenario.atlas\\\"\\n"
   "default_animation: \\\"cen\\\\303\\\\241rio2\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
