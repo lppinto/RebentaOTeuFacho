@@ -34,18 +34,37 @@ function display_time (str_digits_list, alternative)
 	end
 end
 
-local start_iter = 3
+local start_round = 1
+local start_iter = 4
 function start_start_sequence(self, handle, elapsed)
-	if start_iter > 0 then
-		local sprite_id = string.format("start_%d", start_iter)
+	if start_iter > 1 then
+		local sprite_num = start_iter - 1;
+		local sprite_id = string.format("start_%d", sprite_num)
 		msg.post("NumberCount#sprite", "play_animation", {id = hash(sprite_id)})
 		msg.post("NumberCount#sprite", "enable")
-		start_iter = start_iter - 1
-	else
-		msg.post("NumberCount#sprite", "play_animation", {id = hash("kill")})
+
+		local sound_id = string.format("NumberCount#count_%d", sprite_num)
+		sound.play(sound_id, {delay = 0, gain = 3, pan = 0, speed = 1})
+		
+	elseif start_iter > 0 then
+		
+		local start_sprite = "round1"
+		local sound_id = "NumberCount#round_1"
+		if start_round == 2 then
+			start_sprite = "finalRound"
+			sound_id = "NumberCount#final_round"
+		end
+		msg.post("NumberCount#sprite", "play_animation", {id = hash(start_sprite)})
+		sound.play(sound_id, {delay = 0, gain = 3, pan = 0, speed = 1})
+		
 		go.animate("NumberCount", "scale.x", go.PLAYBACK_LOOP_PINGPONG, 1.1, go.EASING_INELASTIC, 0.5)
 		go.animate("NumberCount", "scale.y", go.PLAYBACK_LOOP_PINGPONG, 1.1, go.EASING_INELASTIC, 0.5)
+	else
+		msg.post("NumberCount#sprite", "disable")
+		timer.cancel(handle);
 	end
+	
+	start_iter = start_iter - 1
 end
 	
 function init(self)
@@ -54,7 +73,7 @@ function init(self)
 
 	msg.post("NumberCount#sprite", "disable")
 
-	timer.delay(1, true, start_start_sequence)
+	timer.delay(2, true, start_start_sequence)
 	
 	timer.delay(1, true, function ()
 		total_time = total_time - 1
