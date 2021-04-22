@@ -1,4 +1,6 @@
 local total_time = 30
+local round_count = 1
+local parent = nil
 
 local function get_str_digits_from_number(number)	
 
@@ -34,9 +36,34 @@ function display_time (str_digits_list, alternative)
 	end
 end
 
+function reduce_facho_life(amount)
+end
+
+function reduce_player_life(amount)
+end
+
+-- Start Timer Countdown
+function start_timer()
+	timer.delay(1, true, function (self, handle, elapsed)
+		total_time = total_time - 1
+
+		local alternative = false
+		if total_time < 10 then
+			alternative = true
+		end
+
+		display_time (get_str_digits_from_number(total_time), alternative)
+
+		if total_time <= 0 then
+			timer.cancel(handle)
+			msg.post(parent, "time_over")
+		end
+	end)
+end
+
 local start_round = 1
 local start_iter = 4
-function start_start_sequence(self, handle, elapsed)
+function start_round_sequence(self, handle, elapsed)
 	if start_iter > 1 then
 		local sprite_num = start_iter - 1;
 		local sprite_id = string.format("start_%d", sprite_num)
@@ -62,29 +89,15 @@ function start_start_sequence(self, handle, elapsed)
 	else
 		msg.post("NumberCount#sprite", "disable")
 		timer.cancel(handle);
+		msg.post(parent, "start_round")
+		start_timer()
 	end
 	
 	start_iter = start_iter - 1
 end
-	
+
 function init(self)
-
-	display_time (get_str_digits_from_number(total_time), false)
-
 	msg.post("NumberCount#sprite", "disable")
-
-	timer.delay(2, true, start_start_sequence)
-	
-	timer.delay(1, true, function ()
-		total_time = total_time - 1
-
-		local alternative = false
-		if total_time < 10 then
-			alternative = true
-		end
-			
-		display_time (get_str_digits_from_number(total_time), alternative)
-	end)
 end
 
 function final(self)
@@ -94,7 +107,17 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
-
+	if message_id == hash("start") then
+		total_time = message[1]
+		round_count = message[2]
+		parent = sender
+		display_time (get_str_digits_from_number(total_time), false)
+		go.animate("GameStatus", "position.y", go.PLAYBACK_ONCE_FORWARD, 600, go.EASING_LINEAR, 2, 0, function()
+			timer.delay(2, true, start_round_sequence)
+		end)
+	elseif message_id == hash("set_score") then
+		-- set the score
+	end
 end
 
 function on_input(self, action_id, action)

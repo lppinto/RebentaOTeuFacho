@@ -16,6 +16,7 @@ local clicks_to_finish = 5
 local total_time_left = nil
 
 -- Damage levels / game states
+local LEVEL_PREPARE = 0
 local LEVEL0 = 1
 local LEVEL1 = 2
 local LEVEL2 = 3
@@ -31,7 +32,7 @@ local FINISHING_LEVEL = 12
 local FINISH_HIM = 13
 local FINAL_RESULT = 14
 local GAME_END = 15
-local curr_level = LEVEL0
+local curr_level = LEVEL_PREPARE
 
 -- Head states
 local HEAD_INIT = 1
@@ -48,30 +49,11 @@ local function animate_object(id, properties, playback, tos, easing, duration)
 	end
 end
 
--- Time passed for the game
-local function time_passed(self, handle, elapsed)
-	total_time_left = total_time_left - elapsed
-	if total_time_left < 6 then
-		sound.play("FinishHim#ticktok", {delay = 0, gain = 2, pan = 0, speed = 1})
-	end
-
-	if total_time_left < 0 then total_time_left = 0 end
-	label.set_text("Cenario#Elapsed", string.format("%d", total_time_left))
-	if total_time_left == 0 then
-		timer.cancel(handle)
-		curr_level = FINAL_RESULT
-		game_won = false
-	end
-end
-
 local function combo_off(self, handle, elapsed)
 	continuous_hits = 0
 end
 
 function prepare_weapons()
-	spine.play_anim("polvo_esquerdo#spinemodel", "Dorment_Left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 5})
-	spine.play_anim("polvo_direito#spinemodel", "Dorment_Right", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 5})
-	
 	go.animate("polvo_esquerdo", "position.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 2)
 	go.animate("polvo_direito", "position.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 2)
 
@@ -94,19 +76,17 @@ function start_game()
 	-- Start melo presentation and bad reception
 	-- Raise octopus weapons
 	prepare_weapons()
-	
-	game_timer = timer.delay(1,true,time_passed)
 
-	-- combo timer off
-	timer.delay(3, true, combo_off)
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("dificulty") then
 		dificulty = message[1]
 	elseif message_id == hash("start") then
-		start = true
-		start_game()
+		msg.post("melo:/Score/GameStatus#ScoreAndStats", "start", {30,2})
+	elseif message_id == hash("start_round") then
+		-- start = true
+		start_game() 
 	end
 end
 
@@ -129,6 +109,8 @@ function init(self)
 	-- Save initial positions
 
 	-- Hide initial objects not be seen
+	spine.play_anim("polvo_esquerdo#spinemodel", "Dorment_Left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 5})
+	spine.play_anim("polvo_direito#spinemodel", "Dorment_Right", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 5})
 
 	-- Hide finishing face states
 
@@ -137,14 +119,13 @@ function init(self)
 	-- spine.play_anim("Tora#spinemodel", "pump_it_duplication1", go.PLAYBACK_LOOP_FORWARD, {playback_rate = .5})
 	-- msg.post("Raios#sprite", "play_animation", {id = hash("Raios")})
 	-- msg.post("Beam#sprite", "play_animation", {id = hash("Beam")})
-	particlefx.play("Beam#thoughts")
+	-- particlefx.play("Beam#thoughts")
 	-- particlefx.play("cortes#haircut_left")
 	-- particlefx.play("cortes#haircut_right")
-	particlefx.play("Sparkles")
-		
-	label.set_text("Cenario#Elapsed", string.format("%d", total_time_left))
+	-- particlefx.play("Sparkles")
 
-	start_game()
+	-- TODO while we don't send message start from controller
+	msg.post(".", "start")
 end
 
 function laugh_stop(self, handle, elapsed)
@@ -187,38 +168,6 @@ function check_game_level(hits)
 		elseif numHits >= 0 then
 			curr_level = LEVEL0
 		end
-	end
-end
-
--- Prepare finish seccion
-
-local function finish_him ()
-	timer.delay(3, false, screem_skull)
-
-	-- Compute file points
-	if computed_points == false then
-		computed_points = true
-		bonus_time = 60 + (total_time_left * 0.2)
-		num_combos = num_combos * .3
-		numHits = numHits + bonus_time + num_combos
-		numHits = numHits - (numFails * 0.1)
-		label.set_text("Cenario#Pontos", string.format("%d", numHits))
-	end
-
-	curr_level = FINAL_RESULT
-	game_won = true
-end
-
-local finish_ready = 0
-function prepare_finish (self, handle, elapsed)
-	-- Animate meca penis
-	animate_meca_penis_left()
-end
-
-local function comunicate_score(game_won, score)
-	if game_won then
-		msg.post("main:/controler#controler", "add_score", {score})
-		msg.post("main:/controler#controler", "add_facho_kill")
 	end
 end
 
@@ -272,41 +221,13 @@ function update(self, dt)
 end
 
 local function check_hit(side)
-	local hit_sound = "Geleia#hit"
-	local particle_fx = nil
-	local miss_sound = "Shield#ricochet"
-	local sound_speed = 1
-	local sound_pan = 1
-	local sound_gain = 1
 
-	if side == "esquerdo" then		
-		sound_speed = 1
-		sound_pan = -2
+	if side == "esquerdo" then
+		sound.play("polvo_esquerdo#cut_sound", {delay = 0, gain = 5, pan = -1, speed = 1})
 	elseif side == "direito" then
-		sound_speed = 1
-		sound_pan = 2
+		sound.play("polvo_direito#cut_sound", {delay = 0, gain = 5, pan = 1, speed = 1.2})
 	end
 
-	if escudo_pos.y < -100 then
-		sound.play(hit_sound, {delay = 0, gain = 1, pan = 0, speed = 1})
-		particlefx.play("SkinTear")
-
-		-- shake geleia
-		go.set_scale(geleia_inner_init_scale, "geleia:/destructable")
-		animate_object("geleia:/destructable", {"scale.x", "scale.y"}, go.PLAYBACK_ONCE_PINGPONG, {0.98,0.98}, go.EASING_OUTBACK, 0.2)
-		numHits = numHits + 1
-		continuous_hits = continuous_hits + 1
-		wasHit = true
-	else
-		sound.play(miss_sound, {delay = 0, gain = 1, pan = sound_pan, speed = sound_speed})
-		numHits = numHits - 1
-		if numHits < 0 then
-			numHits = 0
-		end
-		numFails = numFails + 1
-		continuous_hits = 0
-		wasHit = false
-	end
 end
 
 local function back_to_idle(side)
@@ -318,15 +239,13 @@ local function back_to_idle(side)
 end
 
 local function cut_left()
-	
 	-- animate cut left
 	sound.play("polvo_esquerdo#attack_sound", {delay = 0, gain = 2, pan = -1, speed = 1})
 	spine.play_anim("polvo_esquerdo#spinemodel", "Attack", go.PLAYBACK_ONCE_FORWARD, {playback_rate = 2}, function()
 		back_to_idle("left")
 	end)
 
-	sound.play("polvo_esquerdo#cut_sound", {delay = 0, gain = 5, pan = -1, speed = 1})
-	-- check_hit("esquerdo")
+	check_hit("esquerdo")
 	
 	-- label.set_text("Cenario#Pontos", string.format("%d", numHits))
 end
@@ -338,8 +257,7 @@ local function cut_right()
 		back_to_idle("right")
 	end)
 
-	sound.play("polvo_direito#cut_sound", {delay = 0, gain = 5, pan = 1, speed = 1.2})
-	-- check_hit("direito")
+	check_hit("direito")
 
 	-- label.set_text("Cenario#Pontos", string.format("%d", numHits))
 end
