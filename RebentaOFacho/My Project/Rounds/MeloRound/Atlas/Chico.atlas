@@ -34,10 +34,6 @@ images {
   image: "/Rounds/MeloRound/Images/Chico/small_body_chico.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
-images {
-  image: "/Rounds/MeloRound/Images/Chico/small_head_chico.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
 margin: 0
 extrude_borders: 2
 inner_padding: 0

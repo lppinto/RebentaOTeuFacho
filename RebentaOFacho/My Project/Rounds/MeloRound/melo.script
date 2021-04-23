@@ -4,7 +4,6 @@ local finish_hits = 1
 local cut_hits = 1
 local numFails = 0
 local wasHit = false
-local slash = false
 local continuous_hits = 0
 local game_timer = nil
 local computed_points = false
@@ -16,36 +15,36 @@ local clicks_to_finish = 5
 local total_time_left = nil
 local status_bar_id = "melo:/Score/GameStatus#ScoreAndStats"
 
+-- Round levels
+local ROUND1 = 1
+local ROUND2 = 2
+local curr_round = ROUND1
+
+-- Event levels
+local EVENT1 = 1
+local EVENT2 = 2
+local EVENT3 = 3
+local curr_event = EVENT1
+
 -- Damage levels / game states
-local LEVEL_PREPARE = 0
-local LEVEL0 = 1
-local LEVEL1 = 2
-local LEVEL2 = 3
-local LEVEL3 = 4
-local LEVEL4 = 5
-local LEVEL5 = 6
-local LEVEL6 = 7
-local LEVEL7 = 8
-local LEVEL8 = 9
-
-local C_LEVEL0 = 1
-local C_LEVEL0 = 2
-local C_LEVEL0 = 3
-local C_LEVEL0 = 4
-local C_LEVEL0 = 5
-local C_LEVEL0 = 6
-local C_LEVEL0 = 7
-local C_LEVEL0 = 8
-
-local PREPARE_SECOND_ROUND = 10
-local WAIT_PREPARE_SECOND_ROUND = 11
-local PREPARE_FINISH = 12
-local WAIT_PREPARE_FINISH = 13
-local FINISHING_LEVEL = 14
-local FINISH_HIM = 15
-local FINAL_RESULT = 16
-local GAME_END = 17
-local curr_level = LEVEL_PREPARE
+local PREPARE_ROUND = 0
+local WAIT_PREPARE_ROUND = 1
+local LEVEL0 = 2
+local LEVEL1 = 3
+local LEVEL2 = 4
+local LEVEL3 = 5
+local LEVEL4 = 6
+local LEVEL5 = 7
+local LEVEL6 = 8
+local LEVEL7 = 9
+local LEVEL8 = 10
+local FINISHING_LEVEL = 11
+local FINISH_HIM = 12
+local FINAL_RESULT = 13
+local GAME_END = 14
+local PREPARE_EVENT = 15
+local WAIT_PREPARE_EVENT = 16
+local curr_level = PREPARE_ROUND
 
 -- Head states
 local HEAD_INIT = 1
@@ -66,52 +65,26 @@ local function combo_off(self, handle, elapsed)
 	continuous_hits = 0
 end
 
-function change_chico_state()
-end
-
-function change_melo_state()
-end
-
 function start_game()
-	
-	function prepare_weapons()
-		-- Raise squids
-		go.animate("polvo_esquerdo", "position.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 2)
-		go.animate("polvo_direito", "position.y", go.PLAYBACK_ONCE_FORWARD, 2, go.EASING_LINEAR, 2)
 
-		local function idle_tentacles()
-			spine.play_anim("polvo_esquerdo#spinemodel", "Idle_left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
-			spine.play_anim("polvo_direito#spinemodel", "Idle_Right", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
-		end
-
-		local function raise_tentacles()
-			spine.play_anim("polvo_esquerdo#spinemodel", "Rise_Left", go.PLAYBACK_ONCE_FORWARD, {playback_rate = .5})
-			spine.play_anim("polvo_direito#spinemodel", "Rise_Right", go.PLAYBACK_ONCE_FORWARD, {playback_rate = .5}, idle_tentacles)
-		end
-
-		-- Wait 5 seconds to raise the tentacles
-		timer.delay(2, false, raise_tentacles)	
-
-	end
-
-	-- Start melo presentation and bad reception
-
-
-	-- Raise octopus weapons
-	prepare_weapons()
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("dificulty") then
 		dificulty = message[1]
 	elseif message_id == hash("start") then
-		msg.post(status_bar_id, "start", {30,2,200,100, true, "Dr. Meloncolico"})
+		return
 	elseif message_id == hash("start_round") then
-		-- start = true
-		start_game()
+		start = true
 	elseif message_id == hash("time_over") then
 		curr_level = FINAL_RESULT
 	end
+end
+
+-- Hide initial objects at the beginning of the level
+function hide_initial_objects()
+	spine.play_anim("polvo_esquerdo#spinemodel", "Dorment_Left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 5})
+	spine.play_anim("polvo_direito#spinemodel", "Dorment_Right", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 5})
 end
 
 function init(self)
@@ -121,73 +94,244 @@ function init(self)
 	numHits = 0
 	numFails = 0
 	wasHit = false
-	slash = false
 	continuous_hits = 0
 	computed_points = false
 	num_combos = 0
 	total_time_left = 100000
 
 	-- Save initial positions
+	melo_inner_init_pos = go.get_position("Melo")
+	
+	hide_initial_objects()
 
-	-- Hide initial objects not be seen
-	spine.play_anim("polvo_esquerdo#spinemodel", "Dorment_Left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 5})
-	spine.play_anim("polvo_direito#spinemodel", "Dorment_Right", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 5})
-
-	-- TODO while we don't send message start from controller
-	msg.post(".", "start")
+	start = true
 end
 
 function laugh_stop(self, handle, elapsed)
-	go.cancel_animations("boca", "position.y")
-	go.set("boca", "position.y", -88)
-	sound.stop("Laugh#vergonha")
+
 end
 
 function player_loses()		
-	-- Reset Melo face
 
-	sound.play("FinishHim#looser", {delay = 0, gain = 3, pan = 0, speed = 1})
-	sound.play("FinishHim#booing", {delay = 1, gain = 1, pan = 0, speed = 1})
 end
 
-function check_game_level(hits)
-	if curr_level == FINISHING_LEVEL and numHits >= 110 then
-		curr_level = FINISH_HIM
+function set_ferida(number, state)
+	local ferida_id = string.format("Feridas#ferida%d", number)
+	msg.post(ferida_id, state)
+end
+
+function change_chico_state(wasHit)
+	if curr_round == 1 then
+		-- Delete all the stuff not needed for chico right now
+		if curr_level <= LEVEL0 then
+			-- No woumnds visible
+			for i = 1,6 do
+				set_ferida(i, "disable")
+			end
+		elseif curr_level <= LEVEL6 then
+			local ferida_id = curr_level - 2
+			set_ferida(ferida_id, "enable")
+		end 
+	elseif curr_round == 2 then
+		-- We wont do nothing here as he will have disappeared by now
+		return 
+	end
+end
+
+function set_hole (state)
+	msg.post("Hole_Back#sprite", state)
+	msg.post("Hole_Top#sprite", state)
+	msg.post("Top_To_Hide_Drill#sprite", state) 
+end
+
+function set_beam (state)
+	msg.post("Beam#sprite", state)
+end 
+
+function set_raios (state)
+	msg.post("Raios#sprite", state)
+end
+
+local OLHOS_DIR = 0
+local OLHOS_ESQ = 1
+local OLHOS_CIMA = 2
+local OLHOS_BAIXO = 3
+local OLHOS_TROCADOS = 4
+local OLHOS_TREMEM = 5
+local OLHOS_CENTRO = 6
+function mexe_olhos_melo (dir, duration, callback)
+	if dir == OLHOS_DIR then
+		go.animate("olhos", "position.x", go.PLAYBACK_ONCE_FORWARD, 16, go.EASING_LINEAR, duration, 0, callback)
+	elseif dir == OLHOS_ESQ then
+		go.animate("olhos", "position.x", go.PLAYBACK_ONCE_FORWARD, -17, go.EASING_LINEAR, duration, 0, callback)
+	elseif dir == OLHOS_CIMA then
+		go.animate("olhos", "position.y", go.PLAYBACK_ONCE_FORWARD, 26, go.EASING_LINEAR, duration, 0, callback)
+	elseif dir == OLHOS_BAIXO then
+		go.animate("olhos", "position.y", go.PLAYBACK_ONCE_FORWARD, -14, go.EASING_LINEAR, duration, 0, callback)
+	elseif dir == OLHOS_TROCADOS then
+		go.animate("olho_direito", "position.x", go.PLAYBACK_ONCE_FORWARD, -20, go.EASING_LINEAR, duration)
+		go.animate("olho_esquerdo", "position.x", go.PLAYBACK_ONCE_FORWARD, 20, go.EASING_LINEAR, duration, 0, callback)
+	elseif dir == OLHOS_TREMEM then
+		go.animate("olhos", "position.y", go.PLAYBACK_LOOP_PINGPONG, 15, go.EASING_OUTBOUNCE, 0.1)
+	elseif dir == OLHOS_CENTRO then
+		go.animate("olho_direito", "position.x", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, duration)
+		go.animate("olho_esquerdo", "position.x", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, duration)
+		go.animate("olhos", "position.x", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, duration)
+		go.animate("olhos", "position.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, duration, 0, callback)
+	end
+end
+
+local MELO_HAPPY_FACE = "Cabeça1"
+local MELO_NORMAL_FACE = "Cabeça2"
+local MELO_NORMAL_FACE_MAD = "Cabeça2_mad"
+local NELO_NORMAL_FACE_AFRAID = "Cabeça2_afraid"
+local MELO_LESS_HAIR_FACE = "Cabeça3"
+local MELO_LESS_HAIR_FACE_AFRAID = "Cabeça3_afraid"
+local MELO_NO_HAIR_FACE = "Cabeça4"
+local MELO_NO_HAIR_OLD1 = "Cabeça5"
+local MELO_NO_HAIR_OLD2 = "Cabeça6"
+local MELO_NO_HAIR_OLD3 = "Cabeça7"
+function change_melo_face(type)
+	msg.post("Cara#sprite", "play_animation", {id = hash(type)})
+end
+	
+function change_melo_state(wasHit)
+	if curr_round == 1 then
+		-- hide all the stuff not needed for melo right now
+		set_hole("disable")
+		set_beam("disable")
+		set_raios("disable")
+		change_melo_face(MELO_HAPPY_FACE)
+	elseif curr_round == 2 then
+	end
+end
+
+function raise_melo_hand_wave(next_callback)
+	local curr_hand_pos = go.get_position("wavingHand")
+	go.animate("wavingHand", "position.y", go.PLAYBACK_ONCE_FORWARD, -164, go.EASING_LINEAR, 2, 0, function()
+		timer.delay(1, false, function ()
+			go.animate("wavingHand", "rotation.z", go.PLAYBACK_LOOP_PINGPONG, -.2, go.EASING_LINEAR, 2)
+			timer.delay(4, false, function ()
+				print "Stoping waving"
+				go.cancel_animations("wavingHand", "rotation.z")
+				go.animate("wavingHand", "position.y", go.PLAYBACK_ONCE_FORWARD, curr_hand_pos.y, go.EASING_LINEAR, 2, 0, next_callback)
+			end)
+		end)
+	end)
+end
+
+
+function raise_attackers (next_callback)
+	-- Raise squids
+	go.animate("polvo_esquerdo", "position.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 2)
+	go.animate("polvo_direito", "position.y", go.PLAYBACK_ONCE_FORWARD, 2, go.EASING_LINEAR, 2)
+	
+	local function idle_tentacles()
+		spine.play_anim("polvo_esquerdo#spinemodel", "Idle_left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
+		spine.play_anim("polvo_direito#spinemodel", "Idle_Right", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
 	end
 
-	if curr_level < PREPARE_FINISH then
-		if numHits >= 60 then
-			curr_level = PREPARE_FINISH
-		elseif numHits >= 48 then
-			curr_level = LEVEL8
-		elseif numHits >= 42 then
-			curr_level = LEVEL7
-		elseif numHits >= 36 then
-			curr_level = LEVEL6
-		elseif numHits >= 30 then
-			curr_level = LEVEL5
-		elseif numHits >= 24 then
-			curr_level = LEVEL4
-		elseif numHits >= 18 then
-			curr_level = LEVEL3
-		elseif numHits >= 12 then
-			curr_level = LEVEL2
-		elseif numHits >= 6 then
-			curr_level = LEVEL1
-		elseif numHits >= 0 then
-			curr_level = LEVEL0
-		end
+	local function raise_tentacles()
+		spine.play_anim("polvo_esquerdo#spinemodel", "Rise_Left", go.PLAYBACK_ONCE_FORWARD, {playback_rate = .5})
+		spine.play_anim("polvo_direito#spinemodel", "Rise_Right", go.PLAYBACK_ONCE_FORWARD, {playback_rate = .5}, idle_tentacles)
+	end
+	
+	-- Wait 5 seconds to raise the tentacles
+	timer.delay(4, false, raise_tentacles)
+	timer.delay(2, false, next_callback)
+end
+
+function foreshadow_attack(next_callback)
+	-- People stop clapping
+	sound.stop("Melo#palmas");
+	timer.delay(1, false, function()
+		change_melo_face(MELO_NORMAL_FACE)
+	end)
+	
+	timer.delay(1, false, function()
+		sound.play("Cenario#crowd_afraid")
+	end)
+	
+	timer.delay(1, false, function()
+		raise_attackers(next_callback)
+	end)
+end
+
+function melo_looks_around (speed, next_callback)
+	mexe_olhos_melo(OLHOS_DIR, speed, function()
+		mexe_olhos_melo(OLHOS_ESQ, speed, function()
+			mexe_olhos_melo(OLHOS_CENTRO, speed, next_callback)
+		end)
+	end)
+end
+
+function raise_chico(next_callback)
+	go.animate("Melo", "position.y", go.PLAYBACK_ONCE_FORWARD, melo_inner_init_pos.y - 40, go.EASING_LINEAR, 2)
+	go.animate("Chico", "position.y", go.PLAYBACK_ONCE_FORWARD, -450, go.EASING_INBOUNCE, 1, 0, next_callback)
+end
+
+local chico_rotation = .07
+function start_moving_chico()
+	chico_rotation = -chico_rotation
+	go.animate("Chico", "rotation.z", go.PLAYBACK_ONCE_FORWARD, chico_rotation, go.EASING_LINEAR, 1, 0, start_moving_chico)
+	curr_level = LEVEL0
+end
+
+function prepare_round()
+
+	local function round1 (next_callback)
+		change_melo_state(false)
+		change_chico_state(false)
+
+		-- People start clapping
+		sound.play("Melo#palmas");
+		
+		-- One second later melo raises hand and waves
+		timer.delay(1, false, function()
+			raise_melo_hand_wave(function()
+				melo_looks_around(1, function()
+					foreshadow_attack(function()
+						melo_looks_around(0.5, function()
+							raise_chico(function()
+								msg.post(status_bar_id, "prepare", {30,2,200,100, true, "Dr. Meloncolico"})
+								start_moving_chico()
+							end)
+						end)
+					end)
+				end)
+			end)
+		end)
+
+	end
+
+	local function round2 ()
+	end
+
+	if curr_round == 1 then
+		round1()
+	elseif curr_round == 2 then
+		round2()
 	end
 end
 
 function update(self, dt)
+
+	local function check_game_level_and_round()
+	end
+
 	if start == false then
 		return
 	end
 
-	check_game_level (numHits)
+	check_game_level_and_round ()
 
-	if curr_level == LEVEL0 or 
+	if curr_level == PREPARE_ROUND then
+		prepare_round()
+		curr_level = WAIT_PREPARE_ROUND
+		return
+	elseif curr_level == WAIT_PREPARE_ROUND then
+		return
+	elseif curr_level == LEVEL0 or 
 	curr_level == LEVEL1 or 
 	curr_level == LEVEL2 or 
 	curr_level == LEVEL3 or
@@ -196,10 +340,8 @@ function update(self, dt)
 	curr_level == LEVEL6 or
 	curr_level == LEVEL7 or
 	curr_level == LEVEL8 then
-		if wasHit then
-			wasHit = false
-			-- Let's see what to do when melo is realy hit
-		end
+		change_melo_state(wasHit)
+		change_chico_state(wasHit)
 	elseif curr_level == PREPARE_FINISH then
 		msg.post(status_bar_id, "pause")
 		timer.delay(0.5, false, prepare_finish)
@@ -272,16 +414,17 @@ local function cut_right()
 end
 
 function on_input(self, action_id, action)
-	-- if start == false then
-	--	return
-	-- end
+	if start == false then
+		return
+	end
 
-	if curr_level == LEVEL_PREPARE or
-	curr_level == PREPARE_SECOND_ROUND or
-	curr_level == WAIT_PREPARE_SECOND_ROUND or
+	if curr_level == PREPARE_ROUND or
+	curr_level == WAIT_PREPARE_ROUND or
 	curr_level == PREPARE_FINISH or 
 	curr_level == WAIT_PREPARE_FINISH or 
-	curr_level == FINISH_HIM or 
+	curr_level == FINISH_HIM or
+	curr_level == PREPARE_EVENT or
+	curr_level == WAIT_PREPARE_EVENT or
 	curr_level == FINAL_RESULT then
 		-- Do nothing on input for these states, ignore
 		return

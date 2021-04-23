@@ -1,0 +1,22 @@
+images {
+  image: "/Rounds/MeloRound/Images/Chico/chico_preocupado.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+animations {
+  id: "hit"
+  images {
+    image: "/Rounds/MeloRound/Images/Chico/chico_triste.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/Rounds/MeloRound/Images/Chico/chico_dor.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 2
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+margin: 0
+extrude_borders: 2
+inner_padding: 0

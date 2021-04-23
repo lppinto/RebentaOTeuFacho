@@ -47,7 +47,7 @@ embedded_instances {
   children: "FachoName"
   data: ""
   position {
-    x: 447.0
+    x: 272.0
     y: 0.0
     z: 0.0
   }
@@ -59,7 +59,7 @@ embedded_instances {
   }
   scale3 {
     x: 1.0
-    y: 0.8
+    y: 1.0
     z: 1.0
   }
 }
@@ -114,7 +114,7 @@ embedded_instances {
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"
   "  position {\n"
-  "    x: -363.0\n"
+  "    x: -205.0\n"
   "    y: 0.0\n"
   "    z: 0.0\n"
   "  }\n"
@@ -127,7 +127,7 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 363.0
+    x: 205.0
     y: 0.0
     z: 0.1
   }
@@ -154,7 +154,7 @@ embedded_instances {
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"
   "  position {\n"
-  "    x: -363.0\n"
+  "    x: -205.0\n"
   "    y: 0.0\n"
   "    z: 0.0\n"
   "  }\n"
@@ -167,7 +167,7 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 363.0
+    x: 205.0
     y: 0.0
     z: 0.2
   }
@@ -190,7 +190,7 @@ embedded_instances {
   children: "PlayerLifeBar"
   data: ""
   position {
-    x: -444.0
+    x: -271.0
     y: 0.0
     z: 0.0
   }
@@ -202,7 +202,7 @@ embedded_instances {
   }
   scale3 {
     x: 1.0
-    y: 0.8
+    y: 1.0
     z: 1.0
   }
 }
@@ -257,7 +257,7 @@ embedded_instances {
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"
   "  position {\n"
-  "    x: 363.0\n"
+  "    x: 206.0\n"
   "    y: 0.0\n"
   "    z: 0.0\n"
   "  }\n"
@@ -270,7 +270,7 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: -363.0
+    x: -206.0
     y: 0.0
     z: 0.1
   }
@@ -332,7 +332,7 @@ embedded_instances {
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
-  "    y: 55.0\n"
+  "    y: 58.75\n"
   "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
@@ -395,8 +395,8 @@ embedded_instances {
     w: 1.0
   }
   scale3 {
-    x: 1.0
-    y: 1.0
+    x: 0.8
+    y: 0.8
     z: 1.0
   }
 }
@@ -458,8 +458,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 369.0
-    y: -74.0
+    x: 210.0
+    y: -55.0
     z: 0.0
   }
   rotation {
@@ -532,8 +532,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: -372.0
-    y: -64.0
+    x: -209.0
+    y: -55.0
     z: 0.0
   }
   rotation {
@@ -554,7 +554,7 @@ embedded_instances {
   data: ""
   position {
     x: 0.0
-    y: 0.0
+    y: -3.0
     z: 0.0
   }
   rotation {
@@ -564,8 +564,8 @@ embedded_instances {
     w: 1.0
   }
   scale3 {
-    x: 1.0
-    y: 1.0
+    x: 0.6
+    y: 0.6
     z: 1.0
   }
 }

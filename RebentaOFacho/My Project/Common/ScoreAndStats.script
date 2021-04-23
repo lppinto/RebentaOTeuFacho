@@ -198,7 +198,7 @@ function prepare_life_bars()
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("start") then
+	if message_id == hash("prepare") then
 		total_time = message[1]
 		round_count = message[2]
 		max_facho_health = message[3]
@@ -207,12 +207,12 @@ function on_message(self, message_id, message, sender)
 		label.set_text("FachoName#label", message[6]) 
 
 		prepare_life_bars()
-		
+
 		parent = sender
 		display_time (get_str_digits_from_number(total_time), false)
-		go.animate("GameStatus", "position.y", go.PLAYBACK_ONCE_FORWARD, 580, go.EASING_LINEAR, 1, 0, function()
-			timer.delay(1, true, start_round_sequence)
-		end)
+		go.animate("GameStatus", "position.y", go.PLAYBACK_ONCE_FORWARD, 580, go.EASING_LINEAR, 1, 0)
+	elseif message_id == hash("start") then
+		start_round_sequence()
 	elseif message_id == hash("pause") then
 		pause_timer()
 	elseif message_id == hash("set_score") then

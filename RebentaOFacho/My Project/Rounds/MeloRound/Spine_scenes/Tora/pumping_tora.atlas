@@ -1,5 +1,5 @@
 images {
-  image: "/Rounds/MeloRound/Spine_scenes/tora_explicita_2_texture/tora.png"
+  image: "/Rounds/MeloRound/Spine_scenes/Tora/Texture/tora.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 margin: 0
