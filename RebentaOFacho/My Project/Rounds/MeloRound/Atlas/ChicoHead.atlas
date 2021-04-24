@@ -2,6 +2,14 @@ images {
   image: "/Rounds/MeloRound/Images/Chico/chico_preocupado.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
+images {
+  image: "/Rounds/MeloRound/Images/Chico/chico_morto.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Chico/chico_blood_mask.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
 animations {
   id: "hit"
   images {

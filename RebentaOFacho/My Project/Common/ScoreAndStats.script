@@ -201,12 +201,21 @@ function set_facho_name(name)
 	label.set_text("FachoName#label", name) 
 end
 
+function give_player(amount)
+	if amount < 0 then amount = 0 end
+
+	curr_player_health = curr_player_health + amount
+
+	scale_factor = curr_player_health / 100
+	go.animate(player_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, scale_factor, go.EASING_INOUTBACK, 0.2, 0)
+end
+
 function on_message(self, message_id, message, sender)
 	if message_id == hash("prepare") then
 		total_time = message[1]
 		round_count = message[2]
 		max_facho_health = message[3]
-		max_player_health = message[4]
+		max_player_stamina = message[4]
 		boss_level = message[5]
 		set_facho_name(message[6])
 
@@ -216,7 +225,7 @@ function on_message(self, message_id, message, sender)
 		display_time (get_str_digits_from_number(total_time), false)
 		go.animate("GameStatus", "position.y", go.PLAYBACK_ONCE_FORWARD, 580, go.EASING_LINEAR, 1, 0)
 	elseif message_id == hash("start") then
-		start_round_sequence()
+		timer.delay(1, true, start_round_sequence)
 	elseif message_id == hash("pause") then
 		pause_timer()
 	elseif message_id == hash("set_score") then
@@ -225,6 +234,8 @@ function on_message(self, message_id, message, sender)
 		hurt_facho(message[1])
 	elseif message_id == hash("hurt_player") then
 		hurt_player(message[1])
+	elseif message_id == hash("give_player") then
+		give_player(message[1])
 	elseif message_id == hash("facho_name") then
 		set_facho_name(message[1])
 	end

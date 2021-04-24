@@ -65,6 +65,29 @@ embedded_instances {
   "    w: 1.0\n"
   "  }\n"
   "}\n"
+  "embedded_components {\n"
+  "  id: \"no_stamina\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Common/Sounds/no_stamina.ogg\\\"\\n"
+  "looping: 0\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
   ""
   position {
     x: 480.0
@@ -379,7 +402,7 @@ embedded_instances {
   "  id: \"spinemodel\"\n"
   "  type: \"spinemodel\"\n"
   "  data: \"spine_scene: \\\"/Rounds/MeloRound/Spine_scenes/tentaculo_esquerdo.spinescene\\\"\\n"
-  "default_animation: \\\"Attack\\\"\\n"
+  "default_animation: \\\"Dorment_Left\\\"\\n"
   "skin: \\\"\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "material: \\\"/builtins/materials/spine.material\\\"\\n"
@@ -1042,6 +1065,7 @@ embedded_instances {
 }
 embedded_instances {
   id: "ChicoHead"
+  children: "BloodMask"
   children: "Feridas"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
@@ -2255,6 +2279,46 @@ embedded_instances {
     x: 0.0
     y: 0.0
     z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "BloodMask"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/ChicoHead.atlas\\\"\\n"
+  "default_animation: \\\"chico_blood_mask\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 5.078
+    y: -37.719
+    z: 0.011
   }
   rotation {
     x: 0.0
