@@ -69,18 +69,6 @@ function start_game()
 
 end
 
-function on_message(self, message_id, message, sender)
-	if message_id == hash("dificulty") then
-		dificulty = message[1]
-	elseif message_id == hash("start") then
-		return
-	elseif message_id == hash("start_round") then
-		start = true
-	elseif message_id == hash("time_over") then
-		curr_level = FINAL_RESULT
-	end
-end
-
 -- Hide initial objects at the beginning of the level
 function hide_initial_objects()
 	spine.play_anim("polvo_esquerdo#spinemodel", "Dorment_Left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = 5})
@@ -120,7 +108,7 @@ function set_ferida(number, state)
 	msg.post(ferida_id, state)
 end
 
-function change_chico_state(wasHit)
+function change_chico_state()
 	if curr_round == 1 then
 		-- Delete all the stuff not needed for chico right now
 		if curr_level <= LEVEL0 then
@@ -131,7 +119,7 @@ function change_chico_state(wasHit)
 		elseif curr_level <= LEVEL6 then
 			local ferida_id = curr_level - 2
 			set_ferida(ferida_id, "enable")
-		end 
+		end
 	elseif curr_round == 2 then
 		-- We wont do nothing here as he will have disappeared by now
 		return 
@@ -267,14 +255,13 @@ end
 
 function raise_chico(next_callback)
 	go.animate("Melo", "position.y", go.PLAYBACK_ONCE_FORWARD, melo_inner_init_pos.y - 40, go.EASING_LINEAR, 2)
-	go.animate("Chico", "position.y", go.PLAYBACK_ONCE_FORWARD, -450, go.EASING_INBOUNCE, 1, 0, next_callback)
+	go.animate("Chico", "position.y", go.PLAYBACK_ONCE_FORWARD, -450, go.EASING_LINEAR, 1, 0, next_callback)
 end
 
-local chico_rotation = .07
+local chico_rotation_euler = 20
 function start_moving_chico()
-	chico_rotation = -chico_rotation
-	go.animate("Chico", "rotation.z", go.PLAYBACK_ONCE_FORWARD, chico_rotation, go.EASING_LINEAR, 1, 0, start_moving_chico)
-	curr_level = LEVEL0
+	chico_rotation_euler = -chico_rotation_euler
+	go.animate("Chico", "euler.z", go.PLAYBACK_ONCE_FORWARD, chico_rotation_euler, go.EASING_LINEAR, 1, 0, start_moving_chico)
 end
 
 function prepare_round()
@@ -293,8 +280,13 @@ function prepare_round()
 					foreshadow_attack(function()
 						melo_looks_around(0.5, function()
 							raise_chico(function()
-								msg.post(status_bar_id, "prepare", {30,2,200,100, true, "Dr. Meloncolico"})
+								msg.post(status_bar_id, "prepare", {30,2,200,100, true, "Dr. Chiquinho"})
 								start_moving_chico()
+								curr_level = LEVEL0
+								-- timer.delay(0.1, true, function()
+									-- local ChicoRot = go.get_world_rotation("Chico")
+									-- print ("ChicoRot is at: z: " .. math.deg(ChicoRot.z))
+								-- end)
 							end)
 						end)
 					end)
@@ -340,8 +332,8 @@ function update(self, dt)
 	curr_level == LEVEL6 or
 	curr_level == LEVEL7 or
 	curr_level == LEVEL8 then
-		change_melo_state(wasHit)
-		change_chico_state(wasHit)
+		-- change_melo_state()
+		change_chico_state()
 	elseif curr_level == PREPARE_FINISH then
 		msg.post(status_bar_id, "pause")
 		timer.delay(0.5, false, prepare_finish)
@@ -371,14 +363,68 @@ function update(self, dt)
 	end
 end
 
-local function check_hit(side)
-	if side == "esquerdo" then
-		sound.play("polvo_esquerdo#cut_sound", {delay = 0, gain = 5, pan = -1, speed = 1})
-	elseif side == "direito" then
-		sound.play("polvo_direito#cut_sound", {delay = 0, gain = 5, pan = 1, speed = 1.2})
+function check_chico_hit(side, rotation)
+	victim_rot = math.deg(rotation.z)
+	ai_number = math.random(1,4)
+	ai_id = string.format("Chico#ai%d", ai_number)
+	if side == "left" then
+		if victim_rot > 1.5 and victim_rot < 5.5 then
+			print "Victim was hit on the left"
+			wasHit = true
+			sound.play(ai_id, {delay = 0, gain = 3, pan = -1, speed = 1})
+			msg.post(status_bar_id, "hurt_facho", {1})
+			msg.post("ChicoHead#sprite", "play_animation", {id = hash("hit")})
+		else
+			-- The player will lose stamina
+			msg.post(status_bar_id, "hurt_player", {1})
+		end
+	elseif side == "right" then
+		if victim_rot < 0.2 and victim_rot > -3.6 then
+			print "Victim was hit on the right"
+			wasHit = true
+			sound.play(ai_id, {delay = 0, gain = 3, pan = 1, speed = 1.2})
+			msg.post(status_bar_id, "hurt_facho", {1})
+			msg.post("ChicoHead#sprite", "play_animation", {id = hash("hit")})
+		else
+			-- The player will lose stamina
+			msg.post(status_bar_id, "hurt_player", {1})
+		end
 	end
+end
 
-	msg.post(status_bar_id, "hurt_facho", {1})
+function check_melo_hit(side, rotation)
+	-- victim_rot = math.deg(rotation.z)
+	-- ai_number = math.random(1,4)
+	-- ai_id = string.format("", ...)
+	-- if side == "left" then
+	-- 	if victim_rot > 1.5 and victim_rot < 5.5 then
+	-- 		print "Victim was hit on the left"
+	-- 		sound.play("polvo_esquerdo#cut_sound", {delay = 0, gain = 5, pan = -1, speed = 1})
+	-- 		wasHit = true
+	-- 		msg.post(status_bar_id, "hurt_facho", {1})
+	-- 	else
+	-- 		-- The player will lose stamina
+	-- 		msg.post(status_bar_id, "hurt_player", {1})
+	-- 	end
+	-- elseif side == "right" then
+	-- 	if victim_rot < 0.2 and victim_rot > -3.6 then
+	-- 		print "Victim was hit on the right"
+	-- 		sound.play("polvo_direito#cut_sound", {delay = 0, gain = 5, pan = 1, speed = 1.2})
+	-- 		wasHit = true
+	-- 		msg.post(status_bar_id, "hurt_facho", {1})
+	-- 	else
+	-- 		-- The player will lose stamina
+	-- 		msg.post(status_bar_id, "hurt_player", {1})
+	-- 	end
+	-- end
+end
+
+function check_hit(side, rotation)
+	if curr_round == ROUND1 then
+		check_chico_hit(side, rotation)
+	elseif curr_round == ROUND2 then
+		-- Time to take care of Melocolico
+	end
 end
 
 local function back_to_idle(side)
@@ -389,14 +435,15 @@ local function back_to_idle(side)
 	end
 end
 
+local block_left = false
+local block_right = false
 local function cut_left()
 	-- animate cut left
 	sound.play("polvo_esquerdo#attack_sound", {delay = 0, gain = 2, pan = -1, speed = 1})
-	spine.play_anim("polvo_esquerdo#spinemodel", "Attack", go.PLAYBACK_ONCE_FORWARD, {playback_rate = 2}, function()
+	spine.play_anim("polvo_esquerdo#spinemodel", "Attack", go.PLAYBACK_ONCE_FORWARD, {playback_rate = 2.5}, function()
+		block_right = false
 		back_to_idle("left")
 	end)
-
-	check_hit("esquerdo")
 	
 	-- label.set_text("Cenario#Pontos", string.format("%d", numHits))
 end
@@ -405,12 +452,36 @@ local function cut_right()
 	-- Animate cut right
 	sound.play("polvo_direito#attack_sound", {delay = 0, gain = 2, pan = 1, speed = 1.2})
 	spine.play_anim("polvo_direito#spinemodel", "Atack", go.PLAYBACK_ONCE_FORWARD, {playback_rate = 2}, function()
+		block_left = false
 		back_to_idle("right")
 	end)
 
-	check_hit("direito")
-
 	-- label.set_text("Cenario#Pontos", string.format("%d", numHits))
+end
+
+function get_chico_rotation ()
+	return go.get_world_rotation("Chico")
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("dificulty") then
+		dificulty = message[1]
+	elseif message_id == hash("start") then
+		return
+	elseif message_id == hash("start_round") then
+		start = true
+	elseif message_id == hash("time_over") then
+		curr_level = FINAL_RESULT
+	elseif message_id == hash("spine_event") then
+		local head_rot_pos = 0
+		if message.event_id == hash("attack_left") then
+			if curr_round == 1 then head_rot_pos = get_chico_rotation() end
+			check_hit("left", head_rot_pos)
+		elseif message.event_id == hash("attack_right") then
+			if curr_round == 1 then head_rot_pos = get_chico_rotation() end
+			check_hit("right", head_rot_pos)
+		end
+	end
 end
 
 function on_input(self, action_id, action)
@@ -437,6 +508,12 @@ function on_input(self, action_id, action)
 		end
 		return 
 	else
+		if block_left and block_right then
+			-- Something was not unblocked properly
+			-- unblock both
+			block_left = false
+			block_right = false
+		end
 		if action_id == hash("click") and action.pressed then
 			if nextCut == "Left" then
 				cut_left()			
@@ -445,13 +522,14 @@ function on_input(self, action_id, action)
 				cut_right()
 				nextCut = "Left"
 			end
-
-			if curr_level == FINISHING_LEVEL then
-				finish_hits = finish_hits + 0.2
-				if finish_hits > 4 then
-					finish_hits = 4
-				end
-			end
+		elseif action_id == hash("click_left") and action.pressed then
+			if block_left then return end
+			block_right = true
+			cut_left()
+		elseif action_id == hash("click_right") and action.pressed then
+			if block_right then return end
+			block_left = true
+			cut_right()
 		end
 	end
 end

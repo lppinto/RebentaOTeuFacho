@@ -12,7 +12,7 @@ animations {
     image: "/Rounds/MeloRound/Images/Chico/chico_dor.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
-  playback: PLAYBACK_LOOP_FORWARD
+  playback: PLAYBACK_ONCE_BACKWARD
   fps: 2
   flip_horizontal: 0
   flip_vertical: 0

@@ -1,4 +1,20 @@
+key_trigger {
+  input: KEY_Q
+  action: "click_left"
+}
+key_trigger {
+  input: KEY_P
+  action: "click_right"
+}
+key_trigger {
+  input: KEY_SPACE
+  action: "click"
+}
 mouse_trigger {
   input: MOUSE_BUTTON_1
-  action: "click"
+  action: "click_left"
+}
+mouse_trigger {
+  input: MOUSE_BUTTON_2
+  action: "click_right"
 }
