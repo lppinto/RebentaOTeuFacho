@@ -1,5 +1,33 @@
 images {
-  image: "/Rounds/MeloRound/Images/cartaz.png"
+  image: "/Rounds/MeloRound/Images/Cartaz/cartaz.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cartaz/placar1.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cartaz/placar2.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cartaz/placar3.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cartaz/placar4.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cartaz/placar5.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cartaz/placar6.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cartaz/placar7.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 margin: 0

@@ -35,10 +35,6 @@ images {
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/MeloRound/Images/FatoDoMelo.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
   image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Hole_Big_back.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }

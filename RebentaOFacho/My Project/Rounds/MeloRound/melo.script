@@ -30,10 +30,8 @@ local ROUND2 = 2
 local curr_round = ROUND1
 
 -- Event levels
-local EVENT1 = 1
-local EVENT2 = 2
-local EVENT3 = 3
-local curr_event = EVENT1
+local PREPARE_FINISHING = 1
+local curr_event = nil
 
 -- Damage levels / game states
 local PREPARE_ROUND = 0
@@ -46,15 +44,13 @@ local LEVEL4 = 6
 local LEVEL5 = 7
 local LEVEL6 = 8
 local LEVEL7 = 9
-local LEVEL8 = 10
-local FINISHING_LEVEL = 11
-local FINISH_HIM = 12
-local FINAL_RESULT = 13
-local GAME_END = 14
-local PREPARE_EVENT = 15
-local WAIT_PREPARE_EVENT = 16
+local FINISHING_LEVEL = 10
+local FINAL_RESULT = 11
+local GAME_END = 12
+local PREPARE_EVENT = 13
+local WAIT_PREPARE_EVENT = 14
 local curr_level = PREPARE_ROUND
-local number_of_levels = 8 -- Not counting the 0
+local number_of_levels = 8
 
 -- To compute levels
 local max_hits_to_take = maxFachoHealth / hit_value
@@ -102,9 +98,18 @@ function player_loses()
 
 end
 
-function set_ferida(number, state)
+function set_chico_ferida(number, state)
 	local ferida_id = string.format("Feridas#ferida%d", number)
 	msg.post(ferida_id, state)
+end
+
+local last_ferida_level_set = nil
+function change_chico_ferida()
+	if curr_level > LEVEL1 and curr_level <= LEVEL7 and last_ferida_level_set ~= curr_level then
+		last_ferida_level_set = curr_level
+		local ferida_number = curr_level - LEVEL1
+		set_chico_ferida (ferida_number, "enable")
+	end
 end
 
 function animate_chico_hit()
@@ -128,22 +133,18 @@ function change_chico_state()
 		msg.post("ChicoHead#sprite", "play_animation", {id = hash("chico_preocupado")})
 		-- No wounds visible
 		for i = 1,6 do
-			set_ferida(i, "disable")
+			set_chico_ferida(i, "disable")
 		end
 		-- No blood mask visible
 		msg.post("BloodMask#sprite", "disable")
-	elseif curr_level <= LEVEL8 then
-		-- We only have wounds until level 6
-		if curr_level > LEVEL0 and curr_level <= LEVEL6 then
-			local ferida_id = curr_level - 2
-			set_ferida(ferida_id, "enable")
-		end
+	elseif curr_level <= LEVEL7 then
+		change_chico_ferida()
 		if wasHit then
 			ai_number = math.random(1,4)
 			ai_id = string.format("Chico#ai%d", ai_number)
 
+			sound.play("Chico#slashed", {delay = 0, gain = 1, pan = 0, speed = 1})
 			animate_chico_hit()
-			
 			sound.play(ai_id, {delay = 0, gain = 3, pan = -1, speed = 1})
 
 			currFachoHealth = currFachoHealth - hit_value
@@ -224,15 +225,35 @@ local MELO_NO_HAIR_OLD3 = "Cabeça7"
 function change_melo_face(type)
 	msg.post("Cara#sprite", "play_animation", {id = hash(type)})
 end
-	
-function change_melo_state(wasHit)
+
+local MELO_NORMAL_SUIT = "FatoDoMelo"
+local MELO_SQUID_SUIT = "FatoWithSquids"
+function change_melo_suit(type)
+	msg.post("Fato#sprite", "play_animation", {id = hash(type)})
+end
+
+function change_melo_state(next_callback)
 	if curr_round == 1 then
 		-- hide all the stuff not needed for melo right now
 		set_hole("disable")
 		set_beam("disable")
 		set_raios("disable")
 		change_melo_face(MELO_HAPPY_FACE)
+		change_melo_suit(MELO_NORMAL_SUIT)
 	elseif curr_round == 2 then
+		if curr_level < LEVEL0 then
+			-- hide all the stuff not needed for melo right now
+			set_hole("disable")
+			set_beam("disable")
+			set_raios("disable")
+			change_melo_face(MELO_NORMAL_FACE_MAD)
+			change_melo_suit(MELO_SQUID_SUIT)
+			go.animate("Melo", "scale.x", go.PLAYBACK_ONCE_FORWARD, melo_inner_init_scale.x, go.EASING_LINEAR, 2)
+			go.animate("Melo", "scale.y", go.PLAYBACK_ONCE_FORWARD, melo_inner_init_scale.y, go.EASING_LINEAR, 2)
+			go.animate("Melo", "position.y", go.PLAYBACK_ONCE_FORWARD, melo_inner_init_pos.y, go.EASING_LINEAR, 2)
+		else
+			-- lets see for next levels
+		end
 	end
 end
 
@@ -250,11 +271,7 @@ function raise_melo_hand_wave(next_callback)
 	end)
 end
 
-function raise_attackers (next_callback)
-	-- Raise squids
-	go.animate("polvo_esquerdo", "position.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 2)
-	go.animate("polvo_direito", "position.y", go.PLAYBACK_ONCE_FORWARD, 2, go.EASING_LINEAR, 2)
-	
+function ready_attackers(next_callback)
 	local function idle_tentacles()
 		spine.play_anim("polvo_esquerdo#spinemodel", "Idle_left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
 		spine.play_anim("polvo_direito#spinemodel", "Idle_Right", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
@@ -264,10 +281,38 @@ function raise_attackers (next_callback)
 		spine.play_anim("polvo_esquerdo#spinemodel", "Rise_Left", go.PLAYBACK_ONCE_FORWARD, {playback_rate = .5})
 		spine.play_anim("polvo_direito#spinemodel", "Rise_Right", go.PLAYBACK_ONCE_FORWARD, {playback_rate = .5}, idle_tentacles)
 	end
-	
+
 	-- Wait 5 seconds to raise the tentacles
 	timer.delay(2, false, raise_tentacles)
-	timer.delay(4, false, next_callback)
+	if next_callback ~= nil then
+		timer.delay(4, false, next_callback)
+	end
+end
+
+function rest_attackers (next_callback)
+	local function rest_tentacles()
+		spine.play_anim("polvo_esquerdo#spinemodel", "Dorment_Left", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
+		spine.play_anim("polvo_direito#spinemodel", "Dorment_Right", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
+	end
+
+	local function lower_tentacles()
+		spine.play_anim("polvo_esquerdo#spinemodel", "Lower_Left", go.PLAYBACK_ONCE_FORWARD, {playback_rate = .5})
+		spine.play_anim("polvo_direito#spinemodel", "Lower_Right", go.PLAYBACK_ONCE_FORWARD, {playback_rate = .5}, rest_tentacles)
+	end
+
+	-- Wait 2 secs for next callback
+	timer.delay(2, false, lower_tentacles)
+	if next_callback ~= nil then
+		timer.delay(2, false, next_callback)
+	end
+end
+
+function raise_attackers (next_callback)
+	-- Raise squids
+	go.animate("polvo_esquerdo", "position.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 2)
+	go.animate("polvo_direito", "position.y", go.PLAYBACK_ONCE_FORWARD, 2, go.EASING_LINEAR, 2)
+	
+	ready_attackers(next_callback)
 end
 
 function foreshadow_attack(next_callback)
@@ -308,13 +353,13 @@ function start_moving_chico()
 end
 
 -- This is where the party starts
+local stamina_timer = nil
 function start_round()
-	if curr_round == ROUND1 then	
-		curr_level = LEVEL0
-		start_moving_chico()
-
-		-- Increase player stamina each 5 secods until max is reached
-		timer.delay(5, true, function()
+	-- Increase player stamina each 5 secods until max is reached
+	local function start_stamina_time()
+		if stamina_time ~= nill then timer.cancel(stamina_timer) end
+		
+		stamina_timer = timer.delay(5, true, function()
 			if currPlayerStamina < 100 then
 				currPlayerStamina = currPlayerStamina + stamina_recover_value -- 10% increase
 				local stamina_to_give = stamina_recover_value
@@ -327,6 +372,16 @@ function start_round()
 				msg.post(status_bar_id, "give_player", {stamina_to_give})
 			end
 		end)
+	end
+	
+	if curr_round == ROUND1 then	
+		curr_level = LEVEL0
+		start_stamina_time()
+		start_moving_chico()
+	elseif curr_round == ROUND2 then
+		curr_level = LEVEL0
+		start_stamina_time()
+		start_moving_cartaz()
 	end
 end
 
@@ -360,8 +415,32 @@ function prepare_round()
 		end)
 	end
 
-	local function round2 ()
-		print("Let's go for Round2")
+	local function round2 (next_callback)
+		-- People start screaming in horror
+		-- sound.play("Cenario#crowd_afraid")
+		
+		-- Melo drops chico.
+		go.animate("Chico", "position.y", go.PLAYBACK_ONCE_FORWARD, -750, go.EASING_OUTBACK, 2)
+
+		-- comes back to same position but now with octopus suit
+		change_melo_state()
+		-- Melo say something nasty about the uselessnes of chico
+		-- Octopus attacker rests again for awhile while people shout again in horror
+		rest_attackers()
+		-- The Andaime slowly get's down and we hear some one talking from above
+		--- It's the doctor and his intern
+		-- Estagiario: "Eh Dr. o Dr. Meloncolico está numa grande alhada"
+		-- Dr: "Nunca imaginei ver o meu grande ex mentor numa situação destas, rodeado de polvos esquerdalhos 
+		--- gigantescos que o atacam de todos os lados, isto só num filme de serie Z"
+		-- Estagiário: "Tem que haver alguma forma de o podermos ajudar, afinal de contas ele foi um dos responsáveis
+		--- por afundar o CDS e ter catapultado o Dr. Jovem para a ribalta, eu nem dormia se não tentassemos alguma coisa
+		--- como prova da nossa gratidão..."
+		-- Dr: "O Estagiário nunca tem razão, mas desta vez até fez uma amiba corar de orgulho... olhe, está a ver
+		--- aquele cartaz antigo da campanha do CDS que foi deixado no sotão a apodrecer, ore passe cá isso imediatamente, eu
+		--- tenho uma ideia, antes que aqueles polvos esquerdalhos acordem novamente"
+		-- Dr. pega no cartaz
+		-- Polvos acordam novamente 
+		-- Começa o Round2	
 	end
 
 	if curr_round == ROUND1 then
@@ -371,33 +450,46 @@ function prepare_round()
 	end
 end
 
+function is_event_level ()
+	return curr_level == PREPARE_ROUND or
+	curr_level == WAIT_PREPARE_ROUND or
+	curr_level ==  FINISH_HIM or
+	curr_level ==  FINAL_RESULT or
+	curr_level ==  GAME_END or
+	curr_level ==  PREPARE_EVENT or
+	curr_level ==  WAIT_PREPARE_EVENT
+end
+
+local LEVEL0_LIMIT = maxFachoHealth - (hits_per_level * hit_value * (LEVEL0 - 2))
+local LEVEL1_LIMIT = maxFachoHealth - (hits_per_level * hit_value * (LEVEL1 - 2))
+local LEVEL2_LIMIT = maxFachoHealth - (hits_per_level * hit_value * (LEVEL2 - 2))
+local LEVEL3_LIMIT = maxFachoHealth - (hits_per_level * hit_value * (LEVEL3 - 2))
+local LEVEL4_LIMIT = maxFachoHealth - (hits_per_level * hit_value * (LEVEL4 - 2))
+local LEVEL5_LIMIT = maxFachoHealth - (hits_per_level * hit_value * (LEVEL5 - 2))
+local LEVEL6_LIMIT = maxFachoHealth - (hits_per_level * hit_value * (LEVEL6 - 2))
+local LEVEL7_LIMIT = maxFachoHealth - (hits_per_level * hit_value * (LEVEL7 - 2))
 function update(self, dt)
 
 	local function check_game_level_and_round()
 
-		if curr_level == PREPARE_ROUND or
-		curr_level == WAIT_PREPARE_ROUND then
-			return
-		end
-		
-		if currFachoHealth > maxFachoHealth - hits_per_level * LEVEL0 then
+		if is_event_level() or curr_level == FINISH_HIM then return end
+
+		if currFachoHealth >= LEVEL1_LIMIT then
 			curr_level = LEVEL0
-		elseif currFachoHealth > maxFachoHealth - hits_per_level * LEVEL1 then
+		elseif currFachoHealth >= LEVEL2_LIMIT then
 			curr_level = LEVEL1
-		elseif currFachoHealth > maxFachoHealth - hits_per_level * LEVEL2 then
+		elseif currFachoHealth >= LEVEL3_LIMIT then
 			curr_level = LEVEL2
-		elseif currFachoHealth > maxFachoHealth - hits_per_level * LEVEL3 then
+		elseif currFachoHealth >= LEVEL4_LIMIT then
 			curr_level = LEVEL3
-		elseif currFachoHealth > maxFachoHealth - hits_per_level * LEVEL4 then
+		elseif currFachoHealth >= LEVEL5_LIMIT then
 			curr_level = LEVEL4
-		elseif currFachoHealth > maxFachoHealth - hits_per_level * LEVEL5 then
+		elseif currFachoHealth >= LEVEL6_LIMIT then
 			curr_level = LEVEL5
-		elseif currFachoHealth > maxFachoHealth - hits_per_level * LEVEL6 then
+		elseif currFachoHealth >= LEVEL7_LIMIT then
 			curr_level = LEVEL6
-		elseif currFachoHealth > maxFachoHealth - hits_per_level * LEVEL7 then
+		elseif currFachoHealth >= 0 then
 			curr_level = LEVEL7
-		elseif currFachoHealth > maxFachoHealth - hits_per_level * LEVEL8 then
-			curr_level = LEVEL8
 		end
 	end
 
@@ -420,9 +512,7 @@ function update(self, dt)
 	curr_level == LEVEL4 or
 	curr_level == LEVEL5 or
 	curr_level == LEVEL6 or
-	curr_level == LEVEL7 or
-	curr_level == LEVEL8 then
-		
+	curr_level == LEVEL7 then
 		-- change_melo_state()
 		change_chico_state()
 	elseif curr_level == PREPARE_FINISH then
@@ -470,14 +560,12 @@ function check_chico_hit(side, rotation)
 	victim_rot = math.deg(rotation.z)
 	if side == "left" then
 		if victim_rot > 1.3 and victim_rot < 6 then
-			print "Victim was hit on the left"
 			wasHit = true
 		else
 			lose_stamina()
 		end
 	elseif side == "right" then
 		if victim_rot < 0.1 and victim_rot > -3.8 then
-			print "Victim was hit on the right"
 			wasHit = true
 		else
 			lose_stamina()
@@ -586,14 +674,7 @@ function on_input(self, action_id, action)
 		return
 	end
 
-	if curr_level == PREPARE_ROUND or
-	curr_level == WAIT_PREPARE_ROUND or
-	curr_level == PREPARE_FINISH or 
-	curr_level == WAIT_PREPARE_FINISH or 
-	curr_level == FINISH_HIM or
-	curr_level == PREPARE_EVENT or
-	curr_level == WAIT_PREPARE_EVENT or
-	curr_level == FINAL_RESULT then
+	if is_event_level() then
 		-- Do nothing on input for these states, ignore
 		return
 	elseif curr_level == GAME_END then
