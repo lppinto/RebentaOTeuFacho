@@ -173,10 +173,56 @@ embedded_instances {
   children: "Cartaz"
   children: "Front"
   children: "MaosSeguras"
-  data: ""
+  data: "embedded_components {\n"
+  "  id: \"andaime_going\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Common/Sounds/andaime_going.ogg\\\"\\n"
+  "looping: 1\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"andaime_stop\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Common/Sounds/andaime_stop.ogg\\\"\\n"
+  "looping: 0\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
   position {
     x: 480.0
-    y: 977.0
+    y: 854.0
     z: 0.2
   }
   rotation {
@@ -257,7 +303,7 @@ embedded_instances {
   position {
     x: 0.0
     y: 0.0
-    z: 0.02
+    z: 0.021
   }
   rotation {
     x: 0.0
@@ -469,7 +515,7 @@ embedded_instances {
   position {
     x: 60.0
     y: -431.0
-    z: 0.3
+    z: 0.8
   }
   rotation {
     x: 0.0
@@ -556,7 +602,7 @@ embedded_instances {
   position {
     x: 460.0
     y: -421.0
-    z: 0.3
+    z: 0.8
   }
   rotation {
     x: 0.0
@@ -1495,7 +1541,7 @@ embedded_instances {
   data: ""
   position {
     x: -23.809
-    y: -269.045
+    y: 1533.812
     z: 0.01
   }
   rotation {
@@ -1881,14 +1927,14 @@ embedded_instances {
   ""
   position {
     x: -4.545
-    y: 613.0
+    y: 530.0
     z: 0.5
   }
   rotation {
-    x: 6.123234E-17
-    y: -6.123234E-17
+    x: 0.0
+    y: 0.0
     z: 1.0
-    w: 3.7493994E-33
+    w: 6.123234E-17
   }
   scale3 {
     x: 1.0
@@ -2454,7 +2500,7 @@ embedded_instances {
   "  id: \"placar\"\n"
   "  type: \"sprite\"\n"
   "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Cartaz.atlas\\\"\\n"
-  "default_animation: \\\"placar6\\\"\\n"
+  "default_animation: \\\"placar1\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"

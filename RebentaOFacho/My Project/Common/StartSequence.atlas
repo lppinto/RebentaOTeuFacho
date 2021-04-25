@@ -19,7 +19,7 @@ images {
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Common/Images/NumerosStart/ finalRound.png"
+  image: "/Common/Images/NumerosStart/round_final.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 margin: 0

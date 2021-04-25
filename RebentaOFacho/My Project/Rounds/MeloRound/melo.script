@@ -352,6 +352,13 @@ function start_moving_chico()
 	go.animate("Chico", "euler.z", go.PLAYBACK_ONCE_FORWARD, chico_rotation_euler, go.EASING_LINEAR, 1, 0, start_moving_chico)
 end
 
+local cartaz_rot = 25
+function start_moving_cartaz()
+	cartaz_rot = -cartaz_rot
+	rotation = 180 + cartaz_rot
+	go.animate("Cartaz", "euler.z", go.PLAYBACK_ONCE_PINGPONG, rotation, go.EASING_LINEAR, 1.5, 0, start_moving_cartaz)
+end
+
 -- This is where the party starts
 local stamina_timer = nil
 function start_round()
@@ -385,6 +392,21 @@ function start_round()
 	end
 end
 
+function start_first_dialog(next_callback)
+	--- It's the doctor and his intern
+	-- Estagiario: "Eh Dr. o Dr. Meloncolico está numa grande alhada"
+	-- Dr: "Nunca imaginei ver o meu grande ex mentor numa situação destas, rodeado de polvos esquerdalhos 
+	--- gigantescos que o atacam de todos os lados, isto só num filme de serie Z"
+	-- Estagiário: "Tem que haver alguma forma de o podermos ajudar, afinal de contas ele foi um dos responsáveis
+	--- por afundar o CDS e ter catapultado o Dr. Jovem para a ribalta, eu nem dormia se não tentassemos alguma coisa
+	--- como prova da nossa gratidão..."
+	-- Dr: "O Estagiário nunca costuma ter razão, mas desta vez é bem capaz de ter suplantado uma amiba... olhe, está a ver
+	--- aquele cartaz antigo da campanha do CDS que foi deixado no sotão a apodrecer, ore passe para cá isso imediatamente,
+	--- tenho uma ideia, não vão aqueles polvos esquerdalhos nojentos acordar a qualquer momento."
+	print("Dialog happens")
+	timer.delay(2, false, next_callback)
+end
+
 function prepare_round()
 	
 	local function round1 (next_callback)
@@ -401,11 +423,12 @@ function prepare_round()
 					foreshadow_attack(function()
 						melo_looks_around(0.5, function()
 							raise_chico(function()
-								msg.post(status_bar_id, "prepare", {total_time_left,2,200,100, true, "Dr. Chiquinho"})
+								msg.post(status_bar_id, "facho_name", {"Dr. Chiquinho"})
+								msg.post(status_bar_id, "prepare", {total_time_left,2, true})
 
 								-- Wait for the prepare
 								timer.delay(1, false, function()
-									msg.post(status_bar_id, "start")
+									msg.post(status_bar_id, "start", {ROUND1})
 								end)
 							end)
 						end)
@@ -420,27 +443,43 @@ function prepare_round()
 		-- sound.play("Cenario#crowd_afraid")
 		
 		-- Melo drops chico.
-		go.animate("Chico", "position.y", go.PLAYBACK_ONCE_FORWARD, -750, go.EASING_OUTBACK, 2)
+		go.animate("Chico", "position.y", go.PLAYBACK_ONCE_FORWARD, -750, go.EASING_INBACK, 2)
 
 		-- comes back to same position but now with octopus suit
 		change_melo_state()
 		-- Melo say something nasty about the uselessnes of chico
 		-- Octopus attacker rests again for awhile while people shout again in horror
-		rest_attackers()
-		-- The Andaime slowly get's down and we hear some one talking from above
-		--- It's the doctor and his intern
-		-- Estagiario: "Eh Dr. o Dr. Meloncolico está numa grande alhada"
-		-- Dr: "Nunca imaginei ver o meu grande ex mentor numa situação destas, rodeado de polvos esquerdalhos 
-		--- gigantescos que o atacam de todos os lados, isto só num filme de serie Z"
-		-- Estagiário: "Tem que haver alguma forma de o podermos ajudar, afinal de contas ele foi um dos responsáveis
-		--- por afundar o CDS e ter catapultado o Dr. Jovem para a ribalta, eu nem dormia se não tentassemos alguma coisa
-		--- como prova da nossa gratidão..."
-		-- Dr: "O Estagiário nunca tem razão, mas desta vez até fez uma amiba corar de orgulho... olhe, está a ver
-		--- aquele cartaz antigo da campanha do CDS que foi deixado no sotão a apodrecer, ore passe cá isso imediatamente, eu
-		--- tenho uma ideia, antes que aqueles polvos esquerdalhos acordem novamente"
-		-- Dr. pega no cartaz
-		-- Polvos acordam novamente 
-		-- Começa o Round2	
+		rest_attackers(function()
+			-- The Andaime slowly get's down and we hear some one talking from above
+			sound.play("Andaime#andaime_going", {delay = 0, gain = 1, pan = 0, speed = 1})
+			go.animate("Andaime", "position.y", go.PLAYBACK_ONCE_FORWARD, 730, go.EASING_INOUTBACK, 5, 0, function()
+				sound.stop("Andaime#andaime_going")
+				sound.play("Andaime#andaime_stop", {delay = 0, gain = 1, pan = 0, speed = 1})
+
+				-- Estagiario and Dr. start talking here
+				start_first_dialog(function()
+					mexe_olhos_melo(OLHOS_CIMA, 1, function()
+						mexe_olhos_melo(OLHOS_CENTRO, 1, function()
+							change_melo_face(MELO_NORMAL_FACE)
+							-- Dr. pega no cartaz e coloca-o em frente à cara do Dr Melo
+							go.animate("Cartaz", "position.y", go.PLAYBACK_ONCE_FORWARD, 30, go.EASING_LINEAR, 2, 0, function()
+								msg.post(status_bar_id, "facho_name", {"Dr. Meloncolico"})
+
+								timer.delay(1, false, function()
+									-- Polvos acordam novamente 
+									raise_attackers(function()
+										timer.delay(1, false, function()
+											-- Começa o Round2	
+											msg.post(status_bar_id, "start", {ROUND2})
+										end)
+									end)
+								end)
+							end)
+						end)
+					end)
+				end)
+			end)
+		end)
 	end
 
 	if curr_round == ROUND1 then
@@ -513,16 +552,21 @@ function update(self, dt)
 	curr_level == LEVEL5 or
 	curr_level == LEVEL6 or
 	curr_level == LEVEL7 then
-		-- change_melo_state()
-		change_chico_state()
+		if curr_round == ROUND1 then
+			change_chico_state()
+		elseif curr_round == ROUND2 then
+			change_melo_state()
+		end
 	elseif curr_level == PREPARE_FINISH then
 		msg.post(status_bar_id, "pause")
+		-- Raise the drill on top of Meloncolics head
 		timer.delay(0.5, false, prepare_finish)
 		curr_level = WAIT_PREPARE_FINISH
 	elseif curr_level == WAIT_PREPARE_FINISH then
 		return 
 	elseif curr_level == FINISHING_LEVEL then
-		-- Raise the mega drill and position it
+		-- Hit that motherfucker with the drill
+		-- until it makes a hole in his head
 		return
 	elseif curr_level == FINISH_HIM then
 		finish_him ()
@@ -574,37 +618,13 @@ function check_chico_hit(side, rotation)
 end
 
 function check_melo_hit(side, rotation)
-	-- victim_rot = math.deg(rotation.z)
-	-- ai_number = math.random(1,4)
-	-- ai_id = string.format("", ...)
-	-- if side == "left" then
-	-- 	if victim_rot > 1.5 and victim_rot < 5.5 then
-	-- 		print "Victim was hit on the left"
-	-- 		sound.play("polvo_esquerdo#cut_sound", {delay = 0, gain = 5, pan = -1, speed = 1})
-	-- 		wasHit = true
-	-- 		msg.post(status_bar_id, "hurt_facho", {1})
-	-- 	else
-	-- 		-- The player will lose stamina
-	-- 		msg.post(status_bar_id, "hurt_player", {1})
-	-- 	end
-	-- elseif side == "right" then
-	-- 	if victim_rot < 0.2 and victim_rot > -3.6 then
-	-- 		print "Victim was hit on the right"
-	-- 		sound.play("polvo_direito#cut_sound", {delay = 0, gain = 5, pan = 1, speed = 1.2})
-	-- 		wasHit = true
-	-- 		msg.post(status_bar_id, "hurt_facho", {1})
-	-- 	else
-	-- 		-- The player will lose stamina
-	-- 		msg.post(status_bar_id, "hurt_player", {1})
-	-- 	end
-	-- end
 end
 
 function check_hit(side, rotation)
 	if curr_round == ROUND1 then
 		check_chico_hit(side, rotation)
 	elseif curr_round == ROUND2 then
-		-- Time to take care of Melocolico
+		check_melo_hit(side, rotation)
 	end
 end
 
@@ -646,6 +666,10 @@ function get_chico_rotation ()
 	return go.get_world_rotation("Chico")
 end
 
+function get_cartaz_rotation ()
+	return go.get_world_rotation("Cartaz")
+end
+
 function on_message(self, message_id, message, sender)
 	if message_id == hash("dificulty") then
 		dificulty = message[1]
@@ -656,15 +680,23 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("time_over") then
 		curr_level = FINAL_RESULT
 	elseif message_id == hash("spine_event") then
-		local head_rot_pos = 0
+		local rot_position = 0
 		if message.event_id == hash("attack_left") then
 			block_right = false
-			if curr_round == 1 then head_rot_pos = get_chico_rotation() end
-			check_hit("left", head_rot_pos)
+			if curr_round == ROUND1 then 
+				rot_position = get_chico_rotation() 
+			elseif curr_round == ROUND2 then
+				rot_position = get_cartaz_rotation()
+			end
+			check_hit("left", rot_position)
 		elseif message.event_id == hash("attack_right") then
 			block_left = false
-			if curr_round == 1 then head_rot_pos = get_chico_rotation() end
-			check_hit("right", head_rot_pos)
+			if curr_round == ROUND1 then 
+				rot_position = get_chico_rotation()
+			elseif curr_round == ROUND2 then
+				rot_position = get_cartaz_rotation()
+			end
+			check_hit("right", rot_position)
 		end
 	end
 end
@@ -693,8 +725,7 @@ function on_input(self, action_id, action)
 			return
 		end
 		if block_left and block_right then
-			-- Something was not unblocked properly
-			-- unblock both
+			-- If Something was not unblocked properly unblock both
 			block_left = false
 			block_right = false
 		end

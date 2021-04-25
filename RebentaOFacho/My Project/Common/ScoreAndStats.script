@@ -9,6 +9,9 @@ local player_life_bar = "PlayerLifeBar"
 local curr_facho_health = 100
 local curr_player_health = 100
 
+-- Round
+local curr_round = 1 -- default
+
 local function get_str_digits_from_number(number)	
 
 	-- Protection for negative number
@@ -76,7 +79,6 @@ local function pause_timer()
 	end
 end
 
-local start_round = 1
 local start_iter = 4
 function start_round_sequence(self, handle, elapsed)
 	if start_iter > 1 then
@@ -92,8 +94,8 @@ function start_round_sequence(self, handle, elapsed)
 		
 		local start_sprite = "round1"
 		local sound_id = "NumberCount#round_1"
-		if start_round == 2 then
-			start_sprite = "finalRound"
+		if curr_round == 2 then
+			start_sprite = "round_final"
 			sound_id = "NumberCount#final_round"
 		end
 		msg.post("NumberCount#sprite", "play_animation", {id = hash(start_sprite)})
@@ -105,7 +107,7 @@ function start_round_sequence(self, handle, elapsed)
 		msg.post("NumberCount#sprite", "disable")
 		timer.cancel(handle);
 		
-		-- Tell parente to start the round
+		-- Tell parent to start the round
 		msg.post(parent, "start_round")
 		start_timer()
 	end
@@ -143,8 +145,6 @@ function hurt_facho(amount)
 			boss_level = false
 			active_boss_life_bar = "FachoLifeBar1"
 			curr_facho_health = 100 -- Second try bastard
-		else
-			-- message parent to finish the boss once and forever
 		end
 	end
 end
@@ -214,17 +214,16 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("prepare") then
 		total_time = message[1]
 		round_count = message[2]
-		max_facho_health = message[3]
-		max_player_stamina = message[4]
-		boss_level = message[5]
-		set_facho_name(message[6])
-
+		boss_level = message[3]
+		
 		prepare_life_bars()
 
 		parent = sender
 		display_time (get_str_digits_from_number(total_time), false)
 		go.animate("GameStatus", "position.y", go.PLAYBACK_ONCE_FORWARD, 580, go.EASING_LINEAR, 1, 0)
 	elseif message_id == hash("start") then
+		start_iter = 4
+		curr_round = message[1]
 		timer.delay(1, true, start_round_sequence)
 	elseif message_id == hash("pause") then
 		pause_timer()
