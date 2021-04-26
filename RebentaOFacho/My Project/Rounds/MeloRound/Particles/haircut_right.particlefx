@@ -1,6 +1,6 @@
 emitters {
   id: "emitter"
-  mode: PLAY_MODE_LOOP
+  mode: PLAY_MODE_ONCE
   duration: 1.0
   space: EMISSION_SPACE_WORLD
   position {
@@ -258,8 +258,8 @@ emitters {
     type: MODIFIER_TYPE_RADIAL
     use_direction: 0
     position {
-      x: -191.0
-      y: 5.0
+      x: -128.0
+      y: 83.0
       z: 0.0
     }
     rotation {
@@ -289,6 +289,31 @@ emitters {
       spread: 0.0
     }
   }
+  modifiers {
+    type: MODIFIER_TYPE_ACCELERATION
+    use_direction: 0
+    position {
+      x: 96.0
+      y: 115.0
+      z: 0.0
+    }
+    rotation {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      w: 1.0
+    }
+    properties {
+      key: MODIFIER_KEY_MAGNITUDE
+      points {
+        x: 0.0
+        y: -100.0
+        t_x: 1.0
+        t_y: 0.0
+      }
+      spread: 0.0
+    }
+  }
   size_mode: SIZE_MODE_MANUAL
   start_delay_spread: 0.0
   duration_spread: 0.0
@@ -297,7 +322,7 @@ emitters {
 }
 emitters {
   id: "emitter1"
-  mode: PLAY_MODE_LOOP
+  mode: PLAY_MODE_ONCE
   duration: 1.0
   space: EMISSION_SPACE_WORLD
   position {
@@ -555,8 +580,8 @@ emitters {
     type: MODIFIER_TYPE_RADIAL
     use_direction: 0
     position {
-      x: -191.0
-      y: 5.0
+      x: -266.0
+      y: 102.0
       z: 0.0
     }
     rotation {

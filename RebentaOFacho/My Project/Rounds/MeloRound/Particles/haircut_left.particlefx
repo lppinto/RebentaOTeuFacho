@@ -1,6 +1,6 @@
 emitters {
   id: "emitter"
-  mode: PLAY_MODE_LOOP
+  mode: PLAY_MODE_ONCE
   duration: 1.0
   space: EMISSION_SPACE_WORLD
   position {
@@ -67,7 +67,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_LIFE_TIME
     points {
       x: 0.0
-      y: 1.5
+      y: 1.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -259,7 +259,7 @@ emitters {
     use_direction: 0
     position {
       x: 214.0
-      y: -54.0
+      y: 130.0
       z: 0.0
     }
     rotation {
@@ -289,6 +289,31 @@ emitters {
       spread: 0.0
     }
   }
+  modifiers {
+    type: MODIFIER_TYPE_ACCELERATION
+    use_direction: 0
+    position {
+      x: -225.0
+      y: -16.0
+      z: 0.0
+    }
+    rotation {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      w: 1.0
+    }
+    properties {
+      key: MODIFIER_KEY_MAGNITUDE
+      points {
+        x: 0.0
+        y: -100.0
+        t_x: 1.0
+        t_y: 0.0
+      }
+      spread: 0.0
+    }
+  }
   size_mode: SIZE_MODE_MANUAL
   start_delay_spread: 0.0
   duration_spread: 0.0
@@ -297,7 +322,7 @@ emitters {
 }
 emitters {
   id: "emitter1"
-  mode: PLAY_MODE_LOOP
+  mode: PLAY_MODE_ONCE
   duration: 1.0
   space: EMISSION_SPACE_WORLD
   position {
@@ -556,7 +581,7 @@ emitters {
     use_direction: 0
     position {
       x: 214.0
-      y: -54.0
+      y: 27.0
       z: 0.0
     }
     rotation {
@@ -580,6 +605,31 @@ emitters {
       points {
         x: 0.0
         y: 1000.0
+        t_x: 1.0
+        t_y: 0.0
+      }
+      spread: 0.0
+    }
+  }
+  modifiers {
+    type: MODIFIER_TYPE_ACCELERATION
+    use_direction: 0
+    position {
+      x: -167.0
+      y: 191.0
+      z: 0.0
+    }
+    rotation {
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      w: 1.0
+    }
+    properties {
+      key: MODIFIER_KEY_MAGNITUDE
+      points {
+        x: 0.0
+        y: -150.0
         t_x: 1.0
         t_y: 0.0
       }

@@ -22,6 +22,7 @@ collection_instances {
 scale_along_z: 0
 embedded_instances {
   id: "Cenario"
+  children: "Dialog"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
@@ -998,10 +999,10 @@ embedded_instances {
     z: 0.3
   }
   rotation {
-    x: 1.5841245E-16
-    y: -1.9554604E-16
-    z: 0.05554874
-    w: 0.998456
+    x: 0.0
+    y: 0.0
+    z: 0.087155744
+    w: 0.9961947
   }
   scale3 {
     x: 1.3
@@ -1785,8 +1786,8 @@ embedded_instances {
   "  id: \"haircut_left\"\n"
   "  component: \"/Rounds/MeloRound/Particles/haircut_left.particlefx\"\n"
   "  position {\n"
-  "    x: -73.238\n"
-  "    y: 180.953\n"
+  "    x: -101.809\n"
+  "    y: 221.429\n"
   "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
@@ -1800,8 +1801,8 @@ embedded_instances {
   "  id: \"haircut_right\"\n"
   "  component: \"/Rounds/MeloRound/Particles/haircut_right.particlefx\"\n"
   "  position {\n"
-  "    x: 97.619\n"
-  "    y: 195.239\n"
+  "    x: 126.19\n"
+  "    y: 221.429\n"
   "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
@@ -2517,6 +2518,26 @@ embedded_instances {
   "  }\n"
   "}\n"
   ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "Dialog"
+  data: ""
   position {
     x: 0.0
     y: 0.0
