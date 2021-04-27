@@ -1,4 +1,28 @@
 images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/melo_olho_direito.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/melo_olho_esquerdo.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Hole_Big_back.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Hole_Big_Top.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/top_to_hide_drill.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Hole_Big_Top_no_blood.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
   image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a1.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
@@ -27,31 +51,7 @@ images {
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/melo_olho_direito.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
-  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/melo_olho_esquerdo.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
-  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Hole_Big_back.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
-  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Hole_Big_Top.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
-  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/top_to_hide_drill.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
-  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Hole_Big_Top_no_blood.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
-  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a2_afraid.png"
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a8.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
@@ -59,7 +59,27 @@ images {
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a2_afraid.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
   image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a3_afraid.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a4_afraid.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a5_afraid_no_mouth.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Mouth5_afraid.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/Cabe\303\247a5_afraid.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 margin: 0

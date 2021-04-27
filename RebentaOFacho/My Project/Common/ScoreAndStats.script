@@ -88,7 +88,6 @@ function start_round_sequence(self, handle, elapsed)
 		sound.play(sound_id, {delay = 0, gain = 3, pan = 0, speed = 1})
 		
 	elseif start_iter > 0 then
-		
 		local start_sprite = nil
 		local sound_id = nil
 		if curr_round == ROUND1 then
@@ -208,7 +207,7 @@ end
 
 function add_time(time)
 	sound.play("Tempo#add_time")
-	timer.delay(0.1, true, function(self, handle, elapsed)
+	timer.delay(0.04, true, function(self, handle, elapsed)
 		if time > 0 then
 			total_time = total_time + 1
 			time = time - 1

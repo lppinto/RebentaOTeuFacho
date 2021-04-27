@@ -10,13 +10,13 @@ local game_won = false
 local start = false
 local dificulty = "hard"
 local clicks_to_finish = 5
-local facho1_time = 99
+local facho1_time = 45
 local facho2_time = 30
 local total_time_left = facho1_time
-local hit_value = 2
-local cartaz_hit_value = 1
+local hit_value = 3
+local cartaz_hit_value = 1.5
 local cartaz_was_hit = false
-local stamina_lose_value = 5
+local stamina_lose_value = 0
 local stamina_recover_value = 10
 
 -- Heath and Stamina
@@ -33,7 +33,7 @@ local status_bar_id = "melo:/Score/GameStatus#ScoreAndStats"
 -- Round levels
 local ROUND1 = 1
 local ROUND2 = 2
-local curr_round = ROUND1
+local curr_round = ROUND2
 
 -- Event levels
 local EVENT_OCTOPUS = 1
@@ -144,10 +144,6 @@ function init(self)
 	start = true
 end
 
-function laugh_stop(self, handle, elapsed)
-
-end
-
 function player_loses()		
 
 end
@@ -183,7 +179,7 @@ function animate_chico_dead()
 	go.cancel_animations("Chico", "euler.z")
 end
 
-function change_chico_state()
+function update_chico_state()
 	-- Delete all the stuff not needed for chico right now
 	if curr_level < LEVEL0 then
 		-- Set normal first face
@@ -225,6 +221,8 @@ function change_chico_state()
 		end
 	end
 end
+
+------------------------ MELO AREA ------------------------
 
 function set_hole (state)
 	msg.post("Hole_Back#sprite", state)
@@ -275,6 +273,8 @@ local MELO_NORMAL_FACE_MAD = "Cabeça2_mad"
 local NELO_NORMAL_FACE_AFRAID = "Cabeça2_afraid"
 local MELO_LESS_HAIR_FACE = "Cabeça3"
 local MELO_LESS_HAIR_FACE_AFRAID = "Cabeça3_afraid"
+local MELO_EVEN_LESS_HAIR_FACE = "Cabeça4"
+local MELO_EVEN_LESS_HAIR_FACE_AFRAID = "Cabeça4_afraid"
 local MELO_NO_HAIR_FACE = "Cabeça4"
 local MELO_NO_HAIR_OLD1 = "Cabeça5"
 local MELO_NO_HAIR_OLD2 = "Cabeça6"
@@ -283,13 +283,27 @@ function change_melo_face(type)
 	msg.post("Cara#sprite", "play_animation", {id = hash(type)})
 end
 
+_G["MELO_FACE_LEVEL0"] = "Cabeça2"
+_G["MELO_FACE_LEVEL1"] = "Cabeça2_afraid"
+_G["MELO_FACE_LEVEL2"] = "Cabeça3"
+_G["MELO_FACE_LEVEL3"] = "Cabeça3_afraid"
+_G["MELO_FACE_LEVEL4"] = "Cabeça4"
+_G["MELO_FACE_LEVEL5"] = "Cabeça4_afraid"
+_G["MELO_FACE_LEVEL6"] = "Cabeça5"
+_G["MELO_FACE_LEVEL7"] = "Cabeça5_afraid"
+function change_melo_face_per_level(level_number)
+	local var_name = "MELO_FACE_LEVEL" .. level_number;
+	local face_id = _G[var_name];
+	msg.post("Cara#sprite", "play_animation", {id = hash(face_id)})
+end
+
 local MELO_NORMAL_SUIT = "FatoDoMelo"
 local MELO_SQUID_SUIT = "FatoWithSquids"
 function change_melo_suit(type)
 	msg.post("Fato#sprite", "play_animation", {id = hash(type)})
 end
 
-function change_melo_state(next_callback)
+function update_melo_state(next_callback)
 	if curr_round == 1 then
 		-- hide all the stuff not needed for melo right now
 		set_hole("disable")
@@ -310,17 +324,15 @@ function change_melo_state(next_callback)
 			go.animate("Melo", "position.y", go.PLAYBACK_ONCE_FORWARD, melo_inner_init_pos.y, go.EASING_LINEAR, 2)
 			currFachoHealth = maxFachoHealth
 		elseif curr_level <= LEVEL7 then
-			-- TODO:
-			-- change_melo_face()
+			change_melo_face_per_level(curr_level - LEVEL0)
 			if wasHit then
 				currFachoHealth = currFachoHealth - hit_value
 				local hit_value_to_report = hit_value
+
 				if currFachoHealth < 0 then
 					hit_value_to_report = currFachoHealth + hit_value
 					currFachoHealth = 0
-
--- 					animate_chico_dead()
-
+					
 					msg.post(status_bar_id, "pause")
 
 					-- Let's prepare for the finishing even and for what comes next
@@ -336,6 +348,7 @@ function change_melo_state(next_callback)
 				sound.play(rip_id, {delay = 0, gain = 2, pan = 0, speed = 1})
 				
 				currCartazHealth = currCartazHealth - cartaz_hit_value
+				particlefx.play("Frame#CartazRipping")
 				cartaz_was_hit = false
 			end
 		end
@@ -441,19 +454,33 @@ function get_object_rotation(id)
 end
 
 local chico_rot = 20
+local chico_first_rot_iter = true
+local chico_next_rot = nil
 function start_moving_chico()
-	chico_rot = -chico_rot
-	local curr_rotation = get_object_rotation("Chico")
-	local rotation = curr_rotation + chico_rot
-	go.animate("Chico", "euler.z", go.PLAYBACK_ONCE_PINGPONG, rotation, go.EASING_LINEAR, 1, 0, start_moving_chico)
+	if chico_first_rot_iter then
+		local curr_rotation = get_object_rotation("Chico")
+		local rotation = curr_rotation + chico_rot
+		chico_next_rot = curr_rotation - chico_rot
+		go.animate("Chico", "euler.z", go.PLAYBACK_ONCE_FORWARD, rotation, go.EASING_LINEAR, 1, 0, start_moving_chico)
+		chico_first_rot_iter = false
+	else
+		go.animate("Chico", "euler.z", go.PLAYBACK_LOOP_PINGPONG, chico_next_rot, go.EASING_LINEAR, 2, 0)
+	end
 end
 
 local cartaz_rot = 25
+local cartaz_first_iter = true
+local cartaz_next_rot = nil
 function start_moving_cartaz()
-	cartaz_rot = -cartaz_rot
-	local curr_rotation = get_object_rotation("Cartaz")
-	local rotation = curr_rotation + cartaz_rot
-	go.animate("Cartaz", "euler.z", go.PLAYBACK_ONCE_PINGPONG, rotation, go.EASING_LINEAR, 1.5, 0, start_moving_cartaz)
+	if cartaz_first_iter then
+		local curr_rotation = get_object_rotation("Cartaz")
+		local rotation = curr_rotation + cartaz_rot
+		cartaz_next_rot = curr_rotation - cartaz_rot
+		go.animate("Cartaz", "euler.z", go.PLAYBACK_ONCE_FORWARD, rotation, go.EASING_LINEAR, 1.5, 0, start_moving_cartaz)
+		cartaz_first_iter = false
+	else
+		go.animate("Cartaz", "euler.z", go.PLAYBACK_LOOP_PINGPONG, cartaz_next_rot, go.EASING_LINEAR, 2, 0)
+	end
 end
 
 -- This is where the party starts
@@ -509,8 +536,8 @@ function prepare_round()
 	local function round1 (next_callback)
 		msg.post(status_bar_id, "prepare", {2})
 
-		change_melo_state()
-		change_chico_state()
+		update_melo_state()
+		update_chico_state()
 
 		-- People start clapping
 		sound.play("Melo#palmas");
@@ -525,10 +552,6 @@ function prepare_round()
 								msg.post(status_bar_id, "facho_name", {"Dr. Chiquinho"})
 								msg.post(status_bar_id, "set_time", {facho1_time})
 								msg.post(status_bar_id, "start", {ROUND1, maxFachoHealth})
-								timer.delay(.02, true, function()
-									local chico_rot = get_object_rotation("Chico")
-									print ("Chico rotation = " .. chico_rot)
-								end)
 							end)
 						end)
 					end)
@@ -545,7 +568,7 @@ function prepare_round()
 		go.animate("Chico", "position.y", go.PLAYBACK_ONCE_FORWARD, -750, go.EASING_INBACK, 2)
 
 		-- comes back to same position but now with octopus suit
-		change_melo_state()
+		update_melo_state()
 		-- Melo say something nasty about the uselessnes of chico
 		-- Octopus attacker rests again for awhile while people shout again in horror
 		rest_attackers(function()
@@ -591,8 +614,38 @@ function prepare_round()
 	end
 end
 
+function octopus_event()
+	-- Start bringing the octopus inside the ring
+	-- Music of the octopus stars playing
+	-- Melo looks scared
+	-- Dr and Estagiário start another dialog about the huge octopus
+	-- The octoputs sets in position right above Melo's head
+	-- The tip of the octopus opens up revealing a drill
+	-- The drill starts working
+	-- This gives control to the player to drill at least 3 times until a big hole is done
+	-- The drill is then removed and leaves the scene
+	-- The small octopus attackers go to rest position
+	-- Suddenly from the whole a beam of light starts comming out
+	-- after some while small things start also comming out 
+	-- Dr. and Estagiario talk about saving what's left of Dr. Melo
+	-- Dr. has an idea, which starts the next Tora Event
+end
+
+function tora_event()
+	-- Dr. Unzips his trousers, and in from of the shocked estagiario takes out
+	-- his enormous tora out. His play is to close the hole in Dr. Melos so his knowledge wont be lost
+	-- But this brings seconds side effects, the power of Dr. Melo is so big that it provoques a 
+	-- reverterd orgasm entropy to the Dr. himself. He his absorving what's left of Dr. Melo. It's Magical
+	-- The Dr. does some reversed orgasmic sounds with his mouth and the Estagiario says something that 
+	-- I haven't though about. It's going to be EPIC!
+end
+
 function prepare_event()
-	-- Prepare for exciting events
+	if curr_event == EVENT_OCTOPUS then
+		octopus_event()
+	elseif curr_event == EVENT_TORA then
+		tora_event()
+	end
 end
 
 function is_non_input_level ()
@@ -605,6 +658,16 @@ function is_non_input_level ()
 	curr_level ==  WAIT_PREPARE_EVENT
 end
 
+local cartaz_was_not_thrown = true
+function throw_cartaz_away(self, handle, elapsed)
+	-- Dr says something about Manuel Monteiro
+	go.cancel_animations("Cartaz", "euler.z")
+	local curr_rotation = get_object_rotation("Cartaz")
+	local rotation = curr_rotation + 180
+	go.animate("Cartaz", "euler.z", go.PLAYBACK_ONCE_FORWARD, rotation, go.EASING_LINEAR, 1.5, 0)
+	go.animate("Cartaz", "position.x", go.PLAYBACK_ONCE_FORWARD, 500, go.EASING_LINEAR, 1.5, 0)
+end
+		
 function update(self, dt)
 
 	local function check_game_level_and_round()
@@ -630,7 +693,7 @@ function update(self, dt)
 		end
 	end
 
-	local function change_cartaz_state ()
+	local function update_cartaz_state ()
 		if currCartazHealth >= CARTAZ1_LIMIT then
 			msg.post("Frame#placar", "play_animation", {id = hash("placar1")})
 		elseif currCartazHealth >= CARTAZ2_LIMIT then
@@ -645,6 +708,10 @@ function update(self, dt)
 			msg.post("Frame#placar", "play_animation", {id = hash("placar6")})
 		elseif currCartazHealth <= 0 then
 			msg.post("Frame#placar", "play_animation", {id = hash("placar7")})
+			if cartaz_was_not_thrown then
+				cartaz_was_not_thrown = false
+				timer.delay(1, false, throw_cartaz_away)
+			end
 		end
 	end
 
@@ -678,10 +745,10 @@ function update(self, dt)
 	curr_level == LEVEL6 or
 	curr_level == LEVEL7 then
 		if curr_round == ROUND1 then
-			change_chico_state()
+			update_chico_state()
 		elseif curr_round == ROUND2 then
-			change_cartaz_state()
-			change_melo_state()
+			update_cartaz_state()
+			update_melo_state()
 		end
 	elseif curr_level == PREPARE_FINISH then
 		msg.post(status_bar_id, "pause")
@@ -715,12 +782,12 @@ function update(self, dt)
 	end
 end
 
-function lose_stamina()
+function lose_stamina(value)
 	-- The player will lose stamina
-	currPlayerStamina = currPlayerStamina - stamina_lose_value
-	local stamina_lose_to_report = stamina_lose_value
+	currPlayerStamina = currPlayerStamina - value
+	local stamina_lose_to_report = value
 	if currPlayerStamina < 0 then
-		stamina_lose_to_report = currPlayerStamina + stamina_lose_value
+		stamina_lose_to_report = currPlayerStamina + value
 		currPlayerStamina = 0			
 	end
 
@@ -729,16 +796,16 @@ end
 
 function check_chico_hit(side, rotation)
 	if side == "left" then
-		if rotation > 2.5 and rotation < 6 then
+		if rotation > 2.3 and rotation < 6.5 then
 			wasHit = true
 		else
-			lose_stamina()
+			lose_stamina(stamina_lose_value)
 		end
 	elseif side == "right" then
-		if rotation < -3 and rotation > -9 then
+		if rotation < -2.5 and rotation > -10 then
 			wasHit = true
 		else
-			lose_stamina()
+			lose_stamina(stamina_lose_value)
 		end
 	end
 end
@@ -751,9 +818,12 @@ function check_melo_hit(side, rotation)
 			sound.play("polvo_esquerdo#cut_sound", {delay = 0, gain = 2, pan = -1, speed = 1})
 			-- animate hair being cut
 			particlefx.play("flyingHair#haircut_left")
+			if curr_level >= LEVEL4 then
+				particlefx.play("Cara#blood_splash_left")
+			end
 		else
 			cartaz_was_hit = true
-			lose_stamina()
+			lose_stamina(stamina_lose_value)
 		end
 	elseif side == "right" then
 		if rotation < 167 or currCartazHealth <= 0 then
@@ -762,9 +832,12 @@ function check_melo_hit(side, rotation)
 			sound.play("polvo_direito#cut_sound", {delay = 0, gain = 2, pan = 1, speed = 1.2})
 			-- animate hair being cut
 			particlefx.play("flyingHair#haircut_right")
+			if curr_level >= LEVEL6 then
+				particlefx.play("Cara#blood_splash_right")
+			end
 		else
 			cartaz_was_hit = true
-			lose_stamina()
+			lose_stamina(stamina_lose_value)
 		end
 	end
 end
