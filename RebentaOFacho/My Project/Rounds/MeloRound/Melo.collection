@@ -736,17 +736,40 @@ embedded_instances {
   children: "DrillSquid"
   children: "DrillSquidCover"
   children: "DrillTip"
-  data: ""
+  data: "embedded_components {\n"
+  "  id: \"music\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Common/Sounds/the_octopus_music_entrance.ogg\\\"\\n"
+  "looping: 0\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
   position {
-    x: 602.834
-    y: 111.333
+    x: 180.0
+    y: -307.501
     z: 0.01
   }
   rotation {
     x: 0.0
     y: 0.0
-    z: 0.0
-    w: 1.0
+    z: -0.17364818
+    w: 0.9848077
   }
   scale3 {
     x: 0.9
@@ -760,7 +783,7 @@ embedded_instances {
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
   "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Drill.atlas\\\"\\n"
-  "default_animation: \\\"Drill\\\"\\n"
+  "default_animation: \\\"drill10\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"
@@ -779,7 +802,7 @@ embedded_instances {
   ""
   position {
     x: -48.0
-    y: 179.111
+    y: 178.185
     z: 0.15
   }
   rotation {
@@ -1280,7 +1303,7 @@ embedded_instances {
   ""
   position {
     x: 2.0
-    y: -75.238
+    y: -77.619
     z: 0.03
   }
   rotation {
@@ -1505,6 +1528,29 @@ embedded_instances {
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"
   "  position {\n"
+  "    x: 23.816\n"
+  "    y: -36.788\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"sound\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Common/Sounds/slimytip.ogg\\\"\\n"
+  "looping: 0\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
+  "\"\n"
+  "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
   "    z: 0.0\n"
@@ -1518,8 +1564,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: -47.778
-    y: 142.222
+    x: -71.63
+    y: 180.037
     z: 0.2
   }
   rotation {

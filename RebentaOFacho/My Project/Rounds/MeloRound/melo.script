@@ -614,13 +614,36 @@ function prepare_round()
 	end
 end
 
+function dialog_about_the_octopus(next_callback)
+	-- TODO: Insert Dialog
+	timer.delay(2, false, next_callback)
+end
+
+function move_octopus_in_place(next_callback)
+	sound.play("FullDrill#music")
+	go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 110, go.EASING_LINEAR, 5, 0, function()
+		go.animate("FullDrill", "euler.z", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 5, 0)
+		go.animate("FullDrill", "position.x", go.PLAYBACK_ONCE_FORWARD, 62, go.EASING_LINEAR, 5, 0, function()
+			timer.delay(2, false, next_callback)
+		end)
+	end)
+end
+
 function octopus_event()
 	-- Start bringing the octopus inside the ring
 	-- Music of the octopus stars playing
 	-- Melo looks scared
-	-- Dr and Estagiário start another dialog about the huge octopus
 	-- The octoputs sets in position right above Melo's head
-	-- The tip of the octopus opens up revealing a drill
+	move_octopus_in_place(function()
+		-- Dr and Estagiário start another dialog about the huge octopus
+		dialog_about_the_octopus(function()
+			-- The tip of the octopus opens up revealing a drill and play slimy sound
+			sound.play("DrillTip#sound")
+			go.animate("DrillTip", "euler.z", go.PLAYBACK_ONCE_FORWARD, -180, go.EASING_LINEAR, 3)		
+		end)
+	end)
+	
+	
 	-- The drill starts working
 	-- This gives control to the player to drill at least 3 times until a big hole is done
 	-- The drill is then removed and leaves the scene
