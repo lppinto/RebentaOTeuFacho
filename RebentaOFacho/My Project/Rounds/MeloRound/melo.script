@@ -56,6 +56,7 @@ local FINAL_RESULT = 11
 local GAME_END = 12
 local PREPARE_EVENT = 13
 local WAIT_PREPARE_EVENT = 14
+local INTERACTIVE_EVENT = 15
 local curr_level = PREPARE_ROUND
 local number_of_levels = 8
 
@@ -265,6 +266,15 @@ function mexe_olhos_melo (dir, duration, callback)
 		go.animate("olhos", "position.x", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, duration)
 		go.animate("olhos", "position.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, duration, 0, callback)
 	end
+end
+
+function param_olhos_melo ()
+	go.cancel_animations("olho_direito", "position.x")
+	go.cancel_animations("olho_esquerdo", "position.x")
+	go.cancel_animations("olhos", "position.x")
+	go.cancel_animations("olhos", "position.y")
+
+	mexe_olhos_melo(OLHOS_CENTRO, 1, function() end)
 end
 
 local MELO_HAPPY_FACE = "Cabeça1"
@@ -637,15 +647,23 @@ function octopus_event()
 	move_octopus_in_place(function()
 		-- Dr and Estagiário start another dialog about the huge octopus
 		dialog_about_the_octopus(function()
-			-- The tip of the octopus opens up revealing a drill and play slimy sound
+			-- The tip of the octopus opens up revealing a drill and plays slimy sound
 			sound.play("DrillTip#sound")
-			go.animate("DrillTip", "euler.z", go.PLAYBACK_ONCE_FORWARD, -180, go.EASING_LINEAR, 3)		
+			go.animate("DrillTip", "euler.z", go.PLAYBACK_ONCE_FORWARD, -180, go.EASING_LINEAR, 3)
+
+			-- The drill starts working
+			timer.delay(3, false, function()
+				sound.set_gain("FullDrill#music", 0.3)
+				sound.play("Drill#idle_drill", {delay = 0, gain = .5, pan = 0, speed = 1})
+				msg.post("Drill#sprite", "play_animation", {id = hash("Drill")})
+
+				-- This gives control to the player to drill at least 3 times until a big hole is done
+				curr_level = INTERACTIVE_EVENT
+			end)
 		end)
 	end)
 	
 	
-	-- The drill starts working
-	-- This gives control to the player to drill at least 3 times until a big hole is done
 	-- The drill is then removed and leaves the scene
 	-- The small octopus attackers go to rest position
 	-- Suddenly from the whole a beam of light starts comming out
@@ -674,7 +692,6 @@ end
 function is_non_input_level ()
 	return curr_level == PREPARE_ROUND or
 	curr_level == WAIT_PREPARE_ROUND or
-	curr_level ==  FINISH_HIM or
 	curr_level ==  FINAL_RESULT or
 	curr_level ==  GAME_END or
 	curr_level ==  PREPARE_EVENT or
@@ -695,7 +712,10 @@ function update(self, dt)
 
 	local function check_game_level_and_round()
 
-		if is_non_input_level() or curr_level == FINISH_HIM then return end
+		if is_non_input_level() or 
+		curr_level == INTERACTIVE_EVENT then 
+			return 
+		end
 
 		if currFachoHealth >= LEVEL1_LIMIT then
 			curr_level = LEVEL0
@@ -758,7 +778,9 @@ function update(self, dt)
 		prepare_event()
 		curr_level = WAIT_PREPARE_EVENT
 	elseif curr_level == WAIT_PREPARE_EVENT then
-		return 
+		return
+	elseif curr_level == INTERACTIVE_EVENT then
+		return
 	elseif curr_level == LEVEL0 or 
 	curr_level == LEVEL1 or 
 	curr_level == LEVEL2 or 
@@ -785,8 +807,6 @@ function update(self, dt)
 		-- Hit that motherfucker with the drill
 		-- until it makes a hole in his head
 		return
-	elseif curr_level == FINISH_HIM then
-		finish_him ()
 	elseif curr_level == FINAL_RESULT then 
 		if game_won == false then
 			player_loses()	
@@ -939,6 +959,75 @@ function on_message(self, message_id, message, sender)
 	end
 end
 
+function perform_tora_action()
+end
+
+
+local OCTOPUS_FIRST_DRILL = 1
+local OCTOPUS_SECOND_DRILL = 2
+local OCTOPUS_LAST_DRILL = 3
+local curr_octopus_iteration = OCTOPUS_FIRST_DRILL
+local octopus_wait_iteration = false
+function perform_octopus_action()
+	if octopus_wait_iteration then
+		return
+	else
+		octopus_wait_iteration = true
+		if curr_octopus_iteration == OCTOPUS_FIRST_DRILL then
+			-- Animate drill until surface (84y)
+			go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 84, go.EASING_LINEAR, 3, 0, function()
+				-- sparkles start flying
+				particlefx.play("Sparkles")
+				-- small hole starts showing after 1 sec of drilling
+				timer.delay(1, false, function()
+					msg.post("Hole_Back#sprite", "enable")
+					msg.post("Hole_Top#sprite", "enable")
+					-- After 4 seconds animate hole getting bigger and drill getting deeper (duration 10 secs)
+					timer.delay(4, false, function()
+						-- drill noise get's higher
+						sound.play("Drill#hammer_drill")
+						-- Olhos do melo trepidam
+						mexe_olhos_melo(OLHOS_TREMEM)
+						go.animate("Buraco", "scale.x", go.PLAYBACK_ONCE_FORWARD, .8, go.EASING_LINEAR, 10, 0)
+						go.animate("Buraco", "scale.y", go.PLAYBACK_ONCE_FORWARD, .5, go.EASING_LINEAR, 10, 0)
+						go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 78, go.EASING_LINEAR, 10, 0, function()
+							-- drill returns back to same position and noise goes to idle
+							sound.stop("Drill#hammer_drill")
+							-- stop sparkles
+							particlefx.stop("Sparkles")
+							-- Olhos do melho param de tremer
+							param_olhos_melo()
+							go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 110, go.EASING_LINEAR, 10, 0, function()
+								-- increase iteration
+								curr_octopus_iteration = OCTOPUS_SECOND_DRILL
+								-- octopus_wait_iteration = false
+								octopus_wait_iteration = false
+							end)
+						end)
+					end)
+				end)
+			end)
+		elseif curr_octopus_iteration == OCTOPUS_SECOND_DRILL then
+			-- Animate drill until middle 
+			-- Hole grow to size of drill
+			-- sparkles start flying plus bone
+			-- drill noise get's higher
+			-- drill returns back to same position and noise goes to idle
+			-- increase iteration
+			-- octopus_wait_iteration = false
+			return
+		elseif curr_octopus_iteration == OCTOPUS_LAST_DRILL then
+			-- Animate drill until end
+			-- Blood starts squirting from hole
+			-- drill noise get's lower
+			-- drill returns back to same position and noise goes to idle
+			-- A beam of light start coming out of the hole and small while stuff
+			-- Remove octopus drill from the scene and prepare next tora event
+			return
+		end
+	end
+end
+
 function on_input(self, action_id, action)
 	if start == false then
 		return
@@ -947,6 +1036,19 @@ function on_input(self, action_id, action)
 	if is_non_input_level() then
 		-- Do nothing on input for these states, ignore
 		return
+	elseif curr_level == INTERACTIVE_EVENT then
+		if (action_id == hash("click") or 
+		action_id == hash("click_left") or 
+		action_id == hash("click_right")) and action.pressed then
+			if curr_event == EVENT_OCTOPUS then
+				perform_octopus_action()
+			elseif curr_event == EVENT_TORA then
+				perform_tora_action()
+			else
+				-- Do nothing
+				return
+			end
+		end
 	elseif curr_level == GAME_END then
 		if action_id == hash("click") and action.pressed then
 			clicks_to_finish = clicks_to_finish - 1
