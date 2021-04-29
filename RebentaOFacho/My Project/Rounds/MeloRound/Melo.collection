@@ -661,12 +661,16 @@ embedded_instances {
 embedded_instances {
   id: "Cabe\303\247as"
   children: "Beam"
+  children: "BloodHole"
+  children: "Bones"
   children: "Buraco"
   children: "Cara"
+  children: "Mouth"
   children: "Raios"
   children: "Sparkles"
   children: "Top_To_Hide_Drill"
   children: "flyingHair"
+  children: "god_eyes"
   children: "olhos"
   data: ""
   position {
@@ -714,7 +718,7 @@ embedded_instances {
   data: ""
   position {
     x: 19.048
-    y: 252.858
+    y: 235.334
     z: 0.03
   }
   rotation {
@@ -725,7 +729,7 @@ embedded_instances {
   }
   scale3 {
     x: 0.3
-    y: 0.2
+    y: 0.3
     z: 1.0
   }
 }
@@ -848,7 +852,7 @@ embedded_instances {
   position {
     x: -48.0
     y: 178.185
-    z: 0.15
+    z: 0.13
   }
   rotation {
     x: 0.0
@@ -887,7 +891,7 @@ embedded_instances {
   ""
   position {
     x: 0.0
-    y: -113.0
+    y: -111.0
     z: 0.0
   }
   rotation {
@@ -926,8 +930,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: -29.0
-    y: 225.0
+    x: -30.926
+    y: 226.778
     z: 0.2
   }
   rotation {
@@ -1489,7 +1493,7 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: -71.63
+    x: -72.63
     y: 180.037
     z: 0.2
   }
@@ -1512,8 +1516,8 @@ embedded_instances {
   children: "M\303\243o_estagiario"
   data: ""
   position {
-    x: -23.809
-    y: 1533.812
+    x: -29.809
+    y: 1045.24
     z: 0.01
   }
   rotation {
@@ -1552,8 +1556,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: -68.452
-    y: 527.143
+    x: -42.478
+    y: -301.428
     z: 0.009
   }
   rotation {
@@ -1592,8 +1596,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 238.095
-    y: 438.095
+    x: 231.601
+    y: -381.905
     z: 0.009
   }
   rotation {
@@ -1611,7 +1615,7 @@ embedded_instances {
 embedded_instances {
   id: "Mega"
   data: "embedded_components {\n"
-  "  id: \"spinemodel\"\n"
+  "  id: \"pumping_tora\"\n"
   "  type: \"spinemodel\"\n"
   "  data: \"spine_scene: \\\"/Rounds/MeloRound/Spine_scenes/Tora/pumping_tora.spinescene\\\"\\n"
   "default_animation: \\\"pump_faster\\\"\\n"
@@ -1621,6 +1625,27 @@ embedded_instances {
   "\"\n"
   "  position {\n"
   "    x: 61.224\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"dangling_tora\"\n"
+  "  type: \"spinemodel\"\n"
+  "  data: \"spine_scene: \\\"/Rounds/MeloRound/Spine_scenes/Tora/dangling_tora.spinescene\\\"\\n"
+  "default_animation: \\\"\\\"\\n"
+  "skin: \\\"\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "material: \\\"/builtins/materials/spine.material\\\"\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 65.0\n"
   "    y: 0.0\n"
   "    z: 0.0\n"
   "  }\n"
@@ -1651,8 +1676,8 @@ embedded_instances {
 }
 embedded_instances {
   id: "MaosSeguras"
-  children: "Direita"
-  children: "Esquerda"
+  children: "MaoDrDireita"
+  children: "MaoDrEsquerda"
   data: ""
   position {
     x: 2.727
@@ -1672,7 +1697,7 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "Direita"
+  id: "MaoDrDireita"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
@@ -1712,7 +1737,7 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "Esquerda"
+  id: "MaoDrEsquerda"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
@@ -2012,7 +2037,7 @@ embedded_instances {
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
   "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Melo.atlas\\\"\\n"
-  "default_animation: \\\"Cabe\\\\303\\\\247a5\\\"\\n"
+  "default_animation: \\\"Cabe\\\\303\\\\247a5_afraid_no_mouth\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"
@@ -2478,10 +2503,33 @@ embedded_instances {
   "    w: 1.0\n"
   "  }\n"
   "}\n"
+  "embedded_components {\n"
+  "  id: \"sound\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/Rounds/MeloRound/Sounds/light_cone.ogg\\\"\\n"
+  "looping: 0\\n"
+  "group: \\\"master\\\"\\n"
+  "gain: 1.0\\n"
+  "pan: 0.0\\n"
+  "speed: 1.0\\n"
+  "loopcount: 0\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
   ""
   position {
-    x: -7.223
-    y: 748.69
+    x: -11.223
+    y: 756.69
     z: 0.04
   }
   rotation {
@@ -2572,53 +2620,13 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "Top_To_Hide_Drill"
-  data: "embedded_components {\n"
-  "  id: \"sprite\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Melo.atlas\\\"\\n"
-  "default_animation: \\\"top_to_hide_drill\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  ""
-  position {
-    x: 18.667
-    y: 153.333
-    z: 0.06
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-embedded_instances {
   id: "hole_to_scale"
   children: "Hole_Back"
   children: "Hole_Top"
   data: ""
   position {
     x: 0.0
-    y: -23.81
+    y: 0.0
     z: 0.0
   }
   rotation {
@@ -2657,8 +2665,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 0.0
-    y: 0.0
+    x: -2.0
+    y: -2.0
     z: 0.0
   }
   rotation {
@@ -2699,7 +2707,197 @@ embedded_instances {
   position {
     x: -5.714
     y: -6.714
-    z: 0.031
+    z: 0.032
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "Bones"
+  data: "components {\n"
+  "  id: \"Bones\"\n"
+  "  component: \"/Rounds/MeloRound/Particles/Bones.particlefx\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 19.048
+    y: 226.19
+    z: 0.01
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "Mouth"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Melo.atlas\\\"\\n"
+  "default_animation: \\\"Mouth5_afraid\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 36.0
+    y: -175.0
+    z: 0.045
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.05
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "BloodHole"
+  data: "components {\n"
+  "  id: \"blood_splash_center\"\n"
+  "  component: \"/Common/Particles/blood_splash.particlefx\"\n"
+  "  position {\n"
+  "    x: 19.047\n"
+  "    y: 226.19\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.01
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "Top_To_Hide_Drill"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Melo.atlas\\\"\\n"
+  "default_animation: \\\"top_to_hide_drill\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 22.46
+    y: 159.808
+    z: 0.06
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "god_eyes"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"tile_set: \\\"/Rounds/MeloRound/Atlas/Melo.atlas\\\"\\n"
+  "default_animation: \\\"deity_eyes\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 35.714
+    y: 30.952
+    z: 0.4
   }
   rotation {
     x: 0.0

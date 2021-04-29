@@ -86,6 +86,10 @@ images {
   image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/escalpe_unas.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/deity_eyes.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
 margin: 0
 extrude_borders: 2
 inner_padding: 0

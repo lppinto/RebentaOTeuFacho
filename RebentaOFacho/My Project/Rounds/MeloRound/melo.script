@@ -239,6 +239,14 @@ function set_raios (state)
 	msg.post("Raios#sprite", state)
 end
 
+function set_mouth (state)
+	msg.post("Mouth#sprite", state)
+end
+
+function set_god_eyes(state)
+	msg.post("god_eyes#sprite", state)
+end
+
 local OLHOS_DIR = 0
 local OLHOS_ESQ = 1
 local OLHOS_CIMA = 2
@@ -285,10 +293,11 @@ local MELO_LESS_HAIR_FACE = "Cabeça3"
 local MELO_LESS_HAIR_FACE_AFRAID = "Cabeça3_afraid"
 local MELO_EVEN_LESS_HAIR_FACE = "Cabeça4"
 local MELO_EVEN_LESS_HAIR_FACE_AFRAID = "Cabeça4_afraid"
-local MELO_NO_HAIR_FACE = "Cabeça4"
-local MELO_NO_HAIR_OLD1 = "Cabeça5"
-local MELO_NO_HAIR_OLD2 = "Cabeça6"
-local MELO_NO_HAIR_OLD3 = "Cabeça7"
+local MELO_NO_HAIR_FACE = "Cabeça5"
+local MELO_NO_HAIR_NO_MOUTH = "Cabeça5_afraid_no_mouth"
+local MELO_NO_HAIR_OLD1 = "Cabeça6"
+local MELO_NO_HAIR_OLD2 = "Cabeça7"
+local MELO_NO_HAIR_OLD3 = "Cabeça8"
 function change_melo_face(type)
 	msg.post("Cara#sprite", "play_animation", {id = hash(type)})
 end
@@ -313,12 +322,24 @@ function change_melo_suit(type)
 	msg.post("Fato#sprite", "play_animation", {id = hash(type)})
 end
 
+local cartaz_was_not_thrown = true
+function throw_cartaz_away(self, handle, elapsed)
+	-- Dr says something about Manuel Monteiro
+	go.cancel_animations("Cartaz", "euler.z")
+	local curr_rotation = get_object_rotation("Cartaz")
+	local rotation = curr_rotation + 180
+	go.animate("Cartaz", "euler.z", go.PLAYBACK_ONCE_FORWARD, rotation, go.EASING_LINEAR, 1.5, 0)
+	go.animate("Cartaz", "position.x", go.PLAYBACK_ONCE_FORWARD, 500, go.EASING_LINEAR, 1.5, 0)
+end
+
 function update_melo_state(next_callback)
 	if curr_round == 1 then
 		-- hide all the stuff not needed for melo right now
 		set_hole("disable")
 		set_beam("disable")
 		set_raios("disable")
+		set_mouth("disable")
+		set_god_eyes("disable")
 		change_melo_face(MELO_HAPPY_FACE)
 		change_melo_suit(MELO_NORMAL_SUIT)
 	elseif curr_round == 2 then
@@ -327,6 +348,8 @@ function update_melo_state(next_callback)
 			set_hole("disable")
 			set_beam("disable")
 			set_raios("disable")
+			set_mouth("disable")
+			set_god_eyes("disable")
 			change_melo_face(MELO_NORMAL_FACE_MAD)
 			change_melo_suit(MELO_SQUID_SUIT)
 			go.animate("Melo", "scale.x", go.PLAYBACK_ONCE_FORWARD, melo_inner_init_scale.x, go.EASING_LINEAR, 2)
@@ -342,6 +365,12 @@ function update_melo_state(next_callback)
 				if currFachoHealth < 0 then
 					hit_value_to_report = currFachoHealth + hit_value
 					currFachoHealth = 0
+
+					-- Get rid of cartaz if it's still there
+					if currCartazHealth > 0 then
+						cartaz_was_not_thrown = false
+						throw_cartaz_away()
+					end
 					
 					msg.post(status_bar_id, "pause")
 
@@ -528,18 +557,32 @@ end
 
 function start_first_dialog(next_callback)
 	--- It's the doctor and his intern
-	-- Estagiario: "Eh Dr. o Dr. Meloncolico está numa grande alhada"
+	-- Estagiario: "Dr Dr! Veja, O Dr. Meloncolico está numa grande alhada"
 	-- Dr: "Nunca imaginei ver o meu grande ex mentor numa situação destas, rodeado de polvos esquerdalhos 
-	--- gigantescos a atacá-lo por todos os lados, é inadmissivel"
-	-- Estagiário: "Tem que haver alguma forma de o podermos ajudar, afinal de contas ele foi um dos responsáveis
+	--- gigantescos atacá-lo por todos os lados, é inadmissivel"
+	--- Estagiário: "Tem que haver alguma forma de o podermos ajudar, afinal de contas ele foi um dos responsáveis
 	--- por afundar o CDS e ter catapultado o Dr. Jovem para a ribalta, eu nem dormia se não tentassemos alguma coisa
 	--- como prova da nossa gratidão..."
-	--- Dr: "O Estagiário nunca costuma ter razão, mas desta vez é bem capaz de ter suplantado a sua amiba amestrada... olhe, 
-	--- está a ver aquele cartaz antigo da campanha do CDS que foi deixado no sotão a apodrecer, ore passe para cá isso 
-	--- imediatamente, tenho uma ideia, não vão aqueles polvos esquerdalhos nojentos acordar a qualquer momento."
+	--- Dr: "O Estagiário nunca costuma ter razão, mas desta vez é bem capaz de ter suplantado a sua amiba amestrada... 
+	--- Procure qualquer coisa aí em cima no sotão que possamos usar para o ajudar...
+	--- Estagiario: Dr. só encontrei o Dr. Manuel Monteiro deitado em posição fetal, e um poster antigo de umas eleições
+	--- com a cara do mesmo Dr. Monteiro, o que é que prefere
+	--- Dr: Passe para cá o poster
 	print("Dialog happens")
 	timer.delay(2, false, next_callback)
 end
+
+function move_andaime(y_position, duration, next_callback)
+	sound.play("Andaime#andaime_going", {delay = 0, gain = 1, pan = 0, speed = 1})
+	go.animate("Andaime", "position.y", go.PLAYBACK_ONCE_FORWARD, x_position, go.EASING_INOUTBACK, duration, 0, function()
+		sound.stop("Andaime#andaime_going")
+		sound.play("Andaime#andaime_stop", {delay = 0, gain = 1, pan = 0, speed = 1}, next_callback)
+	end)
+end
+
+----------------------------------------------------------------------------
+-------------------------- GAME ROUND PREPARATION --------------------------
+----------------------------------------------------------------------------
 
 function prepare_round()
 	
@@ -585,11 +628,7 @@ function prepare_round()
 			-- The Andaime slowly get's down and we hear some one talking from above
 			-- also lower status bar to be seen
 			msg.post(status_bar_id, "lower_status_bar", {510})
-			sound.play("Andaime#andaime_going", {delay = 0, gain = 1, pan = 0, speed = 1})
-			go.animate("Andaime", "position.y", go.PLAYBACK_ONCE_FORWARD, 730, go.EASING_INOUTBACK, 5, 0, function()
-				sound.stop("Andaime#andaime_going")
-				sound.play("Andaime#andaime_stop", {delay = 0, gain = 1, pan = 0, speed = 1})
-
+			move_andaime(730, 5, function()
 				-- Estagiario and Dr. start talking here
 				start_first_dialog(function()
 					mexe_olhos_melo(OLHOS_CIMA, 1, function()
@@ -624,6 +663,10 @@ function prepare_round()
 	end
 end
 
+---------------------------------------------------------------------------
+-------------------------- OCTOPUS PREPARE EVENT --------------------------
+---------------------------------------------------------------------------
+
 function dialog_about_the_octopus(next_callback)
 	-- TODO: Insert Dialog
 	timer.delay(2, false, next_callback)
@@ -633,13 +676,21 @@ function move_octopus_in_place(next_callback)
 	sound.play("FullDrill#music")
 	go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 110, go.EASING_LINEAR, 5, 0, function()
 		go.animate("FullDrill", "euler.z", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 5, 0)
-		go.animate("FullDrill", "position.x", go.PLAYBACK_ONCE_FORWARD, 62, go.EASING_LINEAR, 5, 0, function()
+		go.animate("FullDrill", "position.x", go.PLAYBACK_ONCE_FORWARD, 61.5, go.EASING_LINEAR, 5, 0, function()
 			timer.delay(2, false, next_callback)
 		end)
 	end)
 end
 
-function octopus_event()
+function move_octopus_away(next_callback)
+	sound.stop("FullDrill#music")
+	go.animate("FullDrill", "euler.z", go.PLAYBACK_ONCE_FORWARD, -20, go.EASING_LINEAR, 5, 0, next_callback)
+	go.animate("FullDrill", "position.x", go.PLAYBACK_ONCE_FORWARD, 180, go.EASING_LINEAR, 5, 0, function()
+		go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, -310, go.EASING_LINEAR, 5, 0)
+	end)
+end
+
+function prepare_octopus_event()
 	-- Start bringing the octopus inside the ring
 	-- Music of the octopus stars playing
 	-- Melo looks scared
@@ -662,30 +713,69 @@ function octopus_event()
 			end)
 		end)
 	end)
-	
-	
-	-- The drill is then removed and leaves the scene
-	-- The small octopus attackers go to rest position
-	-- Suddenly from the whole a beam of light starts comming out
-	-- after some while small things start also comming out 
-	-- Dr. and Estagiario talk about saving what's left of Dr. Melo
-	-- Dr. has an idea, which starts the next Tora Event
 end
 
-function tora_event()
-	-- Dr. Unzips his trousers, and in from of the shocked estagiario takes out
-	-- his enormous tora out. His play is to close the hole in Dr. Melos so his knowledge wont be lost
+------------------------------------------------------------------------
+-------------------------- TORA PREPARE EVENT --------------------------
+------------------------------------------------------------------------
+
+function set_dr_hands(state)
+	msg.post("MaoDrDireita#sprite", state)
+	msg.post("MaoDrEsquerda#sprite", state)
+end
+
+function set_estagiario_hand(state)
+	msg.post("Mão_estagiario#sprite", state)
+end
+
+local DANGLING_TORA = 1
+local PUMPING_TORA = 2
+local curr_tora = DANGLING_TORA -- default
+function set_tora(type)
+	if type == DANGLING_TORA then
+		msg.post("Mega#pumping_tora", "disable")
+		msg.post("Mega#dangling_tora", "enable")
+	elseif type == PUMPING_TORA then
+		msg.post("Mega#pumping_tora", "enable")
+		msg.post("Mega#dangling_tora", "disable")
+	end
+end
+
+function move_tora(x_position, duration, next_callback)
+end
+
+local TORA_DIALOG_1 = 1
+local TORA_DIALOG_2 = 2
+function dialog_about_saving_dr_melo(tora_dialog, next_callback)
+	-- TODO: Insert Dialog
+	-- Dr. Unzips his trousers, and in from of the shocked estagiario takes out his enormous tora out
+	print "Dialog happens 2"
+	timer.delay(2, false, next_callback)
+end
+
+function prepare_tora_event()
+	set_dr_hands("disable")
+	set_tora(DANGLING_TORA)
+	dialog_about_saving_dr_melo(TORA_DIALOG_1, function()
+		-- raise the status base out of screen
+		-- lower the scafold even lower
+		move_andaime(560, 5, function()
+			-- Dr. starts lowering his tora with one hand
+		end)
+	end)
+	
+	-- His play is to close the hole in Dr. Melos so his knowledge wont be lost
 	-- But this brings seconds side effects, the power of Dr. Melo is so big that it provoques a 
 	-- reverterd orgasm entropy to the Dr. himself. He his absorving what's left of Dr. Melo. It's Magical
-	-- The Dr. does some reversed orgasmic sounds with his mouth and the Estagiario says something that 
-	-- I haven't though about. It's going to be EPIC!
+	-- The Dr. does some reversed orgasmic sounds with his mouth and the Estagiario says something
+	return
 end
 
 function prepare_event()
 	if curr_event == EVENT_OCTOPUS then
-		octopus_event()
+		prepare_octopus_event()
 	elseif curr_event == EVENT_TORA then
-		tora_event()
+		prepare_tora_event()
 	end
 end
 
@@ -698,16 +788,6 @@ function is_non_input_level ()
 	curr_level ==  WAIT_PREPARE_EVENT
 end
 
-local cartaz_was_not_thrown = true
-function throw_cartaz_away(self, handle, elapsed)
-	-- Dr says something about Manuel Monteiro
-	go.cancel_animations("Cartaz", "euler.z")
-	local curr_rotation = get_object_rotation("Cartaz")
-	local rotation = curr_rotation + 180
-	go.animate("Cartaz", "euler.z", go.PLAYBACK_ONCE_FORWARD, rotation, go.EASING_LINEAR, 1.5, 0)
-	go.animate("Cartaz", "position.x", go.PLAYBACK_ONCE_FORWARD, 500, go.EASING_LINEAR, 1.5, 0)
-end
-		
 function update(self, dt)
 
 	local function check_game_level_and_round()
@@ -795,18 +875,6 @@ function update(self, dt)
 			update_cartaz_state()
 			update_melo_state()
 		end
-	elseif curr_level == PREPARE_FINISH then
-		msg.post(status_bar_id, "pause")
-		-- Raise the drill on top of Meloncolics head
-		print "Raise the drill on top of Meloncolics head"
-		timer.delay(0.5, false, prepare_finish)
-		curr_level = WAIT_PREPARE_FINISH
-	elseif curr_level == WAIT_PREPARE_FINISH then
-		return 
-	elseif curr_level == FINISHING_LEVEL then
-		-- Hit that motherfucker with the drill
-		-- until it makes a hole in his head
-		return
 	elseif curr_level == FINAL_RESULT then 
 		if game_won == false then
 			player_loses()	
@@ -857,12 +925,16 @@ function check_melo_hit(side, rotation)
 	if side == "left" then
 		if rotation > 195 or currCartazHealth <= 0 then
 			wasHit = true
-			-- play hair being cut
-			sound.play("polvo_esquerdo#cut_sound", {delay = 0, gain = 2, pan = -1, speed = 1})
-			-- animate hair being cut
-			particlefx.play("flyingHair#haircut_left")
+
+			if curr_level < LEVEL7 then
+				-- play and show hair being cut
+				particlefx.play("flyingHair#haircut_left")
+				sound.play("polvo_esquerdo#cut_sound", {delay = 0, gain = 2, pan = -1, speed = 1})
+			end
+			
 			if curr_level >= LEVEL4 then
 				particlefx.play("Cara#blood_splash_left")
+				sound.play("Chico#slashed", {delay = 0, gain = 2, pan = -1, speed = 1})
 			end
 		else
 			cartaz_was_hit = true
@@ -871,12 +943,16 @@ function check_melo_hit(side, rotation)
 	elseif side == "right" then
 		if rotation < 167 or currCartazHealth <= 0 then
 			wasHit = true
-			-- play hair being cut
-			sound.play("polvo_direito#cut_sound", {delay = 0, gain = 2, pan = 1, speed = 1.2})
-			-- animate hair being cut
-			particlefx.play("flyingHair#haircut_right")
+
+			if curr_level < LEVEL7 then
+				-- play and show hair being cut
+				particlefx.play("flyingHair#haircut_right")
+				sound.play("polvo_direito#cut_sound", {delay = 0, gain = 2, pan = 1, speed = 1})
+			end
+			
 			if curr_level >= LEVEL6 then
 				particlefx.play("Cara#blood_splash_right")
+				sound.play("Chico#slashed", {delay = 0, gain = 2, pan = 1, speed = 1})
 			end
 		else
 			cartaz_was_hit = true
@@ -959,15 +1035,42 @@ function on_message(self, message_id, message, sender)
 	end
 end
 
+local TORA_FIRST_TRY = 1
+local TORA_SECOND_TRY = 2
+local curr_tora_iteration = TORA_FIRST_TRY
+local tora_wait_iteration = false
 function perform_tora_action()
+	if tora_wait_iteration then
+		return
+	else
+		tora_wait_iteration = true
+		
+	end
 end
 
+function turn_on_beam_of_light()
+	sound.play("Beam#sound")
+	set_beam("enable")
+	particlefx.play("Beam#thoughts")
+end
+
+function turn_off_beam_of_light()
+	sound.stop("Beam#sound")
+	set_beam("disable")
+	particlefx.stop("Beam#thoughts")
+end
+
+function turn_melo_in_deity_mode()
+	set_god_eyes("enable")
+	turn_on_beam_of_light()
+end
 
 local OCTOPUS_FIRST_DRILL = 1
 local OCTOPUS_SECOND_DRILL = 2
 local OCTOPUS_LAST_DRILL = 3
 local curr_octopus_iteration = OCTOPUS_FIRST_DRILL
 local octopus_wait_iteration = false
+local DRILL_ACTION_TIME = 5
 function perform_octopus_action()
 	if octopus_wait_iteration then
 		return
@@ -975,29 +1078,29 @@ function perform_octopus_action()
 		octopus_wait_iteration = true
 		if curr_octopus_iteration == OCTOPUS_FIRST_DRILL then
 			-- Animate drill until surface (84y)
-			go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 84, go.EASING_LINEAR, 3, 0, function()
+			go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 79, go.EASING_LINEAR, 3, 0, function()
 				-- sparkles start flying
 				particlefx.play("Sparkles")
 				-- small hole starts showing after 1 sec of drilling
 				timer.delay(1, false, function()
-					msg.post("Hole_Back#sprite", "enable")
-					msg.post("Hole_Top#sprite", "enable")
+					-- Start showing hole in the head
+					set_hole("enable")
 					-- After 4 seconds animate hole getting bigger and drill getting deeper (duration 10 secs)
 					timer.delay(4, false, function()
 						-- drill noise get's higher
 						sound.play("Drill#hammer_drill")
 						-- Olhos do melo trepidam
-						mexe_olhos_melo(OLHOS_TREMEM)
-						go.animate("Buraco", "scale.x", go.PLAYBACK_ONCE_FORWARD, .8, go.EASING_LINEAR, 10, 0)
-						go.animate("Buraco", "scale.y", go.PLAYBACK_ONCE_FORWARD, .5, go.EASING_LINEAR, 10, 0)
-						go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 78, go.EASING_LINEAR, 10, 0, function()
+						mexe_olhos_melo(OLHOS_TREMEM, 0.04)
+						go.animate("Buraco", "scale.x", go.PLAYBACK_ONCE_FORWARD, .8, go.EASING_LINEAR, DRILL_ACTION_TIME, 0)
+						go.animate("Buraco", "scale.y", go.PLAYBACK_ONCE_FORWARD, .5, go.EASING_LINEAR, DRILL_ACTION_TIME, 0)
+						go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 78, go.EASING_LINEAR, DRILL_ACTION_TIME, 0, function()
 							-- drill returns back to same position and noise goes to idle
 							sound.stop("Drill#hammer_drill")
 							-- stop sparkles
 							particlefx.stop("Sparkles")
 							-- Olhos do melho param de tremer
 							param_olhos_melo()
-							go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 110, go.EASING_LINEAR, 10, 0, function()
+							go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 110, go.EASING_LINEAR, DRILL_ACTION_TIME, 0, function()
 								-- increase iteration
 								curr_octopus_iteration = OCTOPUS_SECOND_DRILL
 								-- octopus_wait_iteration = false
@@ -1008,22 +1111,83 @@ function perform_octopus_action()
 				end)
 			end)
 		elseif curr_octopus_iteration == OCTOPUS_SECOND_DRILL then
-			-- Animate drill until middle 
-			-- Hole grow to size of drill
-			-- sparkles start flying plus bone
-			-- drill noise get's higher
-			-- drill returns back to same position and noise goes to idle
-			-- increase iteration
-			-- octopus_wait_iteration = false
-			return
+			-- Animate drill until last place it drilled
+			go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 72, go.EASING_LINEAR, 3, 0, function()
+				-- Grow hole to size of drill while drill goes further
+				-- Sparkles and bone start comming out
+				particlefx.play("Sparkles")
+				particlefx.play("Bones")
+				-- drill noise get's higher
+				sound.play("Drill#hammer_drill")
+				-- Olhos do melo trepidam
+				mexe_olhos_melo(OLHOS_TREMEM, 0.04)
+				go.animate("Buraco", "scale.x", go.PLAYBACK_ONCE_FORWARD, 1.2, go.EASING_LINEAR, DRILL_ACTION_TIME, 0)
+				go.animate("Buraco", "scale.y", go.PLAYBACK_ONCE_FORWARD, 1, go.EASING_LINEAR, DRILL_ACTION_TIME, 0)
+				-- Drill deeper
+				go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 62, go.EASING_LINEAR, DRILL_ACTION_TIME, 0, function()
+					-- drill returns back to same position and noise goes to idle
+					sound.stop("Drill#hammer_drill")
+					-- stop sparkles and bone
+					particlefx.stop("Sparkles")
+					particlefx.stop("Bones")
+					-- Olhos do melho param de tremer
+					param_olhos_melo()
+					go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 100, go.EASING_LINEAR, DRILL_ACTION_TIME, 0, function()
+						-- increase iteration
+						curr_octopus_iteration = OCTOPUS_LAST_DRILL
+						-- octopus_wait_iteration = false
+						octopus_wait_iteration = false
+					end)
+				end)
+			end)
 		elseif curr_octopus_iteration == OCTOPUS_LAST_DRILL then
-			-- Animate drill until end
-			-- Blood starts squirting from hole
-			-- drill noise get's lower
-			-- drill returns back to same position and noise goes to idle
-			-- A beam of light start coming out of the hole and small while stuff
-			-- Remove octopus drill from the scene and prepare next tora event
-			return
+			-- Change melo head to have a mouth that opens
+			change_melo_face(MELO_NO_HAIR_NO_MOUTH)
+			set_mouth("enable")
+			-- Animate drill until top of head
+			go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 65, go.EASING_LINEAR, 3, 0, function()
+				-- Start full drilling
+				-- Start squirting blood
+				particlefx.play("BloodHole")
+				particlefx.play("Bones")
+				-- Slowly open Melo mouth while drilling and pull his eyes up
+				mexe_olhos_melo(OLHOS_CIMA, 10, function() end)
+				go.animate("Mouth", "position.y", go.PLAYBACK_ONCE_FORWARD, -225, go.EASING_LINEAR, 10)
+				-- Drill deeper
+				go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 45, go.EASING_LINEAR, DRILL_ACTION_TIME, 0, function()
+					-- Stay there drilling for more 5 seconds
+					timer.delay(5, false, function()
+						-- drill returns back to same position and noise goes to idle
+						-- Stop particles
+						particlefx.play("BloodHole")
+						particlefx.stop("Bones")
+						-- Change outside of hole to be bloody
+						msg.post("Hole_Top#sprite", "play_animation", {id = hash("Hole_Big_Top")})
+						go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 110, go.EASING_LINEAR, DRILL_ACTION_TIME, 0, function()
+							-- Stop drill and its idle sound
+							sound.stop("Drill#idle_drill")
+							msg.post("Drill#sprite", "play_animation", {id = hash("drill10")})
+							
+							-- Cover drill again and go away
+							sound.play("DrillTip#sound")
+							go.animate("DrillTip", "euler.z", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 3, 0, function()
+								-- Remove drill from scene
+								move_octopus_away(function()
+									-- Slowly close the mouth and turn into deity
+									go.animate("Mouth", "position.y", go.PLAYBACK_ONCE_FORWARD, -175, go.EASING_LINEAR, 3, 0, function()
+										-- A beam of light starts coming out of the hole and small while stuff
+										turn_melo_in_deity_mode()
+										rest_attackers()
+										-- Go to next EVENT
+										curr_level = PREPARE_EVENT
+										curr_event = EVENT_TORA
+									end)
+								end)
+							end)
+						end)
+					end)
+				end)
+			end)
 		end
 	end
 end
