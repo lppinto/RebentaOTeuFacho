@@ -1517,7 +1517,7 @@ embedded_instances {
   data: ""
   position {
     x: -29.809
-    y: 1045.24
+    y: 890.0
     z: 0.01
   }
   rotation {
@@ -1557,7 +1557,7 @@ embedded_instances {
   ""
   position {
     x: -42.478
-    y: -301.428
+    y: -331.0
     z: 0.009
   }
   rotation {
@@ -1596,8 +1596,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 231.601
-    y: -381.905
+    x: 244.588
+    y: 314.858
     z: 0.009
   }
   rotation {
@@ -1639,7 +1639,7 @@ embedded_instances {
   "  id: \"dangling_tora\"\n"
   "  type: \"spinemodel\"\n"
   "  data: \"spine_scene: \\\"/Rounds/MeloRound/Spine_scenes/Tora/dangling_tora.spinescene\\\"\\n"
-  "default_animation: \\\"\\\"\\n"
+  "default_animation: \\\"goingstraight\\\"\\n"
   "skin: \\\"\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "material: \\\"/builtins/materials/spine.material\\\"\\n"
@@ -2579,7 +2579,7 @@ embedded_instances {
     w: 1.0
   }
   scale3 {
-    x: 0.5
+    x: 0.6
     y: 1.0
     z: 1.0
   }

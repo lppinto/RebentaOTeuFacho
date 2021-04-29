@@ -33,7 +33,7 @@ local status_bar_id = "melo:/Score/GameStatus#ScoreAndStats"
 -- Round levels
 local ROUND1 = 1
 local ROUND2 = 2
-local curr_round = ROUND2
+local curr_round = ROUND1
 
 -- Event levels
 local EVENT_OCTOPUS = 1
@@ -574,7 +574,7 @@ end
 
 function move_andaime(y_position, duration, next_callback)
 	sound.play("Andaime#andaime_going", {delay = 0, gain = 1, pan = 0, speed = 1})
-	go.animate("Andaime", "position.y", go.PLAYBACK_ONCE_FORWARD, x_position, go.EASING_INOUTBACK, duration, 0, function()
+	go.animate("Andaime", "position.y", go.PLAYBACK_ONCE_FORWARD, y_position, go.EASING_INOUTBACK, duration, 0, function()
 		sound.stop("Andaime#andaime_going")
 		sound.play("Andaime#andaime_stop", {delay = 0, gain = 1, pan = 0, speed = 1}, next_callback)
 	end)
@@ -741,26 +741,107 @@ function set_tora(type)
 	end
 end
 
-function move_tora(x_position, duration, next_callback)
+function move_dr_tora_hand(y_move_offset, next_callback)
+	-- Move Dr hand back the negative offset
+	local curr_hand_y_pos = go.get("Mão_Dr", "position.y")
+	local next_hand_y_pos = curr_hand_y_pos - y_move_offset
+	go.animate("Mão_Dr", "position.y", go.PLAYBACK_ONCE_FORWARD, next_hand_y_pos, go.EASING_LINEAR, 2, 0, next_callback)
 end
 
-local TORA_DIALOG_1 = 1
-local TORA_DIALOG_2 = 2
-function dialog_about_saving_dr_melo(tora_dialog, next_callback)
+local iter_move_y_offset = nil
+local iter_move_duration = nil
+function move_tora(position_y, duration, iteration, next_callback)
+	if iteration <= 0 then return end -- Probably will never happen
+	
+	local curr_pos_y = go.get("Tora", "position.y")
+
+	-- For first initialization
+	if iter_move_y_offset == nil then
+		local total_move_y_offset = position_y - curr_pos_y
+		iter_move_y_offset = total_move_y_offset / iteration
+		iter_move_duration = duration / iteration
+	end
+
+	local next_pos_y = curr_pos_y + iter_move_y_offset
+	go.animate("Tora", "position.y", go.PLAYBACK_ONCE_FORWARD, next_pos_y, go.EASING_LINEAR, iter_move_duration, 0, function()
+		local next_iter = iteration - 1
+		if next_iter > 0 then
+			move_dr_tora_hand(iter_move_y_offset, function()
+				move_tora(0, 0, next_iter, next_callback)
+			end)
+		else
+			move_dr_tora_hand(iter_move_y_offset, next_callback)
+			iter_move_y_offset = nil
+			iter_move_duration = nil
+		end	
+	end)
+end
+
+local TORA_DIALOG_SOLUTION = 1
+local TORA_DIALOG_DANGLING = 2
+local TORA_DIALOG_NOT_YET = 3
+local TORA_DIALOG_NOW_IS_WORKING = 4
+function dialog_about_dr_melo(tora_dialog, next_callback)
 	-- TODO: Insert Dialog
-	-- Dr. Unzips his trousers, and in from of the shocked estagiario takes out his enormous tora out
-	print "Dialog happens 2"
-	timer.delay(2, false, next_callback)
+	if tora_dialog == TORA_DIALOG_SOLUTION then
+		-- Dr. Unzips his trousers, and in from of the shocked estagiario takes out his enormous tora out
+		print "Dialog Tora Solution"
+	elseif tora_dialog == TORA_DIALOG_DANGLING then
+		print "Dialog Tora dangling"
+	elseif tora_dialog == TORA_DIALOG_NOT_YET then
+		print "Dialog Tora not yet"
+	elseif tora_dialog == TORA_DIALOG_NOW_IS_WORKING then
+		print "Dialog Tora now is working"
+	end
+	timer.delay(5, false, next_callback)
 end
 
 function prepare_tora_event()
 	set_dr_hands("disable")
+	set_estagiario_hand("disable")
 	set_tora(DANGLING_TORA)
-	dialog_about_saving_dr_melo(TORA_DIALOG_1, function()
+	spine.cancel("Mega#dangling_tora")
+	dialog_about_dr_melo(TORA_DIALOG_SOLUTION, function()
 		-- raise the status base out of screen
 		-- lower the scafold even lower
 		move_andaime(560, 5, function()
 			-- Dr. starts lowering his tora with one hand
+			move_tora(100, 5, 3, function()
+				-- until it starts dangling and then it pulls it up again
+				spine.play_anim("Mega#dangling_tora", "goingdown", go.PLAYBACK_LOOP_FORWARD, {playback_rate = .5})
+				-- After realizing that the tora is unstable Dr. pulls
+				-- the tora away, and tries with more concentration
+				dialog_about_dr_melo(TORA_DIALOG_DANGLING, function()
+					move_tora(890, 2, 1, function()
+						spine.play_anim("Mega#dangling_tora", "goingdown2", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
+						move_tora(100, 5, 3, function()
+							dialog_about_dr_melo(TORA_DIALOG_NOT_YET, function()
+								move_dr_tora_hand(-100, function()
+									-- Estagiario hands a helping hand to stabilize the Tora even more
+									set_estagiario_hand("enable")
+									spine.play_anim("Mega#dangling_tora", "goingstraight", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
+									dialog_about_dr_melo(TORA_DIALOG_NOW_IS_WORKING, function()
+										-- Finnally lower the tora to Dr. Meloncolicos brain
+										move_tora(-200, 1, 1, function()
+											-- Move Dr. hand 
+											go.animate("Mão_Dr", "position.y", go.PLAYBACK_ONCE_FORWARD, 380, go.EASING_LINEAR, 2)
+											-- The beam of light disappears and disable it's sound
+											set_beam("disable")
+											sound.stop("Beam#sound")
+											-- The dream particles also stop running up
+											particlefx.stop("Beam#thoughts")
+											-- Electricity starts surrounding the tora
+											set_raios("enable")
+
+											-- Lets start a new interactive event of tora pumping
+										end)
+									end)
+								end)
+							end)
+						end)
+					end)
+				end)
+			end)
 		end)
 	end)
 	
