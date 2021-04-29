@@ -33,7 +33,7 @@ local status_bar_id = "melo:/Score/GameStatus#ScoreAndStats"
 -- Round levels
 local ROUND1 = 1
 local ROUND2 = 2
-local curr_round = ROUND1
+local curr_round = ROUND2
 
 -- Event levels
 local EVENT_OCTOPUS = 1
@@ -98,6 +98,87 @@ local CARTAZ4_LIMIT
 local CARTAZ5_LIMIT
 local CARTAZ6_LIMIT
 local CARTAZ7_LIMIT
+
+function do_something_and_wait(something, wait, next_callback)
+	timer.delay(0, false, something)
+	if next_callback ~= nil then
+		timer.delay(wait, false, next_callback)	
+	end
+end
+
+function update_legenda(text, wait_time, next_callback)
+	do_something_and_wait(function() label.set_text("Legendas#legendas", text) end, wait_time, next_callback)
+end
+
+function clear_legendas(next_callback)
+	label.set_text("Legendas#legendas", "")
+	timer.delay(0, false, next_callback)
+end
+
+function play_legendas(lista_legendas, index, next_callback)
+	local dialog = lista_legendas[index]
+	if dialog == nil then
+		clear_legendas(next_callback)
+	else
+		label.set_text("Legendas#legendas", dialog)
+		timer.delay(3, false, function()
+			play_legendas(lista_legendas, index + 1, next_callback) 
+		end)
+	end
+end
+
+-------------------------------------------------------------
+--------------------- DIALOG MANAGEMENT ---------------------
+-------------------------------------------------------------
+
+-- All dialog themes
+local DIALOG_DR_A_EST_ENTER_ROUND2 = 0
+local DIALOG_TORA_SOLUTION = 1
+local DIALOG_TORA_IS_DANGLING = 2
+local DIALOG_TORA_NOT_YET_RIGHT = 3
+local DIALOG_TORA_NOW_IS_WORKING = 4
+function play_dialog(dialog_theme, next_callback)
+	-- TODO: Insert dialog_theme
+	if dialog_theme == DIALOG_DR_A_EST_ENTER_ROUND2 then
+		local legendas = {
+			"Estagiário: Dr. acho que o Dr. Melo está em grandes apuros temos mesmo que o ajudar!",
+			"Dr: É uma vergonha, o meu grande ex-mentor a ser atacado por polvos esquerda-lhos assim tão desprevenido",
+			"Estagiário: O que fazemos Dr?",
+			"Dr: Olhe, procure aí no sotão, algo que nos seja util",
+			"Estagiário: Dr. só encontrei um cartaz velho de campanha do Dr Manuel Monteiro",
+			"e o próprio em posição fetal a chorar, parece já há algum tempo!",
+			"Dr: Passe para cá o cartaz, pelo menos esse deve aguentar mais pancadas do que aquele que lá´ está representado"
+		}
+		play_legendas(legendas, 1, next_callback)
+	elseif dialog_theme == DIALOG_TORA_SOLUTION then
+		local legendas = {
+			"[Dr. abre o feixo das calças em frente ao estagiário",
+			"profundamente chocado com que estava a testemunhar]",
+			"Estagiario: Dr... estou sem palavras...",
+			"Dr: Não se faça admirado, logo o menino que não apaga",
+			"o historico do browser",
+			"Estagiário: Dr., mas mesmo assim, é descomunal...",
+			"Estagiário: Ando com um peso pendurado dentro das calças ",
+			"há mais de 2 anos e nem 2 milimetros cresceu",
+			"Dr: Esteja é calado, temos que ajudar o Dr. Melo o mais",
+			"urgentemente possivel, e isto é a unica solução viável...",
+			"Dr: Temos que tapar aquele buraco o mais rápidamente possivel",
+			"ou a essência do Dr. Melo esvai-se para o eter para a eternidade",
+			"Dr: E isto é a unica coisa com diametro necessário para ao fazer",
+			"Estagiário: Estou consigo Dr."
+		}
+		play_legendas(legendas, 1, next_callback)
+	elseif dialog_theme == DIALOG_TORA_IS_DANGLING then
+		print "dialog Tora dangling"
+		timer.delay(5, false, next_callback)
+	elseif dialog_theme == DIALOG_TORA_NOT_YET_RIGHT then
+		print "dialog Tora not yet"
+		timer.delay(5, false, next_callback)
+	elseif dialog_theme == DIALOG_TORA_NOW_IS_WORKING then
+		print "dialog Tora now is working"
+		timer.delay(5, false, next_callback)
+	end
+end
 
 function compute_limits()
 	LEVEL0_LIMIT = maxFachoHealth - (hits_per_level * hit_value * (LEVEL0 - 2))
@@ -555,23 +636,6 @@ function start_round()
 	end
 end
 
-function start_first_dialog(next_callback)
-	--- It's the doctor and his intern
-	-- Estagiario: "Dr Dr! Veja, O Dr. Meloncolico está numa grande alhada"
-	-- Dr: "Nunca imaginei ver o meu grande ex mentor numa situação destas, rodeado de polvos esquerdalhos 
-	--- gigantescos atacá-lo por todos os lados, é inadmissivel"
-	--- Estagiário: "Tem que haver alguma forma de o podermos ajudar, afinal de contas ele foi um dos responsáveis
-	--- por afundar o CDS e ter catapultado o Dr. Jovem para a ribalta, eu nem dormia se não tentassemos alguma coisa
-	--- como prova da nossa gratidão..."
-	--- Dr: "O Estagiário nunca costuma ter razão, mas desta vez é bem capaz de ter suplantado a sua amiba amestrada... 
-	--- Procure qualquer coisa aí em cima no sotão que possamos usar para o ajudar...
-	--- Estagiario: Dr. só encontrei o Dr. Manuel Monteiro deitado em posição fetal, e um poster antigo de umas eleições
-	--- com a cara do mesmo Dr. Monteiro, o que é que prefere
-	--- Dr: Passe para cá o poster
-	print("Dialog happens")
-	timer.delay(2, false, next_callback)
-end
-
 function move_andaime(y_position, duration, next_callback)
 	sound.play("Andaime#andaime_going", {delay = 0, gain = 1, pan = 0, speed = 1})
 	go.animate("Andaime", "position.y", go.PLAYBACK_ONCE_FORWARD, y_position, go.EASING_INOUTBACK, duration, 0, function()
@@ -630,7 +694,7 @@ function prepare_round()
 			msg.post(status_bar_id, "lower_status_bar", {510})
 			move_andaime(730, 5, function()
 				-- Estagiario and Dr. start talking here
-				start_first_dialog(function()
+				play_dialog(DIALOG_DR_A_EST_ENTER_ROUND2, function()
 					mexe_olhos_melo(OLHOS_CIMA, 1, function()
 						mexe_olhos_melo(OLHOS_CENTRO, 1, function()
 							change_melo_face(MELO_NORMAL_FACE)
@@ -777,31 +841,12 @@ function move_tora(position_y, duration, iteration, next_callback)
 	end)
 end
 
-local TORA_DIALOG_SOLUTION = 1
-local TORA_DIALOG_DANGLING = 2
-local TORA_DIALOG_NOT_YET = 3
-local TORA_DIALOG_NOW_IS_WORKING = 4
-function dialog_about_dr_melo(tora_dialog, next_callback)
-	-- TODO: Insert Dialog
-	if tora_dialog == TORA_DIALOG_SOLUTION then
-		-- Dr. Unzips his trousers, and in from of the shocked estagiario takes out his enormous tora out
-		print "Dialog Tora Solution"
-	elseif tora_dialog == TORA_DIALOG_DANGLING then
-		print "Dialog Tora dangling"
-	elseif tora_dialog == TORA_DIALOG_NOT_YET then
-		print "Dialog Tora not yet"
-	elseif tora_dialog == TORA_DIALOG_NOW_IS_WORKING then
-		print "Dialog Tora now is working"
-	end
-	timer.delay(5, false, next_callback)
-end
-
 function prepare_tora_event()
 	set_dr_hands("disable")
 	set_estagiario_hand("disable")
 	set_tora(DANGLING_TORA)
 	spine.cancel("Mega#dangling_tora")
-	dialog_about_dr_melo(TORA_DIALOG_SOLUTION, function()
+	play_dialog(DIALOG_TORA_SOLUTION, function()
 		-- raise the status base out of screen
 		-- lower the scafold even lower
 		move_andaime(560, 5, function()
@@ -811,16 +856,16 @@ function prepare_tora_event()
 				spine.play_anim("Mega#dangling_tora", "goingdown", go.PLAYBACK_LOOP_FORWARD, {playback_rate = .5})
 				-- After realizing that the tora is unstable Dr. pulls
 				-- the tora away, and tries with more concentration
-				dialog_about_dr_melo(TORA_DIALOG_DANGLING, function()
+				play_dialog(DIALOG_TORA_IS_DANGLING, function()
 					move_tora(890, 2, 1, function()
 						spine.play_anim("Mega#dangling_tora", "goingdown2", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
 						move_tora(100, 5, 3, function()
-							dialog_about_dr_melo(TORA_DIALOG_NOT_YET, function()
+							play_dialog(DIALOG_TORA_NOT_YET_RIGHT, function()
 								move_dr_tora_hand(-100, function()
 									-- Estagiario hands a helping hand to stabilize the Tora even more
 									set_estagiario_hand("enable")
 									spine.play_anim("Mega#dangling_tora", "goingstraight", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
-									dialog_about_dr_melo(TORA_DIALOG_NOW_IS_WORKING, function()
+									play_dialog(DIALOG_TORA_NOW_IS_WORKING, function()
 										-- Finnally lower the tora to Dr. Meloncolicos brain
 										move_tora(-200, 1, 1, function()
 											-- Move Dr. hand 
@@ -834,6 +879,7 @@ function prepare_tora_event()
 											set_raios("enable")
 
 											-- Lets start a new interactive event of tora pumping
+											curr_level = INTERACTIVE_EVENT
 										end)
 									end)
 								end)
@@ -844,12 +890,6 @@ function prepare_tora_event()
 			end)
 		end)
 	end)
-	
-	-- His play is to close the hole in Dr. Melos so his knowledge wont be lost
-	-- But this brings seconds side effects, the power of Dr. Melo is so big that it provoques a 
-	-- reverterd orgasm entropy to the Dr. himself. He his absorving what's left of Dr. Melo. It's Magical
-	-- The Dr. does some reversed orgasmic sounds with his mouth and the Estagiario says something
-	return
 end
 
 function prepare_event()
@@ -924,10 +964,6 @@ function update(self, dt)
 	end
 
 	check_game_level_and_round ()
-
-	if round == ROUND2 then
-		set_cartaz_state()
-	end
 	
 	if curr_level == PREPARE_ROUND then
 		prepare_round()
@@ -1007,7 +1043,7 @@ function check_melo_hit(side, rotation)
 		if rotation > 195 or currCartazHealth <= 0 then
 			wasHit = true
 
-			if curr_level < LEVEL7 then
+			if curr_level < LEVEL6 then
 				-- play and show hair being cut
 				particlefx.play("flyingHair#haircut_left")
 				sound.play("polvo_esquerdo#cut_sound", {delay = 0, gain = 2, pan = -1, speed = 1})
@@ -1025,7 +1061,7 @@ function check_melo_hit(side, rotation)
 		if rotation < 167 or currCartazHealth <= 0 then
 			wasHit = true
 
-			if curr_level < LEVEL7 then
+			if curr_level < LEVEL6 then
 				-- play and show hair being cut
 				particlefx.play("flyingHair#haircut_right")
 				sound.play("polvo_direito#cut_sound", {delay = 0, gain = 2, pan = 1, speed = 1})
@@ -1125,7 +1161,7 @@ function perform_tora_action()
 		return
 	else
 		tora_wait_iteration = true
-		
+		set_tora(PUMPING_TORA)
 	end
 end
 

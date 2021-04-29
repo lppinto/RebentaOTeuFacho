@@ -1618,7 +1618,7 @@ embedded_instances {
   "  id: \"pumping_tora\"\n"
   "  type: \"spinemodel\"\n"
   "  data: \"spine_scene: \\\"/Rounds/MeloRound/Spine_scenes/Tora/pumping_tora.spinescene\\\"\\n"
-  "default_animation: \\\"pump_faster\\\"\\n"
+  "default_animation: \\\"pump\\\"\\n"
   "skin: \\\"\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "material: \\\"/builtins/materials/spine.material\\\"\\n"
@@ -2898,6 +2898,82 @@ embedded_instances {
     x: 35.714
     y: 30.952
     z: 0.4
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "Legendas"
+  data: "embedded_components {\n"
+  "  id: \"legendas\"\n"
+  "  type: \"label\"\n"
+  "  data: \"size {\\n"
+  "  x: 800.0\\n"
+  "  y: 64.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "scale {\\n"
+  "  x: 1.0\\n"
+  "  y: 1.0\\n"
+  "  z: 1.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "color {\\n"
+  "  x: 1.0\\n"
+  "  y: 1.0\\n"
+  "  z: 1.0\\n"
+  "  w: 1.0\\n"
+  "}\\n"
+  "outline {\\n"
+  "  x: 0.0\\n"
+  "  y: 0.0\\n"
+  "  z: 0.0\\n"
+  "  w: 1.0\\n"
+  "}\\n"
+  "shadow {\\n"
+  "  x: 0.0\\n"
+  "  y: 0.0\\n"
+  "  z: 0.0\\n"
+  "  w: 1.0\\n"
+  "}\\n"
+  "leading: 1.0\\n"
+  "tracking: 0.0\\n"
+  "pivot: PIVOT_W\\n"
+  "blend_mode: BLEND_MODE_ALPHA\\n"
+  "line_break: true\\n"
+  "text: \\\"\\\\n"
+  "\\\"\\n"
+  "  \\\"\\\"\\n"
+  "font: \\\"/Common/StatusFont.font\\\"\\n"
+  "material: \\\"/builtins/fonts/label.material\\\"\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: -401.0\n"
+  "    y: 39.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 480.0
+    y: 46.0
+    z: 0.9
   }
   rotation {
     x: 0.0
