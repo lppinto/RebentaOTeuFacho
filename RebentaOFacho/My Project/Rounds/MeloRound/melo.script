@@ -112,7 +112,9 @@ end
 
 function clear_legendas(next_callback)
 	label.set_text("Legendas#legendas", "")
-	timer.delay(0, false, next_callback)
+	if next_callback ~= nil then
+		timer.delay(0, false, next_callback)
+	end
 end
 
 function play_legendas(lista_legendas, index, next_callback)
@@ -121,10 +123,14 @@ function play_legendas(lista_legendas, index, next_callback)
 		clear_legendas(next_callback)
 	else
 		label.set_text("Legendas#legendas", dialog)
-		timer.delay(3, false, function()
+		timer.delay(5, false, function()
 			play_legendas(lista_legendas, index + 1, next_callback) 
 		end)
 	end
+end
+
+function play_legenda(texto)
+	play_legendas({texto}, 1, nil)
 end
 
 -------------------------------------------------------------
@@ -141,42 +147,76 @@ function play_dialog(dialog_theme, next_callback)
 	-- TODO: Insert dialog_theme
 	if dialog_theme == DIALOG_DR_A_EST_ENTER_ROUND2 then
 		local legendas = {
-			"Estagiário: Dr. acho que o Dr. Melo está em grandes apuros temos mesmo que o ajudar!",
-			"Dr: É uma vergonha, o meu grande ex-mentor a ser atacado por polvos esquerda-lhos assim tão desprevenido",
+			"Estagiário: Dr, o Dr. Melo está em grandes apuros temos que o ajudar!",
+			"Dr: É uma vergonha, o meu ex-adorado mentor a ser atacado por polvos esquerdalhos nojentos",
+			"Dr: Ainda para mais a atacarem o seu bem mais precioso, o seu cabelo, cobardes",
 			"Estagiário: O que fazemos Dr?",
-			"Dr: Olhe, procure aí no sotão, algo que nos seja util",
-			"Estagiário: Dr. só encontrei um cartaz velho de campanha do Dr Manuel Monteiro",
-			"e o próprio em posição fetal a chorar, parece já há algum tempo!",
-			"Dr: Passe para cá o cartaz, pelo menos esse deve aguentar mais pancadas do que aquele que lá´ está representado"
+			"Dr: Olhe, procure aí no sotão algo que nos seja util",
+			"...",
+			"Estagiário: Dr. só encontrei um cartaz velho de campanha do Dr Manuel Monteiro,",
+			"Estagiário: Também encontrei o próprio Dr. Manuel Monteiro em posição fetal a chorar, parece já há algum tempo!",
+			"...",
+			"Dr: Passe para cá o cartaz, pelo menos esse deve aguentar mais pancada do que o segundo"
 		}
 		play_legendas(legendas, 1, next_callback)
 	elseif dialog_theme == DIALOG_TORA_SOLUTION then
 		local legendas = {
-			"[Dr. abre o feixo das calças em frente ao estagiário",
-			"profundamente chocado com que estava a testemunhar]",
+			"[Dr. abre o feixo das calças em frente ao estagiário.",
+			"Esse mostra-se profundamente chocado com que está a testemunhar]",
+			"...",
 			"Estagiario: Dr... estou sem palavras...",
-			"Dr: Não se faça admirado, logo o menino que não apaga",
-			"o historico do browser",
-			"Estagiário: Dr., mas mesmo assim, é descomunal...",
-			"Estagiário: Ando com um peso pendurado dentro das calças ",
-			"há mais de 2 anos e nem 2 milimetros cresceu",
-			"Dr: Esteja é calado, temos que ajudar o Dr. Melo o mais",
-			"urgentemente possivel, e isto é a unica solução viável...",
-			"Dr: Temos que tapar aquele buraco o mais rápidamente possivel",
-			"ou a essência do Dr. Melo esvai-se para o eter para a eternidade",
-			"Dr: E isto é a unica coisa com diametro necessário para ao fazer",
-			"Estagiário: Estou consigo Dr."
+			"Dr: Não se faça admirado, logo o menino que não apaga o historico do browser!",
+			"Dr: Eu sei o que andava a ver nas horas de expediente, tenha vergonha!",
+			"Estagiário: Dr., mas mesmo assim, é descomunal, nunca vi nada disso lá...",
+			"Estagiário: Imagine, eu próprio ando com um peso pendurado dentro das calças há mais de 2 anos,", 
+			"Estagiário: E nem 2 milimetros cresceu, tem alguma dica...",
+			"Dr: Esteja mas é calado, temos que ajudar o Dr. Melo o mais urgentemente possivel!",
+			"Dr: Isto é a unica solução viável que eu consigo encontrar...",
+			"...",
+			"Dr: Aquele buraco tem que ser selado imediatamente ou a essência do Dr. Melo esvai-se no vácuo eterno",
+			"...",
+			"Estagiário: Todos aqueles sonhinhos e as suas grandes ideias a desaparecer no vácuo",
+			"Estagiário: Tão triste e um enorme desperdicio...",
+			"...",
+			"Dr: Isto é a unica coisa com diametro necessário para selar a fenda",
+			"Dr: Vai ser um sacrificio enorme da minha parte, mas de certa forma é uma prova da minha gratidão",
+			"Dr: Por tudo o que fez por mim no passado. Não seria o homem que sou hoje se não fosse ele",
+			"Estagiário: Eu faria o mesmo por si Dr, se conseguisse, por isso estou consigo Dr."
 		}
 		play_legendas(legendas, 1, next_callback)
 	elseif dialog_theme == DIALOG_TORA_IS_DANGLING then
-		print "dialog Tora dangling"
-		timer.delay(5, false, next_callback)
+		local legendas = {
+			"Dr: A Força magnética do Dr. Melo é gigantesca, não a consigo manter estável e firme",
+			"Dr: Oh estágiário abra-me aí o instagram da Susana Garcia..",
+			"...",
+			"Estagiário: Tem certeza Dr.?",
+			"Dr: Faça o que lhe digo!"
+		}
+		play_legendas(legendas, 1, next_callback)
 	elseif dialog_theme == DIALOG_TORA_NOT_YET_RIGHT then
-		print "dialog Tora not yet"
-		timer.delay(5, false, next_callback)
+		local legendas = {
+			"Dr: Continua a ser muito dificil, temos polos obviamente idênticos, é por isso que se afastam",
+			"Dr: É como num iman, polo negativo afasta polo negativo, etc.",
+			"Dr: Estagiário, vamos tentar outra coisa",
+			"Dr: Abra-me aí o instagram da Mariana Mortágua, nova estratégia, vou-me concentrar a muito custo nela!",
+			"...",
+			"Estagiário: Não prefere o da Margarida Martins?",
+			"Dr: Cale-se e faça o que lhe digo, eu não lhe pago para me contraiar",
+			"...",
+		}
+		play_legendas(legendas, 1, next_callback)
 	elseif dialog_theme == DIALOG_TORA_NOW_IS_WORKING then
-		print "dialog Tora now is working"
-		timer.delay(5, false, next_callback)
+		local legendas = {
+			"Dr: EU NAO LHE DISSE!! Polos opostos atraiem-se...",
+			"Estagiário: Deixe-me ajudar também Dr., a minha mão é pequena mas é firme",
+			"Dr: Mas que raio é que está a fazer???",
+			"Estagiário: Não se preocupe Dr, é tudo pelo bem do Dr. Melo, e eu olho para o outro lado",
+			"...",
+			"Dr: Bem, só porque é por um bem maior, e ninguém está a ver de qualquer maneira, por isso pode deixar estar",
+			"Estagiário: Obrigado Dr., é um honra poder ajudá-lo desta forma!",
+			"Dr: Entra que nem uma luva!",
+		}
+		play_legendas(legendas, 1, next_callback)
 	end
 end
 
@@ -314,10 +354,20 @@ end
 
 function set_beam (state)
 	msg.post("Beam#sprite", state)
+	if state == "enable" then
+		sound.play("Beam#sound")
+	else
+		sound.stop("Beam#sound")
+	end
 end 
 
 function set_raios (state)
 	msg.post("Raios#sprite", state)
+	if state == "enable" then
+		sound.play("Raios#electricity")
+	else
+		sound.stop("Raios#electricity")
+	end
 end
 
 function set_mouth (state)
@@ -761,7 +811,14 @@ function prepare_octopus_event()
 	-- The octoputs sets in position right above Melo's head
 	move_octopus_in_place(function()
 		-- Dr and Estagiário start another dialog about the huge octopus
-		dialog_about_the_octopus(function()
+		local legendas = {
+			"Estagiário: Dr, olhe-me só para aquele bicharoco, o que é que os polvos esquerda-lhos",
+			"terão em mente?",
+			"Dr: Eu não sei, mas algo de muito grave se vai passar",
+			"Dr: Se eu fosse uma pessoal sensivel a esta hora virava os olhos!",
+			"Estagiário: Prevejo que vá acontecer algo terrivel ao nosso querido Dr. Melo",
+		}
+		play_legendas(legendas,1, function()
 			-- The tip of the octopus opens up revealing a drill and plays slimy sound
 			sound.play("DrillTip#sound")
 			go.animate("DrillTip", "euler.z", go.PLAYBACK_ONCE_FORWARD, -180, go.EASING_LINEAR, 3)
@@ -774,6 +831,7 @@ function prepare_octopus_event()
 
 				-- This gives control to the player to drill at least 3 times until a big hole is done
 				curr_level = INTERACTIVE_EVENT
+				play_legenda("<Clique para furar o crânio do Dr>")
 			end)
 		end)
 	end)
@@ -867,19 +925,21 @@ function prepare_tora_event()
 									spine.play_anim("Mega#dangling_tora", "goingstraight", go.PLAYBACK_LOOP_PINGPONG, {playback_rate = .5})
 									play_dialog(DIALOG_TORA_NOW_IS_WORKING, function()
 										-- Finnally lower the tora to Dr. Meloncolicos brain
-										move_tora(-200, 1, 1, function()
-											-- Move Dr. hand 
-											go.animate("Mão_Dr", "position.y", go.PLAYBACK_ONCE_FORWARD, 380, go.EASING_LINEAR, 2)
-											-- The beam of light disappears and disable it's sound
-											set_beam("disable")
-											sound.stop("Beam#sound")
-											-- The dream particles also stop running up
-											particlefx.stop("Beam#thoughts")
-											-- Electricity starts surrounding the tora
-											set_raios("enable")
-
-											-- Lets start a new interactive event of tora pumping
-											curr_level = INTERACTIVE_EVENT
+										-- And at the same time the dr hand goes alog
+										go.animate("Mão_Dr", "position.y", go.PLAYBACK_ONCE_FORWARD, 380, go.EASING_LINEAR, 2)
+										move_tora(-200, 2, 1, function()
+											-- Play slushy noise of tora entering Dr. Melo's brain
+											sound.play("Tora#tora_fart", {delay = 0, gain = 3, pan = 0, speed = 1})
+											sound.play("DrillTip#sound", {delay = 0, gain = 5, pan = 0, speed = 1}, function()
+												-- The beam of light disappears and disable it's sound
+												set_beam("disable")
+												sound.stop("Beam#sound")
+												-- Electricity starts surrounding the tora
+												set_raios("enable")
+												-- Lets start a new interactive event of tora pumping
+												curr_level = INTERACTIVE_EVENT
+												play_legenda("<Clique para continuar>")
+											end)
 										end)
 									end)
 								end)
@@ -1154,6 +1214,7 @@ end
 
 local TORA_FIRST_TRY = 1
 local TORA_SECOND_TRY = 2
+local TORA_THIRD_TRY = 3
 local curr_tora_iteration = TORA_FIRST_TRY
 local tora_wait_iteration = false
 function perform_tora_action()
@@ -1161,25 +1222,135 @@ function perform_tora_action()
 		return
 	else
 		tora_wait_iteration = true
-		set_tora(PUMPING_TORA)
+		clear_legendas()
+		if curr_tora_iteration == TORA_FIRST_TRY then
+			local legendas = {
+				"Estagiário: Veja Dr.. Parece que ainda não é suficiente!",
+				"Estagiario: os sonhinhos do Dr. Melo ainda se estão a escapar",
+				"Dr: Esteja calado e deixe-me pensar! Estou a levar com muita energia do Dr. Melo",
+				"...",
+				"Dr: Já sei! Se a conseguir bombear de alguma forma consigo absorver todos os seus sonhinhos!",
+				"Dr: E toda a sua sabedoria, seria como um 'mind meld' do Dr. Spock, nada ficaria perdido",
+				"Dr: E quem sabe com a minha futura esposa poderiamos dár continuade ao seu legado se eu a",
+				"empregnasse com toda esta energia que estou a absorver...",
+				"Dr: AHHHHHHHHHHHH",
+				"Estagiario: Que se passa Dr?",
+				"Dr: É muito forte, tenho que começar a bombear todo este poder!"
+			}
+			play_legendas(legendas, 1, function()
+				curr_tora_iteration = TORA_SECOND_TRY
+				tora_wait_iteration = false
+				play_legenda("<Clique para começar a bombear a energia do Dr. Melo>")
+			end)
+		elseif curr_tora_iteration == TORA_SECOND_TRY then
+			set_tora(PUMPING_TORA)
+			timer.delay(3, false, function()
+				-- Add more electricity coming from the sides? TODO
+				local legendas = {
+					"Dr: AHHHHHHHHHHHHHHHHHH",
+					"Estagiario: Dr. sente-se bem??? Estou a ficar com medo!",
+					"..."
+				}
+				play_legendas(legendas, 1, function()
+					-- Dr grabs ledge with both hands
+					set_dr_hands("enable")
+					local legendas = {
+						"Dr: Estagiário, o poder de sucção ainda não é suficiente, vou ter que lhe pedir algo...",
+						"Dr: Vai ter que fazer o sacrificio, e vai ter que me ajudar, é a unica maneira...",
+						"Estagiario: Diga Dr., tudo o que eu puder fazer",
+						"...",
+						"Dr: Tente encontrar a minha prostata, e faça movimentos de pressão suave, isso vai-me ajudar aumentar a suçao",
+						"...",
+						"Estagiário: Dr? Tem a certeza?",
+						"Dr: Faça o que lhe digo homem, pelo futuro do planeta!",
+						"..."
+					}
+					play_legendas(legendas, 1, function()
+						curr_tora_iteration = TORA_THIRD_TRY
+						tora_wait_iteration = false
+						play_legenda("<Clique para encontrar a prostata do Dr e o ajudar a bombear mais rápido>")
+					end)
+				end)
+			end)	
+		elseif curr_tora_iteration == TORA_THIRD_TRY then
+			set_estagiario_hand("disable")
+			local legendas = {
+				"[Estagiário a muito custo inicia a busca da prostata do Dr.]",
+				"..."
+			}
+			play_legendas(legendas, 1, function()
+				sound.play("DrillTip#sound", {delay = 0, gain = 5, pan = 0, speed = 1})
+				local legendas = {
+					"Estagiário: ENCONTREI DR!!",
+					"...",
+					"Dr: Eu sei, agora estimule isso com cuidado, ainda vamos conseguir salvar a situação",
+					"Dr: E depressa que pressinto que os tentáculos estão a acordar novamente e pode ser ainda mais perigoso",
+					"..."
+				}
+				play_legendas(legendas, 1, function()
+					-- Para com 
+					set_raios("disable")
+					-- Para com os sonhinhos
+					particlefx.stop("Beam#thoughts")
+					sound.play("Tora#sucking", {delay = 0, gain = 1, pan = 0, speed = .8})
+					spine.play_anim("Mega#pumping_tora", "pump_faster", go.PLAYBACK_LOOP_FORWARD, {playback_rate = 1})
+					-- From now on we see Melo getting older
+					local legendas = {
+						"Estagiário: Veja Dr., está a resultar, mas algo estranho está a acontecer ao Dr. Melo",
+						"Dr: Não fale comigo agora, estou muito concentrado, encontre-me aí uma foto da Odete Santos, rápido!",
+						"Dr: Pode ser que acelere o processo ainda mais, e seja mais gentil com esse dedo!",
+						"Estagiário: Faço o melhor que posso Dr, e não se preocupe que farto estou eu de treinar em mim próprio",
+						"..."
+					}
+					play_legendas(legendas, 1, function()
+						-- Remove melos mouth
+						set_mouth ("disable")
+						-- Melo gets older each 5 seconds
+						change_melo_face(MELO_NO_HAIR_OLD1)
+						timer.delay(5, false, function()
+							change_melo_face(MELO_NO_HAIR_OLD2)
+							timer.delay(5, false, function()
+								sound.stop("Tora#sucking", {delay = 0, gain = 1, pan = 0, speed = .8})
+								sound.play("Tora#sucking", {delay = 0, gain = .2, pan = 0, speed = .6})
+								spine.play_anim("Mega#pumping_tora", "pump", go.PLAYBACK_LOOP_FORWARD, {playback_rate = 1})
+								change_melo_face(MELO_NO_HAIR_OLD3)
+								-- Stop glowing eyes
+								param_olhos_melo()
+								set_god_eyes("disable")
+								mexe_olhos_melo(OLHOS_CIMA, 2, function()
+									local legendas = {
+										"Estagiário: Parece que conseguiu Dr. Não há mais energia para extrair do Dr. Melo",
+										"Dr: Parece que sim, o Dr. Melo não tem mais nada para dar, é agora uma caraça inerte, carne para molusco!",
+										"...",
+										"Dr: Acho que está na altura de me retirar, fizemos a boa açao do dia",
+										"Dr: Sinto agora que o Dr. Melo está num lugar muito melhor, bem guardado dentro deste cofre inviolável que é o meu cererbro",
+										"Dr: Aquelas conversas imaginárias que tinhamos, deixarão de ser imaginárias, porque agora estarei mesmo a falar com ele cá dentro",
+										"Estagiário: E eu também Dr. através de si.... Estou mesmo contente com esta boa acçao que fizemos",
+										"Estagiário: O mundo está desta vez muito melhor!",
+									}
+									play_legendas(legendas, 1, function()
+										-- Stop sucking sound
+										sound.stop("Tora#sucking", {delay = 0, gain = 1, pan = 0, speed = .8})
+										-- Change penis and start pulling it out
+										set_tora(DANGLING_TORA)
+										move_tora(890, 2, 1, function()
+											------ THIS WILL END THE GAME -----
+										end)
+									end)	
+								end)
+							end)
+						end)
+					end)
+				end)
+			end)
+		end
 	end
-end
-
-function turn_on_beam_of_light()
-	sound.play("Beam#sound")
-	set_beam("enable")
-	particlefx.play("Beam#thoughts")
-end
-
-function turn_off_beam_of_light()
-	sound.stop("Beam#sound")
-	set_beam("disable")
-	particlefx.stop("Beam#thoughts")
 end
 
 function turn_melo_in_deity_mode()
 	set_god_eyes("enable")
-	turn_on_beam_of_light()
+	set_beam("enable")
+	particlefx.play("Beam#thoughts")
 end
 
 local OCTOPUS_FIRST_DRILL = 1
@@ -1187,7 +1358,7 @@ local OCTOPUS_SECOND_DRILL = 2
 local OCTOPUS_LAST_DRILL = 3
 local curr_octopus_iteration = OCTOPUS_FIRST_DRILL
 local octopus_wait_iteration = false
-local DRILL_ACTION_TIME = 5
+local DRILL_ACTION_TIME = 3
 function perform_octopus_action()
 	if octopus_wait_iteration then
 		return
@@ -1195,7 +1366,7 @@ function perform_octopus_action()
 		octopus_wait_iteration = true
 		if curr_octopus_iteration == OCTOPUS_FIRST_DRILL then
 			-- Animate drill until surface (84y)
-			go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 79, go.EASING_LINEAR, 3, 0, function()
+			go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 79, go.EASING_LINEAR, DRILL_ACTION_TIME, 0, function()
 				-- sparkles start flying
 				particlefx.play("Sparkles")
 				-- small hole starts showing after 1 sec of drilling
@@ -1203,7 +1374,15 @@ function perform_octopus_action()
 					-- Start showing hole in the head
 					set_hole("enable")
 					-- After 4 seconds animate hole getting bigger and drill getting deeper (duration 10 secs)
-					timer.delay(4, false, function()
+					local legendas = {
+						"Estagiário: É terrivel Dr., estão a perfurar o cránio do Dr. Melo, é totalmente nojento",
+						"Dr: Esquerdalhos, que grandes $#$#%$%",
+						"Estagiário: Dr. nem parece seu usar o meu tipo de linguagem",
+						"Dr: Isto é inadmissivel, tudo porque não estou mais ao seu lado para o proteger",
+						"Dr: Se eu fosse uma pessoa mais sensivel neste momento viriam-me as lágrimas aos olhos, so de ver isto",
+						"Dr: Sinto-me impotente perante este cenário depressivo"
+					}
+					play_legendas(legendas, 1, function()
 						-- drill noise get's higher
 						sound.play("Drill#hammer_drill")
 						-- Olhos do melo trepidam
@@ -1222,6 +1401,7 @@ function perform_octopus_action()
 								curr_octopus_iteration = OCTOPUS_SECOND_DRILL
 								-- octopus_wait_iteration = false
 								octopus_wait_iteration = false
+								play_legenda("<Clique para continuar a furar>")
 							end)
 						end)
 					end)
@@ -1254,6 +1434,7 @@ function perform_octopus_action()
 						curr_octopus_iteration = OCTOPUS_LAST_DRILL
 						-- octopus_wait_iteration = false
 						octopus_wait_iteration = false
+						play_legenda("<Clique para continuar a furar, ainda mais>")
 					end)
 				end)
 			end)
@@ -1273,7 +1454,14 @@ function perform_octopus_action()
 				-- Drill deeper
 				go.animate("FullDrill", "position.y", go.PLAYBACK_ONCE_FORWARD, 45, go.EASING_LINEAR, DRILL_ACTION_TIME, 0, function()
 					-- Stay there drilling for more 5 seconds
-					timer.delay(5, false, function()
+					local legendas = {
+						"Estagiário: Veja Dr. ele está a levar o seu tempo, é como se estivesse a gostar de estár lá dentro",
+						"Dr: Quem é que não gostaria de estar dentro da grande mente do Dr. Melo? Mas não assim, não desta maneira...", 
+						"Dr: Isto ultrapassa todos o limites do bom gosto e do bom senso",
+						"Estagiário: Concordo, nem imagino o que estará a sentir o Dr. Melo com uma broca a ser-lhe inserida",
+						"assim no crânio a sangue frio e sem anestesia, deve ser doloroso"
+					}
+					play_legendas(legendas,1, function()
 						-- drill returns back to same position and noise goes to idle
 						-- Stop particles
 						particlefx.play("BloodHole")
@@ -1295,9 +1483,17 @@ function perform_octopus_action()
 										-- A beam of light starts coming out of the hole and small while stuff
 										turn_melo_in_deity_mode()
 										rest_attackers()
-										-- Go to next EVENT
-										curr_level = PREPARE_EVENT
-										curr_event = EVENT_TORA
+										local legendas = {
+											"Estagiario: Dr. está a ver o que eu estou a ver? (espantado)",
+											"Dr: É verdade, a sua verdadeira essencia foi revelada, o Dr. Melo era na realidade um Deus preso numa casca humana",
+											"Dr: Era esse o objectivo nojento daqueles polvos esquerdalhos, matar Deus ou qualquer outra divindade que se lhe assemelhe",
+											"Dr: Temos que fazer algo urgentemente"
+										}
+										play_legendas(legendas, 1, function()
+											-- Go to next EVENT
+											curr_level = PREPARE_EVENT
+											curr_event = EVENT_TORA
+										end)
 									end)
 								end)
 							end)
@@ -1321,6 +1517,7 @@ function on_input(self, action_id, action)
 		if (action_id == hash("click") or 
 		action_id == hash("click_left") or 
 		action_id == hash("click_right")) and action.pressed then
+			clear_legendas()
 			if curr_event == EVENT_OCTOPUS then
 				perform_octopus_action()
 			elseif curr_event == EVENT_TORA then
