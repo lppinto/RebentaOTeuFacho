@@ -90,6 +90,26 @@ images {
   image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/deity_eyes.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/top6_sad_to_hide_drill.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/top6_to_hide_drill.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/top7_to_hide_drill.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/top8_sad_to_hide_drill.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/Rounds/MeloRound/Images/Cabe\303\247asMelo/top8_to_hide_drill.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
 margin: 0
 extrude_borders: 2
 inner_padding: 0

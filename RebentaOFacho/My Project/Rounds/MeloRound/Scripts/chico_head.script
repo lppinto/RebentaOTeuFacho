@@ -1,0 +1,35 @@
+local hit_register = nil
+
+function init(self)
+	-- Add initialization code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	-- Add update code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("hit_register") and hit_register == nil then
+		hit_register = sender
+	elseif message_id == hash("trigger_response") and message.enter then
+		local head_side = sender.fragment
+		local other_id = message.other_id
+		msg.post(hit_register, "chico_hit", {head_side, other_id})
+	end
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Learn more: https://defold.com/manuals/hot-reload/
+	-- Remove this function if not needed
+end
