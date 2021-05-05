@@ -4,10 +4,6 @@ main_collection = /Rounds/MeloRound/Melo.collectionc
 [script]
 shared_state = 1
 
-[display]
-width = 960
-height = 640
-
 [android]
 input_method = HiddenInputField
 
@@ -25,4 +21,7 @@ max_particle_count = 4096
 [sound]
 max_sound_buffers = 64
 max_component_count = 64
+
+[physics]
+debug = 0
 

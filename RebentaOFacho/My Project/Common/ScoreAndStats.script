@@ -1,4 +1,4 @@
-local total_time = 30
+local total_time = 0 -- To be set
 local round_count = 1
 local parent = nil
 local boss_level = false
@@ -8,6 +8,7 @@ local active_boss_life_bar = nil
 local player_life_bar = "PlayerLifeBar"
 local curr_facho_health = 100
 local curr_player_stamina = 100
+local bonus_visible = false
 
 -- Round
 local ROUND1 = 1
@@ -58,6 +59,7 @@ function start_timer()
 		local alternative = false
 		if total_time < 10 then
 			alternative = true
+			sound.play("Tempo#ticktock")
 		end
 
 		display_time (get_str_digits_from_number(total_time), alternative)
@@ -117,8 +119,49 @@ function start_round_sequence(self, handle, elapsed)
 	start_iter = start_iter - 1
 end
 
+function set_bonus_level(level, restart)
+
+	local function disable()
+		msg.post("Bonus#bonus", "disable")
+		msg.post("Amount#amount", "disable")
+		msg.post("X#x_amount", "disable")
+		go.set("Bonus", "scale.x", 0.25)
+		go.set("Bonus", "scale.y", 0.25)
+	end
+	
+	if level == 0 then
+		-- Make it disappear
+		if bonus_visible and restart == false then
+			sound.play("Bonus#bonus_off", {gain = 3})
+			go.animate("Bonus", "scale.x", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_INOUTBOUNCE, 2)
+			go.animate("Bonus", "scale.y", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_INOUTBOUNCE, 2, 0, disable)
+		else
+			disable()
+		end
+		
+		bonus_visible = false
+		
+	elseif level > 0 and level <= 5 then
+		if bonus_visible == false then
+			msg.post("Bonus#bonus", "enable")
+			msg.post("Amount#amount", "enable")
+			msg.post("X#x_amount", "enable")
+		end
+
+		sound.play("Bonus#bonus_sound", {gain = 3})
+		msg.post("Amount#amount", "play_animation", {id = hash(string.format("%d", level))})
+		go.animate("Bonus", "scale.x", go.PLAYBACK_ONCE_PINGPONG, 0.5, go.EASING_INOUTBOUNCE, 2)
+		go.animate("Bonus", "scale.y", go.PLAYBACK_ONCE_PINGPONG, 0.5, go.EASING_INOUTBOUNCE, 2)
+
+		bonus_visible = true
+	end
+end
+
 function init(self)
 	msg.post("NumberCount#sprite", "disable")
+
+	-- No bonus yet
+	set_bonus_level(0, true)
 end
 
 function final(self)
@@ -137,10 +180,11 @@ function hurt_facho(amount)
 	if curr_facho_health > 0 then
 		scale_factor = curr_facho_health / 100
 		go.animate(active_boss_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, scale_factor, go.EASING_INOUTBACK, 0.2, 0)
-		-- go.animate(active_boss_life_bar, "tint.x", go.PLAYBACK_ONCE_BACKWARD, 1, go.EASING_INOUTBACK, 0.2, 0)
 	else
 		go.animate(active_boss_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_INOUTBACK, 0.2, 0)
 	end
+
+	
 end
 
 function recover_facho(amount)
@@ -150,11 +194,10 @@ function recover_facho(amount)
 	curr_facho_health = curr_facho_health + amount
 
 	if curr_facho_health > 100 then
-		go.animate(active_boss_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_INOUTBACK, 0.2, 0)
+		go.animate(active_boss_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 0.2, 0)
 	else
 		scale_factor = curr_facho_health / 100
-		go.animate(active_boss_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, -scale_factor, go.EASING_INOUTBACK, 0.2, 0)
-		-- go.animate(active_boss_life_bar, "tint.x", go.PLAYBACK_ONCE_BACKWARD, 1, go.EASING_INOUTBACK, 0.2, 0)
+		go.animate(active_boss_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, -scale_factor, go.EASING_LINEAR, 0.2, 0)
 	end
 end
 
@@ -167,10 +210,9 @@ function hurt_player(amount)
 
 	if curr_player_stamina > 0 then
 		scale_factor = curr_player_stamina / 100
-		go.animate(player_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, scale_factor, go.EASING_INOUTBACK, 0.2, 0)
-		-- go.animate(active_boss_life_bar, "tint.x", go.PLAYBACK_ONCE_BACKWARD, 1, go.EASING_INOUTBACK, 0.2, 0)
+		go.animate(player_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, scale_factor, go.EASING_LINEAR, 0.2, 0)
 	else
-		go.animate(player_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_INOUTBACK, 0.2, 0)
+		go.animate(player_life_bar, "scale.x", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 0.2, 0)
 	end
 end
 
@@ -207,11 +249,17 @@ end
 
 function add_time(time)
 	sound.play("Tempo#add_time")
-	timer.delay(0.04, true, function(self, handle, elapsed)
+	timer.delay(0.02, true, function(self, handle, elapsed)
 		if time > 0 then
 			total_time = total_time + 1
 			time = time - 1
 			display_time (get_str_digits_from_number(total_time), false)
+
+			if total_time > 99 then
+				-- Cannot add more than 99 time
+				sound.stop("Tempo#add_time")
+				timer.cancel(handle)
+			end
 		else	
 			sound.stop("Tempo#add_time")
 			timer.cancel(handle)
@@ -219,9 +267,15 @@ function add_time(time)
 	end)
 end
 
-function lower_status_bar(position)
+function move_status_bar(position)
 	go.animate("GameStatus", "position.y", go.PLAYBACK_ONCE_FORWARD, position, go.EASING_LINEAR, 1, 0)
 end
+
+function set_score(value)
+	label.set_text("ScoreResult#score_result", string.format("%09d", value))
+end
+
+
 
 function on_message(self, message_id, message, sender)
 	if parent == nil then
@@ -230,7 +284,7 @@ function on_message(self, message_id, message, sender)
 	
 	if message_id == hash("prepare") then
 		round_count = message[1]
-		lower_status_bar(580)
+		move_status_bar(580)
 	elseif message_id == hash("start") then
 		start_iter = 4
 		curr_round = message[1]
@@ -240,7 +294,7 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("pause") then
 		pause_timer()
 	elseif message_id == hash("set_score") then
-		-- set the score
+		set_score(message[1])
 	elseif message_id == hash("hurt_facho") then
 		hurt_facho(message[1])
 	elseif message_id == hash("hurt_player") then
@@ -255,7 +309,9 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("add_time") then
 		-- Add time with animation effect
 		add_time(message[1])
-	elseif message_id == hash("lower_status_bar") then
-		lower_status_bar(message[1])
+	elseif message_id == hash("move_status_bar") then
+		move_status_bar(message[1])
+	elseif message_id == hash("set_bonus_level") then
+		set_bonus_level(message[1], message[2])
 	end
 end

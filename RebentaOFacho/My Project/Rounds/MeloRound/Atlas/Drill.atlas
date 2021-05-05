@@ -2,6 +2,10 @@ images {
   image: "/Rounds/MeloRound/drill/scaled/drill10.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
+images {
+  image: "/Rounds/MeloRound/drill/scaled/drill10_b.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
 animations {
   id: "Drill"
   images {
@@ -41,6 +45,49 @@ animations {
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_LOOP_BACKWARD
+  fps: 60
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "drill_blood"
+  images {
+    image: "/Rounds/MeloRound/drill/scaled/drill1_b.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/Rounds/MeloRound/drill/scaled/drill2_b.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/Rounds/MeloRound/drill/scaled/drill3_b.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/Rounds/MeloRound/drill/scaled/drill4_b.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/Rounds/MeloRound/drill/scaled/drill5_b.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/Rounds/MeloRound/drill/scaled/drill6_b.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/Rounds/MeloRound/drill/scaled/drill7_b.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/Rounds/MeloRound/drill/scaled/drill8_b.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/Rounds/MeloRound/drill/scaled/drill9_b.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_LOOP_FORWARD
   fps: 60
   flip_horizontal: 0
   flip_vertical: 0
