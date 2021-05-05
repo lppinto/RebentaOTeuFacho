@@ -12,7 +12,7 @@ local dificulty = "hard"
 
 -- Max time per facho
 local facho1_time = 30
-local facho2_time = 30
+local facho2_time = 60
 
 -- To check for bonus
 local continuous_attack_count = 0
@@ -38,7 +38,7 @@ local status_bar_id = "melo:/Score/GameStatus#ScoreAndStats"
 -- Round levels
 local ROUND1 = 1
 local ROUND2 = 2
-local curr_round = ROUND1
+local curr_round = ROUND2
 
 -- Event levels
 local EVENT_OCTOPUS = 1
@@ -1622,6 +1622,20 @@ function animate_dropping_toupet(next_callback)
 	end)
 end
 
+function show_dreams(iter)
+	if iter > 4 then return end
+	
+	if iter == 0 then
+		go.set("Sonhos#sprite", "tint.w", 0.0)
+		show_dreams(iter+1)
+	else
+		msg.post("Sonhos#sprite", "play_animation", {id = hash(string.format("Sonho%d", iter))})
+		go.animate("Sonhos#sprite", "tint.w", go.PLAYBACK_ONCE_PINGPONG, 1.0, go.EASING_LINEAR, 9, 0, function()
+			show_dreams(iter+1)
+		end)
+	end
+end
+
 local TORA_FIRST_TRY = 1
 local TORA_SECOND_TRY = 2
 local TORA_THIRD_TRY = 3
@@ -1759,6 +1773,7 @@ function perform_tora_action()
 															msg.post("Friendship#sprite", "enable")
 															go.animate("Friendship", "position.y", go.PLAYBACK_LOOP_PINGPONG, 480, go.EASING_INOUTBACK, 2)
 															raise_attackers(function () end)
+															show_dreams(0)
 															sound.play("Friendship#music", nil, function()
 																-- Acaba o jogo
 																sound.play("Friendship#friendship")
